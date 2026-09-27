@@ -260,6 +260,12 @@ body {
     margin-top: 6px; 
 }
 
+/* ファイル上限枚数のインライン表示保証（改行防止） */
+[data-octopus-max-files] {
+    display: inline !important;
+}
+
+
 /* 共通アコーディオン */
 .accordion { 
     margin-bottom: 14px; 

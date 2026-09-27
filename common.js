@@ -12,46 +12,46 @@
 
 const OCTOPUS_APP_INFO = {
     // 1. メイン（共通）バージョン情報
-    version: "1.64",
+    version: "1.65",
     date: "2026-09-27",
-    updateNote: "「EXIF View & Edit」にモバイル端末の保護機能によるGPS除外を検知する動的注記バッジおよび説明を追加",
+    updateNote: "ファイル受け入れ上限枚数および端末別（PC/SP）動的表示の管理を common.js へ一元化、それぞれの上限の見直し",
 
     // 2. 各ツールの個別サブバージョン・更新内容
     tools: {
         index: {
             name: "TOP",
-            subVersion: "16",
-            updateNote: "Newの追加・並び替え／前ver：「Octopus EXIF Analyzer」のツールカード（概要・アイコン・リンク）をTOPページに正式追加"
+            subVersion: "17",
+            updateNote: "共通管理基盤（v1.65）への内部同期"
         },
         exif: {
             name: "EXIF Frame",
-            subVersion: "134",
-            updateNote: "モバイル・アプリ環境におけるクリップボードコピー処理のSNS最適化（長辺2048px自動リサイズ分岐）を追加し処理速度を大幅改善"
+            subVersion: "135",
+            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
         },
         mosaic: {
             name: "Mosaic & Blur",
-            subVersion: "117",
-            updateNote: "モバイル・アプリ環境におけるクリップボードコピー処理のSNS最適化（長辺2048px自動リサイズ分岐）を追加し処理速度を大幅改善"
+            subVersion: "118",
+            updateNote: "共通管理基盤（v1.65）への内部同期"
         },
         cleaner: {
             name: "EXIF Cleaner",
-            subVersion: "5",
-            updateNote: "固有スクリプトを「js/exif-cleaner.js」へ完全外出し・即時関数カプセル化"
+            subVersion: "6",
+            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
         },
         viewedit: {
             name: "EXIF View & Edit",
-            subVersion: "27",
-            updateNote: "モバイル・アプリ環境における端末保護機能（Photo Picker）によるGPS除外検知バッジを詳細モード右隣に設置、説明欄に注意事項を追記"
+            subVersion: "28",
+            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
         },
         photoprocess: {
             name: "Photo Process",
-            subVersion: "12",
-            updateNote: "設定プリセットのブラウザ/アプリ内一覧保存・管理機能（全域モーダル、ソート、検索、上書き/追加インポート）および画像読み込み前の設定保持に対応"
+            subVersion: "13",
+            updateNote: "共通管理基盤（v1.65）への内部同期"
         },
         analyzer: {
             name: "EXIF Analyzer",
-            subVersion: "16",
-            updateNote: "検出機材一覧および各設定テーブル・プロンプトの機材リストを撮影枚数順（降順）に自動ソートするようUI改善"
+            subVersion: "17",
+            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
         }
     }
 };
@@ -84,8 +84,8 @@ const OCTOPUS_NAV_ITEMS = [
     order: 10,
     showInTab: true,
     showInOther: false,
-    maxFilesPC: 20,
-    maxFilesMobile: 20,
+    maxFilesPC: 50,
+    maxFilesMobile: 30,
     isSingleOnly: false
   },
   {
@@ -98,8 +98,8 @@ const OCTOPUS_NAV_ITEMS = [
     order: 20,
     showInTab: true,
     showInOther: false,
-    maxFilesPC: 50,
-    maxFilesMobile: 10,
+    maxFilesPC: 100,
+    maxFilesMobile: 30,
     isSingleOnly: false
   },
   {
@@ -113,7 +113,7 @@ const OCTOPUS_NAV_ITEMS = [
     showInTab: true,
     showInOther: false,
     maxFilesPC: 3000,
-    maxFilesMobile: 100,
+    maxFilesMobile: 500,
     isSingleOnly: false
   },
   {
@@ -154,8 +154,8 @@ const OCTOPUS_NAV_ITEMS = [
     order: 60,
     showInTab: false,
     showInOther: true,
-    maxFilesPC: 100,
-    maxFilesMobile: 30,
+    maxFilesPC: 200,
+    maxFilesMobile: 50,
     isSingleOnly: false
   },
   {
@@ -217,6 +217,17 @@ function getToolMaxFiles(toolId) {
                    (window.innerWidth <= 768);
 
   return isMobile ? item.maxFilesMobile : item.maxFilesPC;
+}
+
+/**
+ * 現在のページ内にある上限枚数表示要素を、アクセス環境に応じた数値へ自動更新する
+ * @param {string} toolId
+ */
+function updateToolMaxFilesUI(toolId) {
+  const max = getToolMaxFiles(toolId);
+  document.querySelectorAll('[data-octopus-max-files]').forEach(el => {
+    el.textContent = max.toLocaleString();
+  });
 }
 
 (function() {
@@ -338,5 +349,10 @@ function getToolMaxFiles(toolId) {
 
         // 4. ワイド表示切り替えの初期化
         initWideModeToggle(currentKey);
+
+        // 5. 上限枚数のUI自動反映
+        if (currentKey !== "index" && currentKey !== "menu") {
+            updateToolMaxFilesUI(currentKey);
+        }
     });
 })();

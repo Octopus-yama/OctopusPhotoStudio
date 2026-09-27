@@ -24,11 +24,8 @@
         body {
             padding: 0 !important;
             margin: 0 !important;
-            /* アドレスバー対策：svhを優先し、JSの--app-heightで完璧にフィットさせる */
             height: 100vh;
             height: 100dvh;
-            height: 100svh;
-            height: var(--app-height, 100svh);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -608,6 +605,7 @@
             border-left: 3px solid var(--primary);
         }
 
+        /* PC版フッター（常に右パネル下部に固定） */
         .panel-footer {
             padding: 12px 16px;
             border-top: 1px solid var(--border-color);
@@ -734,8 +732,6 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
-            height: 100svh;
-            height: var(--app-height, 100svh);
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(4px);
             z-index: 9999;
@@ -757,9 +753,8 @@
             box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
             width: 94vw;
             max-width: 1040px;
-            height: 92vh;
-            height: 92dvh;
-            height: 92svh;
+            height: 90vh;
+            height: 90dvh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -815,27 +810,12 @@
             align-items: center;
             gap: 8px;
             flex: 1;
-            min-width: 240px;
         }
         .preset-toolbar-right {
             display: flex;
             align-items: center;
             gap: 8px;
             flex-wrap: wrap;
-        }
-        .preset-search-input {
-            padding: 6px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--radius-sm);
-            background: var(--card-bg-sub);
-            color: var(--text-color);
-            font-size: 12px;
-            flex: 1;
-            max-width: 280px;
-        }
-        .preset-search-input:focus {
-            border-color: var(--primary);
-            outline: none;
         }
         .preset-list-container {
             flex: 1;
@@ -943,8 +923,6 @@
             width: 100vw !important;
             height: 100vh !important;
             height: 100dvh !important;
-            height: 100svh !important;
-            height: var(--app-height, 100svh) !important;
         }
 
         /* ---------------------------------
@@ -956,8 +934,7 @@
                 min-height: 0;
             }
             .stage-area {
-                height: 38dvh;
-                height: 38svh;
+                height: 40dvh;
                 flex: none;
                 min-height: 130px;
             }
@@ -987,7 +964,6 @@
                 transform: translateX(-50%) !important;
                 z-index: 100000 !important;
                 max-height: 45dvh;
-                max-height: 45svh;
                 overflow-y: auto;
             }
 
@@ -999,21 +975,10 @@
                 overflow: hidden;
             }
 
-            /* ★ スマホ時のフッター：下部アドレスバーやシステムバーに埋もれないよう余白を強化 */
-            .panel-footer {
-                display: none;
-                padding: 10px 14px !important;
-                padding-bottom: calc(16px + env(safe-area-inset-bottom, 12px)) !important;
-                background: var(--card-bg-sub);
-                border-top: 1px solid var(--border-color);
-            }
-            .panel-area.is-export-active .panel-footer {
-                display: flex;
-            }
-
+            /* 全タブ共通のスクロール設定（指定の42px / 22pxに変更） */
             .panel-content {
-                padding-right: 32px !important;
-                padding-bottom: calc(64px + env(safe-area-inset-bottom, 16px)) !important;
+                padding-right: 42px !important;
+                padding-bottom: calc(22px + env(safe-area-inset-bottom, 16px)) !important;
                 overflow-y: scroll !important;
                 scrollbar-width: auto;
                 scrollbar-color: var(--primary) var(--card-bg-sub);
@@ -1037,12 +1002,22 @@
             .panel-content::-webkit-scrollbar-thumb:active {
                 background-color: var(--primary-hover);
             }
+
+            /* ★ スマホ画面時はスクロール領域内の通常要素として配置 */
+            .panel-footer {
+                display: flex !important;
+                position: static !important;
+                border-top: 1px dashed var(--border-color) !important;
+                background: transparent !important;
+                padding: 16px 0 48px 0 !important;
+                margin-top: 20px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
             
             .preset-manager-box {
                 width: 96vw;
-                height: 92vh;
-                height: 92dvh;
-                height: 92svh;
+                height: 94dvh;
             }
             .preset-card {
                 flex-direction: column;
@@ -1055,11 +1030,11 @@
             }
 
             /* iOS実機専用スタイル */
-            body.is-ios .panel-footer {
-                padding-bottom: calc(32px + env(safe-area-inset-bottom, 16px)) !important;
-            }
             body.is-ios .panel-content {
-                padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px)) !important;
+                padding-bottom: calc(72px + env(safe-area-inset-bottom, 20px)) !important;
+            }
+            body.is-ios .panel-footer {
+                padding-bottom: calc(56px + env(safe-area-inset-bottom, 28px)) !important;
             }
             body.is-ios .zoom-popover {
                 bottom: calc(75px + env(safe-area-inset-bottom, 16px)) !important;
@@ -1075,8 +1050,6 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
-            height: 100svh;
-            height: var(--app-height, 100svh);
             background: rgba(0, 0, 0, 0.42);
             backdrop-filter: blur(2px);
             z-index: 999999 !important;
@@ -1226,7 +1199,8 @@
             <button type="button" class="panel-tab-btn" data-tab="tab-filter">フィルター</button>
             <button type="button" class="panel-tab-btn" data-tab="tab-transform">変形</button>
             <button type="button" class="panel-tab-btn" data-tab="tab-history">履歴</button>
-            <button type="button" class="panel-tab-btn" data-tab="tab-export">保存設定</button>
+            <!-- ② タブ名を「保存/設定」に変更 -->
+            <button type="button" class="panel-tab-btn" data-tab="tab-export">保存/設定</button>
         </div>
 
         <div class="panel-content">
@@ -1528,12 +1502,14 @@
                         <button type="button" class="main-btn" id="btn-save-current-preset" style="width: 100%; margin-top: 0; padding: 9px; font-size: 12.5px; background: var(--primary); color: #ffffff;">＋ 現在の設定をプリセット登録</button>
                     </div>
                 </div>
+
+                <!-- ※ スマホ画面時は、ここに保存ボタン群（.panel-footer）が自動で移動してきます -->
             </div>
 
         </div>
 
-        <!-- パネルフッター -->
-        <div class="panel-footer">
+        <!-- パネルフッター（PC版ではここに配置、スマホ時はJSで tab-export の末尾に自動移動） -->
+        <div class="panel-footer" id="main-panel-footer">
             <button type="button" class="opt-btn" id="btn-reset-all" title="全パラメーターを初期状態に戻します">全リセット</button>
             <button type="button" class="opt-btn" id="btn-restore-last" title="直近の加工設定を復帰します">前回設定を復帰</button>
             <button type="button" class="main-btn" id="btn-save-image" disabled>保存する</button>
@@ -1549,10 +1525,9 @@
             <button type="button" class="modal-close" id="btn-pm-close" title="閉じる">&times;</button>
         </div>
 
-        <!-- ツールバー：検索・ソート・一括操作 -->
+        <!-- ツールバー：ソート・一括操作 -->
         <div class="preset-toolbar">
             <div class="preset-toolbar-left">
-                <input type="text" id="pm-search" class="preset-search-input" placeholder="🔍 プリセット名で検索...">
                 <select id="pm-sort" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--card-bg-sub); color: var(--text-color); font-size: 12px;">
                     <option value="created-desc">作成日: 新しい順</option>
                     <option value="created-asc">作成日: 古い順</option>
