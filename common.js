@@ -7,38 +7,13 @@
  * ・アコーディオン開閉制御
  */
  
-// ==========================================
-// Web用 GA4 自動判定・配信スクリプト
-// ==========================================
-(function() {
-  // アプリ（AndroidBridgeが存在する）環境の場合はWeb用GAを読み込まず終了
-  if (window.AndroidBridge) {
-    return;
-  }
-
-  // ここから下はWebブラウザで開かれた時だけ実行される
-  const GA_MEASUREMENT_ID = 'G-NYCV0Y514R';
-
-  // gtag.js の動的読み込み
-  const script = document.createElement('script');
-  script.async = true;
-  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
-  document.head.appendChild(script);
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  window.gtag = gtag;
-
-  gtag('js', new Date());
-  gtag('config', GA_MEASUREMENT_ID);
-})();
 
 // ==========================================
 
 const OCTOPUS_APP_INFO = {
     // 1. メイン（共通）バージョン情報
-    version: "1.62",
-    date: "2026-09-26",
+    version: "1.64",
+    date: "2026-09-27",
     updateNote: "「EXIF View & Edit」にモバイル端末の保護機能によるGPS除外を検知する動的注記バッジおよび説明を追加",
 
     // 2. 各ツールの個別サブバージョン・更新内容
@@ -70,8 +45,8 @@ const OCTOPUS_APP_INFO = {
         },
         photoprocess: {
             name: "Photo Process",
-            subVersion: "11",
-            updateNote: "モバイル・アプリ環境におけるクリップボードコピー処理のSNS最適化（長辺2048px自動リサイズ分岐）を追加し処理速度を大幅改善"
+            subVersion: "12",
+            updateNote: "設定プリセットのブラウザ/アプリ内一覧保存・管理機能（全域モーダル、ソート、検索、上書き/追加インポート）および画像読み込み前の設定保持に対応"
         },
         analyzer: {
             name: "EXIF Analyzer",
@@ -198,6 +173,35 @@ const OCTOPUS_NAV_ITEMS = [
     isSingleOnly: false
   }
 ];
+
+
+// ==========================================
+// Web用 GA4 自動判定・配信スクリプト
+// ==========================================
+(function() {
+  // アプリ（AndroidBridgeが存在する）環境の場合はWeb用GAを読み込まず終了
+  if (window.AndroidBridge) {
+    return;
+  }
+
+  // ここから下はWebブラウザで開かれた時だけ実行される
+  const GA_MEASUREMENT_ID = 'G-NYCV0Y514R';
+
+  // gtag.js の動的読み込み
+  const script = document.createElement('script');
+  script.async = true;
+  script.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+  document.head.appendChild(script);
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  window.gtag = gtag;
+
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+})();
+
+
 
 /**
  * 実行環境（PCブラウザ vs モバイルブラウザ/アプリ）に応じたツールの最大受入枚数を取得する

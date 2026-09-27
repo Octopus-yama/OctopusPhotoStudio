@@ -24,8 +24,11 @@
         body {
             padding: 0 !important;
             margin: 0 !important;
+            /* アドレスバー対策：svhを優先し、JSの--app-heightで完璧にフィットさせる */
             height: 100vh;
             height: 100dvh;
+            height: 100svh;
+            height: var(--app-height, 100svh);
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -122,7 +125,7 @@
             min-height: 0;
         }
 
-        /* 左側：写真表示ステージ（z-index: 30 で右側パネルより常に上位に設定） */
+        /* 左側：写真表示ステージ */
         .stage-area {
             flex: 1;
             background: #181c15;
@@ -268,7 +271,7 @@
             pointer-events: none;
         }
 
-.split-bar {
+        .split-bar {
             position: absolute;
             background: #ffffff;
             z-index: 10;
@@ -723,7 +726,7 @@
             border: 1px solid rgba(0,0,0,0.15);
         }
 
-        /* モーダルポップアップ */
+        /* モーダル共通スタイル */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -731,6 +734,8 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
+            height: 100svh;
+            height: var(--app-height, 100svh);
             background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(4px);
             z-index: 9999;
@@ -743,13 +748,20 @@
         .modal-overlay.open {
             display: flex;
         }
-        .modal-box {
+
+        /* 92%〜94% 前面全域プリセット管理モーダル専用スタイル */
+        .preset-manager-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-md);
-            max-width: 480px;
-            width: 100%;
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+            width: 94vw;
+            max-width: 1040px;
+            height: 92vh;
+            height: 92dvh;
+            height: 92svh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
             animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -758,12 +770,13 @@
             to { opacity: 1; transform: scale(1) translateY(0); }
         }
         .modal-header {
-            padding: 16px 20px;
+            padding: 14px 18px;
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: var(--card-bg-sub);
+            flex-shrink: 0;
         }
         .modal-header h3 {
             margin: 0;
@@ -781,32 +794,139 @@
             color: var(--text-muted);
             cursor: pointer;
             line-height: 1;
+            padding: 4px 8px;
         }
         .modal-close:hover {
             color: var(--danger-color);
         }
-        .modal-body {
-            padding: 20px;
-            font-size: 13px;
-            line-height: 1.6;
-            color: var(--text-color);
+        .preset-toolbar {
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: space-between;
+            flex-shrink: 0;
         }
-        .modal-info-box {
-            background: var(--primary-light);
-            border: 1px solid var(--primary-border);
+        .preset-toolbar-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 240px;
+        }
+        .preset-toolbar-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .preset-search-input {
+            padding: 6px 12px;
+            border: 1px solid var(--border-color);
             border-radius: var(--radius-sm);
-            padding: 12px 14px;
-            margin-bottom: 16px;
+            background: var(--card-bg-sub);
+            color: var(--text-color);
             font-size: 12px;
-            line-height: 1.6;
+            flex: 1;
+            max-width: 280px;
+        }
+        .preset-search-input:focus {
+            border-color: var(--primary);
+            outline: none;
+        }
+        .preset-list-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-height: 0;
+            background: var(--bg-color);
+        }
+        .preset-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: var(--transition);
+        }
+        .preset-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .preset-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+        .preset-card-title-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        .preset-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-color);
+            cursor: pointer;
+            word-break: break-all;
+        }
+        .preset-card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .preset-badges {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .preset-badge {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+        .preset-badge.highlight {
+            background: var(--primary-light);
+            border-color: var(--primary-border);
+            color: var(--primary);
+            font-weight: 600;
+        }
+        .preset-card-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+        .preset-empty-msg {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--text-muted);
+            font-size: 13.5px;
         }
         .modal-footer {
-            padding: 12px 20px;
+            padding: 12px 18px;
             border-top: 1px solid var(--border-color);
             background: var(--card-bg-sub);
             display: flex;
             justify-content: flex-end;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         /* 全画面表示モードスタイル */
@@ -823,6 +943,8 @@
             width: 100vw !important;
             height: 100vh !important;
             height: 100dvh !important;
+            height: 100svh !important;
+            height: var(--app-height, 100svh) !important;
         }
 
         /* ---------------------------------
@@ -834,9 +956,10 @@
                 min-height: 0;
             }
             .stage-area {
-                height: 42dvh;
+                height: 38dvh;
+                height: 38svh;
                 flex: none;
-                min-height: 140px;
+                min-height: 130px;
             }
 
             .workspace-resizer {
@@ -864,6 +987,7 @@
                 transform: translateX(-50%) !important;
                 z-index: 100000 !important;
                 max-height: 45dvh;
+                max-height: 45svh;
                 overflow-y: auto;
             }
 
@@ -875,23 +999,27 @@
                 overflow: hidden;
             }
 
+            /* ★ スマホ時のフッター：下部アドレスバーやシステムバーに埋もれないよう余白を強化 */
             .panel-footer {
                 display: none;
-                padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+                padding: 10px 14px !important;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom, 12px)) !important;
+                background: var(--card-bg-sub);
+                border-top: 1px solid var(--border-color);
             }
             .panel-area.is-export-active .panel-footer {
                 display: flex;
             }
 
             .panel-content {
-                padding-right: 32px !important; /* バー20px ＋ 隙間12pxで今の余白感をキープ */
-                padding-bottom: calc(48px + env(safe-area-inset-bottom, 0px)) !important;
+                padding-right: 32px !important;
+                padding-bottom: calc(64px + env(safe-area-inset-bottom, 16px)) !important;
                 overflow-y: scroll !important;
                 scrollbar-width: auto;
                 scrollbar-color: var(--primary) var(--card-bg-sub);
             }
             .panel-content::-webkit-scrollbar {
-                width: 20px !important; /* 42pxから半分（約20px）に変更 */
+                width: 20px !important;
                 display: block !important;
                 background-color: var(--card-bg-sub);
             }
@@ -902,26 +1030,44 @@
             .panel-content::-webkit-scrollbar-thumb {
                 background-color: var(--primary);
                 border-radius: 10px;
-                border: 4px solid var(--card-bg-sub); /* 幅に合わせて枠線もバランス調整 */
+                border: 4px solid var(--card-bg-sub);
                 min-height: 50px;
             }
             .panel-content::-webkit-scrollbar-thumb:hover,
             .panel-content::-webkit-scrollbar-thumb:active {
                 background-color: var(--primary-hover);
             }
+            
+            .preset-manager-box {
+                width: 96vw;
+                height: 92vh;
+                height: 92dvh;
+                height: 92svh;
+            }
+            .preset-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .preset-card-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+
             /* iOS実機専用スタイル */
             body.is-ios .panel-footer {
-                padding-bottom: calc(36px + env(safe-area-inset-bottom, 16px)) !important;
+                padding-bottom: calc(32px + env(safe-area-inset-bottom, 16px)) !important;
             }
             body.is-ios .panel-content {
-                padding-bottom: calc(72px + env(safe-area-inset-bottom, 16px)) !important;
+                padding-bottom: calc(84px + env(safe-area-inset-bottom, 16px)) !important;
             }
             body.is-ios .zoom-popover {
                 bottom: calc(75px + env(safe-area-inset-bottom, 16px)) !important;
                 z-index: 100000 !important;
             }
         }
-/* 処理中操作保護オーバーレイ ＆ スピナー */
+
+        /* 処理中操作保護オーバーレイ ＆ スピナー */
         .process-overlay {
             position: fixed;
             top: 0;
@@ -929,6 +1075,8 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
+            height: 100svh;
+            height: var(--app-height, 100svh);
             background: rgba(0, 0, 0, 0.42);
             backdrop-filter: blur(2px);
             z-index: 999999 !important;
@@ -1360,12 +1508,24 @@
 
                 <hr style="margin: 18px 0; border: none; border-top: 1px dashed var(--border-color);">
 
+                <!-- ◆ 加工プリセット管理 -->
                 <div class="control-group">
-                    <label class="control-label">◆ 設定（プリセット）の管理</label>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                        <label class="control-label">◆ 加工プリセット管理</label>
+                        <button type="button" class="header-action-btn" id="btn-open-preset-manager" style="font-size: 11px; padding: 3px 8px;">⚙️ プリセット詳細一覧</button>
+                    </div>
+
+                    <!-- クイック選択・復帰 -->
                     <div style="display: flex; gap: 6px; margin-top: 8px;">
-                        <button type="button" class="opt-btn" id="btn-export-json" style="flex: 1;">JSON書き出し</button>
-                        <button type="button" class="opt-btn" id="btn-import-json" style="flex: 1;">JSON読み込み</button>
-                        <input type="file" id="json-file-input" accept=".json" style="display: none;">
+                        <select id="quick-preset-select" style="flex: 1; font-size: 12px; padding: 7px 8px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--card-bg-sub); color: var(--text-color);">
+                            <option value="">(登録済みプリセットを選択)</option>
+                        </select>
+                        <button type="button" class="opt-btn" id="btn-apply-quick-preset" style="padding: 0 12px; font-weight: 700;">適用</button>
+                    </div>
+
+                    <!-- 現在の設定を登録 -->
+                    <div style="margin-top: 8px;">
+                        <button type="button" class="main-btn" id="btn-save-current-preset" style="width: 100%; margin-top: 0; padding: 9px; font-size: 12.5px; background: var(--primary); color: #ffffff;">＋ 現在の設定をプリセット登録</button>
                     </div>
                 </div>
             </div>
@@ -1381,30 +1541,41 @@
     </div>
 </div>
 
-<!-- JSON書き出しモーダル -->
-<div id="json-export-modal" class="modal-overlay">
-    <div class="modal-box">
+<!-- 92%〜94% 前面全域 プリセット詳細管理モーダル -->
+<div id="preset-manager-modal" class="modal-overlay">
+    <div class="preset-manager-box">
         <div class="modal-header">
-            <h3><span>📁</span> 設定プリセットのJSON書き出し</h3>
-            <button type="button" class="modal-close" id="btn-modal-close">&times;</button>
+            <h3><span>⚙️</span> 加工プリセット詳細管理 <span id="pm-total-badge" style="font-size: 11px; background: var(--primary-light); color: var(--primary); padding: 2px 8px; border-radius: 12px; margin-left: 6px;">0件</span></h3>
+            <button type="button" class="modal-close" id="btn-pm-close" title="閉じる">&times;</button>
         </div>
-        <div class="modal-body">
-            <div class="modal-info-box">
-                <strong>【保存される設定内容】</strong><br>
-                ・色調・露出（明るさ、コントラスト、色温度、ハイライト/シャドウ等）<br>
-                ・RGBカラーバランス ＆ HSL特定色調整（全12色の彩度・明度）<br>
-                ・適用フィルター、周辺減光（ビネット）、銀塩グレインノイズ（強さ・粗さ）、カラーフィルター<br><br>
-                <span style="color:var(--text-muted); font-size:11px;">※ 切り抜き範囲、リサイズ指定値、写真データ自体は含まれません。他の写真へ安全に流し込み適用できます。</span>
-            </div>
 
-            <div class="form-group">
-                <label>書き出すJSONファイル名</label>
-                <input type="text" id="modal-json-filename" value="" placeholder="ファイル名を入力 (.json)">
+        <!-- ツールバー：検索・ソート・一括操作 -->
+        <div class="preset-toolbar">
+            <div class="preset-toolbar-left">
+                <input type="text" id="pm-search" class="preset-search-input" placeholder="🔍 プリセット名で検索...">
+                <select id="pm-sort" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--card-bg-sub); color: var(--text-color); font-size: 12px;">
+                    <option value="created-desc">作成日: 新しい順</option>
+                    <option value="created-asc">作成日: 古い順</option>
+                    <option value="name-asc">名前: 昇順 (A→Z / あ→ん)</option>
+                    <option value="name-desc">名前: 降順 (Z→A / ん→あ)</option>
+                </select>
+            </div>
+            <div class="preset-toolbar-right">
+                <button type="button" class="header-action-btn" id="btn-pm-add-current">＋ 現在の設定を登録</button>
+                <button type="button" class="header-action-btn" id="btn-pm-import-all" title="プリセットJSONファイルを読み込んで一括復帰します">📥 一括インポート</button>
+                <button type="button" class="header-action-btn" id="btn-pm-export-all" title="保存されている全プリセットを1つのJSONに書き出します">📤 一括エクスポート</button>
+                <input type="file" id="pm-import-all-file" accept=".json" style="display: none;">
             </div>
         </div>
+
+        <!-- プリセット一覧スクロール領域 -->
+        <div class="preset-list-container" id="pm-list-container">
+            <!-- JSで動的生成 -->
+        </div>
+
         <div class="modal-footer">
-            <button type="button" class="opt-btn" id="btn-modal-cancel">キャンセル</button>
-            <button type="button" class="main-btn" id="btn-modal-confirm-export" style="margin-top:0; padding:8px 18px; width:auto;">書き出す</button>
+            <span style="font-size: 11.5px; color: var(--text-muted); margin-right: auto; align-self: center;">※ 設定データはブラウザ/アプリのローカル領域に安全に保存されています。</span>
+            <button type="button" class="opt-btn" id="btn-pm-footer-close" style="padding: 7px 18px;">閉じる</button>
         </div>
     </div>
 </div>
