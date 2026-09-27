@@ -1,21 +1,19 @@
-MIT License
+Copyright (c) 2026 山下オクトパス. All rights reserved.
 
-Copyright (c) 2026 Octopus-yama
+本ソフトウェア「Octopus Tools」の著作権は制作者（山下オクトパス）に帰属します。
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+【利用条件】
+1. 個人利用・業務利用を問わず、本ソフトウェアを無償で使用することができます。
+2. 本ソフトウェアのバイナリ（APK等）およびソースコードの無断転載、再配布、複製、改変、リバースエンジニアリング、販売を禁止します。
+3. 本ソフトウェアを利用したことによって生じたいかなる損害についても、制作者は一切の責任を負いません。
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+********************************************************************************************************
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Copyright (c) 2026 Yamashita Octopus. All rights reserved.
+
+All copyrights and intellectual property rights to this software, "Octopus Tools", belong to the creator (Yamashita Octopus).
+
+[Terms of Use]
+1. You may use this software free of charge for both personal and business purposes.
+2. Unauthorized reproduction, redistribution, duplication, modification, reverse engineering, or sale of this software's binaries (such as APK files) and source code is strictly prohibited.
+3. The creator assumes no liability whatsoever for any damages or losses arising from the use of this software.
