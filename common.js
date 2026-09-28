@@ -1,5 +1,5 @@
 /**
- * Octopus Tools - 共通管理スクリプト
+ * Octopus Photo Studio - 共通管理スクリプト
  * ・バージョンおよび更新内容の一元管理（メイン＋各ツール計7系統）
  * ・グローバルナビゲーション自動生成
  * ・ダークモード（テーマ）切り替え＆永続化
@@ -12,9 +12,9 @@
 
 const OCTOPUS_APP_INFO = {
     // 1. メイン（共通）バージョン情報
-    version: "1.65",
-    date: "2026-09-27",
-    updateNote: "ファイル受け入れ上限枚数および端末別（PC/SP）動的表示の管理を common.js へ一元化、それぞれの上限の見直し",
+    version: "1.68",
+    date: "2026-09-28",
+    updateNote: "名称を「Octopus Photo Studio」に改名／「Octopus EXIF Frame」のExif再保存パイプラインを刷新（piexif未定義タグによるクラッシュ根絶・最新タグ動的登録・日本語安全エスケープ対応）",
 
     // 2. 各ツールの個別サブバージョン・更新内容
     tools: {
@@ -25,13 +25,13 @@ const OCTOPUS_APP_INFO = {
         },
         exif: {
             name: "EXIF Frame",
-            subVersion: "135",
-            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
+            subVersion: "136",
+            updateNote: "Exif埋め込み処理を刷新（16進数定数指定、最新Exif規格タグ動的注入、未知タグ型自動補完、全角文字エスケープ、2段構えダンプフォールバック、生成・一括DLエラーハンドリング強化）"
         },
         mosaic: {
             name: "Mosaic & Blur",
-            subVersion: "118",
-            updateNote: "共通管理基盤（v1.65）への内部同期"
+            subVersion: "119",
+            updateNote: "Exif保存処理を刷新（最新規格・メーカー独自タグ・測定センサータグの動的型補完、有理数バイナリ補正、サムネイル破棄による情報漏洩防止＆2段構えダンプ）"
         },
         cleaner: {
             name: "EXIF Cleaner",
@@ -40,13 +40,13 @@ const OCTOPUS_APP_INFO = {
         },
         viewedit: {
             name: "EXIF View & Edit",
-            subVersion: "28",
-            updateNote: "ファイル読み込み上限管理を common.js に一元化し、アクセス端末に応じた動的枚数表示に対応"
+            subVersion: "29",
+            updateNote: "Exif保存時の測定センサー系タグ（外気温度・気圧・水深・加速度等）の型定義登録および有理数バイナリパック補正によるメタデータ保持強化"
         },
         photoprocess: {
             name: "Photo Process",
-            subVersion: "13",
-            updateNote: "共通管理基盤（v1.65）への内部同期"
+            subVersion: "14",
+            updateNote: "Exif保存処理を刷新（最新規格・独自タグ・測定センサータグの動的型補完、有理数バイナリ補正、サムネイル破棄＆2段構えダンプによるメタデータ完全保持）"
         },
         analyzer: {
             name: "EXIF Analyzer",
@@ -90,7 +90,7 @@ const OCTOPUS_NAV_ITEMS = [
   },
   {
     id: "viewedit",
-    name: "EXIF編集",
+    name: "EXIF View & Edit",
     tabName: "編集",
     url: "ExifViewEdit.html",
     icon: "📋",
@@ -138,8 +138,8 @@ const OCTOPUS_NAV_ITEMS = [
     icon: "🎨",
     iconImage: "img/ico_photo_Process.png",
     order: 50,
-    showInTab: false,
-    showInOther: true,
+    showInTab: true,
+    showInOther: false,
     maxFilesPC: 1,
     maxFilesMobile: 1,
     isSingleOnly: true
