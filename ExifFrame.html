@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Octopus EXIF Frame｜Octopus Photo Studio</title>
@@ -37,7 +36,7 @@
         @font-face { font-family: 'Cherry Bomb'; src: url('font/CherryBombOne-Regular.ttf') format('truetype'); }
         @font-face { font-family: 'はちまるポップ'; src: url('font/HachiMaruPop-Regular.ttf') format('truetype'); }
 
-        /* ドロップエリアの拡張（クリップボードボタン配置用） */
+        /* ドロップエリアの拡張 */
         .drop-area {
             position: relative;
             padding-bottom: 48px;
@@ -566,7 +565,6 @@
             background: rgba(201, 74, 74, 0.05);
         }
 
-        /* 一括ダウンロードボタン（アクセントカラー上書き） */
         #download-btn { 
             background: var(--accent) !important; 
             box-shadow: 0 4px 14px rgba(84, 35, 102, 0.25) !important; 
@@ -634,7 +632,6 @@
             background: var(--primary-hover); 
         }
 
-        /* 各画像ごとのクリップボードコピーボタン */
         .single-copy-btn { 
             background: var(--card-bg); 
             border: 1px solid var(--border-color); 
@@ -658,93 +655,9 @@
             opacity: 0.65; 
             cursor: default; 
         }
-
-        /* ライトボックスモーダル */
-        #lightbox-modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0, 0, 0, 0.88); 
-            z-index: 10000; 
-            justify-content: center; 
-            align-items: center; 
-            flex-direction: column; 
-            backdrop-filter: blur(4px); 
-        }
-        #lightbox-img { 
-            max-width: 92vw; 
-            max-height: 88vh; 
-            border-radius: var(--radius-sm); 
-            object-fit: contain; 
-            box-shadow: 0 12px 40px rgba(0,0,0,0.5); 
-            -webkit-touch-callout: default;
-        }
-        #lightbox-close { 
-            position: absolute; 
-            top: 20px; 
-            right: 30px; 
-            color: #ffffff; 
-            font-size: 38px; 
-            cursor: pointer; 
-            user-select: none; 
-            transition: transform 0.2s; 
-            z-index: 10002;
-        }
-        #lightbox-close:hover { 
-            transform: scale(1.2); 
-        }
-
-        /* 矢印ナビゲーション */
-        .lightbox-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            border: none;
-            font-size: 28px;
-            width: 48px;
-            height: 64px;
-            cursor: pointer;
-            z-index: 10001;
-            border-radius: var(--radius-sm);
-            transition: background 0.2s, transform 0.2s;
-            user-select: none;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .lightbox-nav:hover {
-            background: rgba(0, 0, 0, 0.8);
-        }
-        .lightbox-nav:active {
-            transform: translateY(-50%) scale(0.95);
-        }
-        #lightbox-prev {
-            left: 20px;
-        }
-        #lightbox-next {
-            right: 20px;
-        }
-
-        @media (max-width: 768px) {
-            .lightbox-nav {
-                display: none !important;
-            }
-        }
     </style>
 </head>
 <body>
-
-<div id="lightbox-modal">
-    <span id="lightbox-close">&times;</span>
-    <button id="lightbox-prev" class="lightbox-nav">&#10094;</button>
-    <img id="lightbox-img" src="" alt="拡大プレビュー">
-    <button id="lightbox-next" class="lightbox-nav">&#10095;</button>
-</div>
 
 <div class="container" id="main-container">
     <div class="header">
@@ -759,7 +672,7 @@
         </div>
     </div>
 
-    <!-- 共通ナビゲーション（common.jsから自動描画） -->
+    <!-- 共通ナビゲーション -->
     <nav id="global-nav"></nav>
 
     <div class="drop-area" id="drop-area">
@@ -767,9 +680,7 @@
         <span id="limit-notice">JPEG (.jpg / .jpeg) 対応（上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
         
-        <div class="file-list" id="file-list">
-            <!-- 選択された画像のサムネイルがここに追加されます -->
-        </div>
+        <div class="file-list" id="file-list"></div>
         <button id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
         <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け（※EXIFデータが正常に読み込めない場合があります）</button>
     </div>
@@ -786,7 +697,6 @@
                 </label>
             </div>
 
-            <!-- 読み取ったEXIF情報の表示エリア -->
             <div id="extracted-exif-display" style="margin-bottom: 15px; font-size: 13px; background: var(--card-bg-sub); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-height: 250px; overflow-y: auto;">
                 <div style="color: var(--text-muted); text-align: center;">画像が選択されていません。</div>
             </div>
@@ -799,63 +709,54 @@
             
             <div id="override-container" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: none;">
                 <div style="text-align: right; margin-bottom: 8px; font-size: 12px; font-weight: bold; color: var(--primary); padding-right: 5px;">写真1の情報をコピーする ↓</div>
-                <!-- カメラモデル -->
                 <div class="override-row">
                     <label>カメラモデル</label>
                     <input type="checkbox" id="ov-model-chk" disabled>
                     <textarea id="ov-model-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-model-copy" onclick="copyExifToOverride('model')" disabled>コピー</button>
                 </div>
-                <!-- カメラメーカー -->
                 <div class="override-row">
                     <label>カメラメーカー</label>
                     <input type="checkbox" id="ov-make-chk" disabled>
                     <textarea id="ov-make-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-make-copy" onclick="copyExifToOverride('make')" disabled>コピー</button>
                 </div>
-                <!-- レンズモデル -->
                 <div class="override-row">
                     <label>レンズモデル</label>
                     <input type="checkbox" id="ov-lens-chk" disabled>
                     <textarea id="ov-lens-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-lens-copy" onclick="copyExifToOverride('lens')" disabled>コピー</button>
                 </div>
-                <!-- 焦点距離 -->
                 <div class="override-row">
                     <label>焦点距離</label>
                     <input type="checkbox" id="ov-focal-chk" disabled>
                     <textarea id="ov-focal-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-focal-copy" onclick="copyExifToOverride('focal')" disabled>コピー</button>
                 </div>
-                <!-- F値 -->
                 <div class="override-row">
                     <label>F値</label>
                     <input type="checkbox" id="ov-fnum-chk" disabled>
                     <textarea id="ov-fnum-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-fnum-copy" onclick="copyExifToOverride('fnum')" disabled>コピー</button>
                 </div>
-                <!-- 露出時間 -->
                 <div class="override-row">
                     <label>露出時間</label>
                     <input type="checkbox" id="ov-exp-chk" disabled>
                     <textarea id="ov-exp-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-exp-copy" onclick="copyExifToOverride('exp')" disabled>コピー</button>
                 </div>
-                <!-- ISO感度 -->
                 <div class="override-row">
                     <label>ISO感度</label>
                     <input type="checkbox" id="ov-iso-chk" disabled>
                     <textarea id="ov-iso-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-iso-copy" onclick="copyExifToOverride('iso')" disabled>コピー</button>
                 </div>
-                <!-- 撮影日時 -->
                 <div class="override-row">
                     <label>撮影日時</label>
                     <input type="checkbox" id="ov-datetime-chk" disabled>
                     <textarea id="ov-datetime-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
                     <button class="copy-btn" id="ov-datetime-copy" onclick="copyExifToOverride('datetime')" disabled>コピー</button>
                 </div>
-                <!-- 署名 -->
                 <div class="override-row">
                     <label>署名</label>
                     <input type="checkbox" id="ov-copyright-chk" disabled>
@@ -863,7 +764,6 @@
                     <button class="copy-btn" id="ov-copyright-copy" onclick="copyExifToOverride('copyright')" disabled>コピー</button>
                 </div>
 
-                <!-- 一括操作アクション -->
                 <div class="override-bulk-actions">
                     <div class="bulk-check-group">
                         <span class="bulk-label">チェックボックスを</span>
@@ -918,7 +818,6 @@
             項目設定 <span>▼</span>
         </div>
         <div class="accordion-content" id="content-items">
-
             <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
                 カードをつかんでドラッグ＆ドロップすると、順番や行の移動ができます。各チェックボックスで表示・非表示を切り替えられます。
             </p>
@@ -929,7 +828,6 @@
                 </button>
             </div>
 
-            <!-- 1行目の配置ゾーン -->
             <div class="drag-zone-group only-standard">
                 <div class="drag-zone-header">
                     <span class="drag-zone-title">
@@ -941,7 +839,6 @@
                 <div class="drag-container" id="container-line1" data-line="line1"></div>
             </div>
 
-            <!-- 2行目の配置ゾーン -->
             <div class="drag-zone-group only-standard" style="margin-top: 18px;">
                 <div class="drag-zone-header">
                     <span class="drag-zone-title">
@@ -953,7 +850,6 @@
                 <div class="drag-container" id="container-line2" data-line="line2"></div>
             </div>
 
-            <!-- サイド用 配置ゾーン -->
             <div class="drag-zone-group only-side-2">
                 <div class="drag-zone-header">
                     <span class="drag-zone-title">■ 左1行目に記載する項目 <span class="drag-zone-badge" id="leftLine1-count">0項目</span></span>
@@ -983,7 +879,6 @@
                 <div class="drag-container" id="container-rightLine2" data-line="rightLine2"></div>
             </div>
 
-            <!-- フリーテキスト入力エリア（テキスト1〜3のいずれかが有効な場合に動的表示） -->
             <div id="free-text-settings-container" style="display: none; margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
                 <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
                     ■ フリーテキスト設定
@@ -1061,7 +956,6 @@
                 </div>
             </div>
 
-            <!-- フォント書体選択 -->
             <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 16px;">
                 <label>◆ フォント書体</label>
                 <div class="font-picker">
@@ -1110,7 +1004,7 @@
         </div>
     </div>
 
-    <!-- 5. フレーム設定（サイズ・色・枠線） -->
+    <!-- 5. フレーム設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-frame-settings', this)">
             フレーム設定 <span>▼</span>
@@ -1229,9 +1123,7 @@
     
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
 
-    <div class="result-area" id="result-area">
-        <!-- 生成されたサムネイルがここに並びます -->
-    </div>
+    <div class="result-area" id="result-area"></div>
 </div>
 
 <!-- 説明セクション -->
@@ -1244,8 +1136,8 @@
         <h3> できること</h3>
         <p>・アップロードした画像に、EXIF情報のフレームを追加します。</p>
         <p>・生成した画像のダウンロードができるとともに、生成時にクリップボードにも保存されるため、そのままペーストして利用が可能です。</p>
+        <p>・生成後のサムネイルをタップすると、スマホでは左右スワイプで前後の画像を滑らかにプレビュー確認できます。</p>
         <p>・フォントサイズやフレーム枠などの細かい設定や、EXIF情報を強制上書きするモード、フリーテキストの挿入など、ご自身の好きな設定に変更ください。</p>
-        
     </div>
 </div>
 
@@ -1254,7 +1146,7 @@
      ／ <a href="license_web.html" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">All rights reserved. LICENSE.</a></span>
 </footer>
 
-<!-- ツール固有スクリプト（外部JSファイル） -->
+<!-- ツール固有スクリプト -->
 <script src="js/exif-frame.js"></script>
 
 </body>

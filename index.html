@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Octopus Photo Studio｜写真・画像加工 Webツール</title>
@@ -18,53 +17,39 @@
         /* ---------------------------------
            ポータル（TOP）固有スタイル
         ------------------------------------ */
-
-        /* TOP固有のコンテナ余白調整 */
         .container {
             padding-top: 27px;
         }
-
-        /* TOP固有のヘッダー余白調整 */
         .header {
             margin-bottom: 21px;
             padding-bottom: 11px;
         }
-
-        /* TOPヘッダーアイコン（共通32pxより大きく表示し、角丸・影を解除） */
         .header-icon {
             width: 46px;
             height: 46px;
             border-radius: 0;
             box-shadow: none;
         }
-
         .header h1 {
             font-size: 24px;
         }
-
-        /* リード文 */
         .portal-intro {
             margin-bottom: 28px;
             font-size: 14px;
             color: var(--text-muted);
             line-height: 1.7;
         }
-
-        /* ツール一覧グリッド */
         .tools-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
             gap: 20px;
             margin-bottom: 12px;
         }
-
         @media (max-width: 480px) {
             .tools-grid {
                 grid-template-columns: 1fr;
             }
         }
-
-        /* ツールカード */
         .tool-card {
             background: var(--card-bg-sub);
             border: 1px solid var(--border-color);
@@ -81,7 +66,6 @@
             border-color: var(--primary-border);
             box-shadow: var(--shadow-md);
         }
-
         .tool-card-header {
             display: flex;
             align-items: center;
@@ -120,8 +104,6 @@
             line-height: 1.65;
             flex-grow: 1;
         }
-
-        /* 機能バッジ群 */
         .tool-tags {
             display: flex;
             flex-wrap: wrap;
@@ -137,8 +119,6 @@
             padding: 3px 8px;
             border-radius: 4px;
         }
-
-        /* ツール遷移ボタン */
         .tool-btn {
             background: var(--primary);
             color: #ffffff;
@@ -161,8 +141,6 @@
             box-shadow: 0 6px 14px var(--primary-glow);
             color: #ffffff;
         }
-
-        /* QRコード表示エリア */
         .qr-area {
             margin-top: 18px;
             padding-top: 14px;
@@ -192,7 +170,6 @@
             margin-bottom: 4px;
             font-size: 13.5px;
         }
-
         @media (max-width: 540px) {
             .qr-area {
                 flex-direction: column;
@@ -230,7 +207,7 @@
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/Exif_Frame_Tool_icon.png" alt="EXIF Frame アイコン" onerror="this.parentElement.innerHTML='📷';">
+                        <img data-tool-icon="exif">
                     </div>
                     <div class="tool-card-title">Octopus EXIF Frame</div>
                 </div>
@@ -249,13 +226,12 @@
             </div>
         </div>
 
-
-        <!-- ツール4: Octopus EXIF View & Edit -->
+        <!-- ツール2: Octopus EXIF View & Edit -->
         <div class="tool-card">
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/icon_view_edit.png" alt="EXIF View & Edit アイコン" onerror="this.parentElement.innerHTML='📝';">
+                        <img data-tool-icon="viewedit">
                     </div>
                     <div class="tool-card-title">Octopus EXIF View & Edit</div>
                 </div>
@@ -268,21 +244,19 @@
                     <span class="tool-tag">Excel風一覧表示</span>
                     <span class="tool-tag">インライン編集</span>
                     <span class="tool-tag">一括置換・反映</span>
-                    <span class="tool-tag">画質劣化ゼロ</span>
                 </div>
                 <a href="ExifViewEdit.html" class="tool-btn">ツールを開く →</a>
             </div>
         </div>
 
-
-        <!-- ツール6: Octopus EXIF Analyzer -->
+        <!-- ツール3: Octopus EXIF Analyzer -->
         <div class="tool-card">
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/icon_analyzer.png" alt="EXIF Analyzer アイコン" onerror="this.parentElement.innerHTML='📊';">
+                        <img data-tool-icon="analyzer">
                     </div>
-                    <div class="tool-card-title">Octopus EXIF Analyzer</div><span class="tool-card-badge" style="background:var(--primary); color:#ffffff; font-size:10.5px; font-weight:700; padding:2px 7px; border-radius:10px;">New</span>
+                    <div class="tool-card-title">Octopus EXIF Analyzer</div>
                 </div>
                 <div class="tool-card-desc">
                     ブラウザ完結で大量の写真からExifメタデータを高速抽出・解析できるツールです。機材別の焦点距離やズーム両端の傾向、露出パラメータを可視化し、撮影傾向の講評やレンズ選びの相談に使えるAIプロンプトを自動生成。
@@ -300,13 +274,12 @@
             </div>
         </div>
 
-
-        <!-- ツール2: Octopus Mosaic & Blur -->
+        <!-- ツール4: Octopus Mosaic & Blur -->
         <div class="tool-card">
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/Mosaic_Blur_Tool_icon.png" alt="Mosaic & Blur アイコン" onerror="this.parentElement.innerHTML='🧩';">
+                        <img data-tool-icon="mosaic">
                     </div>
                     <div class="tool-card-title">Octopus Mosaic & Blur</div>
                 </div>
@@ -325,13 +298,12 @@
             </div>
         </div>
 
-
         <!-- ツール5: Octopus Photo Process -->
         <div class="tool-card">
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/ico_photo_Process.png" alt="Photo Process アイコン" onerror="this.parentElement.innerHTML='🎨';">
+                        <img data-tool-icon="photoprocess">
                     </div>
                     <div class="tool-card-title">Octopus Photo Process</div>
                 </div>
@@ -351,14 +323,61 @@
             </div>
         </div>
 
-
-
-        <!-- ツール3: Octopus EXIF Cleaner -->
+        <!-- ツール6: Octopus Photo Process Batch -->
         <div class="tool-card">
             <div>
                 <div class="tool-card-header">
                     <div class="tool-card-icon">
-                        <img src="img/icon_cleaner.png" alt="EXIF Cleaner アイコン" onerror="this.parentElement.innerHTML='🧹';">
+                        <img data-tool-icon="photobatch">
+                    </div>
+                    <div class="tool-card-title">Octopus Photo Process Batch</div>
+                </div>
+                <div class="tool-card-desc">
+                    Photo Processで保存した調色プリセットを複数画像へ一括適用し、ブラウザ内で安全に連続書き出しを行うツールです。元解像度とExif情報の維持、クラッシュを防ぐ順次処理に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">プリセット一括適用</span>
+                    <span class="tool-tag">順次シリアル処理</span>
+                    <span class="tool-tag">EXIF保持</span>
+                    <span class="tool-tag">複数枚一括処理</span>
+                </div>
+                <a href="PhotoBatch.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
+
+        <!-- ツール7: Octopus Image Resizer -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="resizer">
+                    </div>
+                    <div class="tool-card-title">Octopus Image Resizer</div>
+                </div>
+                <div class="tool-card-desc">
+                    noteアイキャッチ等の比率に合わせた直感的なスマート構図切り抜きから、大量写真の長辺・パーセント一括縮小までをブラウザ内で軽快に行うツールです。最新Exifメタデータの保持に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">スマート構図合わせ</span>
+                    <span class="tool-tag">noteアイキャッチ</span>
+                    <span class="tool-tag">長辺・比率一括</span>
+                    <span class="tool-tag">EXIF保持</span>
+                    <span class="tool-tag">順次シリアル処理</span>
+                </div>
+                <a href="ImageResize.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
+
+        <!-- ツール8: Octopus EXIF Cleaner -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="cleaner">
                     </div>
                     <div class="tool-card-title">Octopus EXIF Cleaner</div>
                 </div>
@@ -369,16 +388,162 @@
             <div>
                 <div class="tool-tags">
                     <span class="tool-tag">Exif選択削除</span>
-                    <span class="tool-tag">GPS完全消去</span>
-                    <span class="tool-tag">画質劣化ゼロ</span>
+                    <span class="tool-tag">GPS消去</span>
                     <span class="tool-tag">複数枚一括処理</span>
                 </div>
                 <a href="ExifCleaner.html" class="tool-btn">ツールを開く →</a>
             </div>
         </div>
 
+        <!-- ツール9: Octopus Title Image -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="titleimage">
+                    </div>
+                    <div class="tool-card-title">Octopus Title Image</div>
+                </div>
+                <div class="tool-card-desc">
+                    写真と文章を入力するだけで、アイキャッチやブログサムネイル、SNS告知用の高品質なタイトル画像を瞬時に生成できるツールです。すりガラス余白や洗練された6系統のプリセットに対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">アイキャッチ生成</span>
+                    <span class="tool-tag">すりガラス余白</span>
+                    <span class="tool-tag">デザインプリセット</span>
+                    <span class="tool-tag">ドラッグ構図調整</span>
+                    <span class="tool-tag">ローカル完結</span>
+                </div>
+                <a href="TitleImage.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
 
+        <!-- ツール10: Octopus Photo Grid -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="grid">
+                    </div>
+                    <div class="tool-card-title">Octopus Photo Grid</div>
+                </div>
+                <div class="tool-card-desc">
+                    複数枚の写真を縦横の均等な格子状に整列・合成し、1枚の組写真や比較用画像を瞬時に書き出せるツールです。ドラッグによる構図パン微調整、角丸・余白調整、2048pxクリップボード出力に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">均等グリッド整列</span>
+                    <span class="tool-tag">構図パン微調整</span>
+                    <span class="tool-tag">組写真・比較画像</span>
+                    <span class="tool-tag">高解像度出力</span>
+                    <span class="tool-tag">完全ローカル動作</span>
+                </div>
+                <a href="PhotoGrid.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
 
+        <!-- ツール11: Octopus Before After -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="beforeafter">
+                    </div>
+                    <div class="tool-card-title">Octopus Before After</div>
+                </div>
+                <div class="tool-card-desc">
+                    現像前後の写真や風景の比較画像を、スプリット（左右・上下・斜め）や並列で瞬時に合成できるツールです。境界線のリアルタイムドラッグ、画角を合わせた中央自動フィット、ラベル刻印に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">2枚スプリット比較</span>
+                    <span class="tool-tag">斜め対角線分割</span>
+                    <span class="tool-tag">境界線ドラッグ移動</span>
+                    <span class="tool-tag">パン微調整</span>
+                    <span class="tool-tag">ローカル完結</span>
+                </div>
+                <a href="BeforeAfter.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
+
+        <!-- ツール12: Octopus Motion GIF -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="motiongif">
+                    </div>
+                    <div class="tool-card-title">Octopus Motion GIF</div>
+                </div>
+                <div class="tool-card-desc">
+                    複数枚の写真によるパラパラ写真や短尺動画（MP4/MOV/Live Photos）から、noteやSNSで軽快に動くアニメーションGIFや高画質APNGを作成できるツールです。Web Workerによる高速エンコード対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">アニメGIF生成</span>
+                    <span class="tool-tag">パラパラ写真</span>
+                    <span class="tool-tag">動画トリミング</span>
+                    <span class="tool-tag">APNG対応</span>
+                    <span class="tool-tag">外部通信ゼロ</span>
+                </div>
+                <a href="MotionGif.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
+
+        <!-- ツール13: Octopus Watermark -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="watermark">
+                    </div>
+                    <div class="tool-card-title">Octopus Watermark</div>
+                </div>
+                <div class="tool-card-desc">
+                    撮影写真や公開用画像に、著作権テキスト・サイン・透過ロゴを好みのレイアウト（四隅、中央、斜め全面リピート等）で一括刻印できるツールです。IndexedDBによる自作ロゴ画像管理とExif保持に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">サイン・ロゴ一括刻印</span>
+                    <span class="tool-tag">斜め全面リピート</span>
+                    <span class="tool-tag">画像プライバシー管理</span>
+                    <span class="tool-tag">EXIF保持</span>
+                    <span class="tool-tag">ローカル完結</span>
+                </div>
+                <a href="WatermarkBatch.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
+
+        <!-- ツール14: Octopus QR Code -->
+        <div class="tool-card">
+            <div>
+                <div class="tool-card-header">
+                    <div class="tool-card-icon">
+                        <img data-tool-icon="qrcode">
+                    </div>
+                    <div class="tool-card-title">Octopus QR Code</div>
+                </div>
+                <div class="tool-card-desc">
+                    URLや自由テキスト、Wi-Fi簡単接続QRをブラウザ内で瞬時に生成できるツールです。外部通信ゼロのローカル動作で機密情報も安全。中央ロゴ合成や拡大しても粗くならない高解像度SVG出力に対応。
+                </div>
+            </div>
+            <div>
+                <div class="tool-tags">
+                    <span class="tool-tag">外部通信ゼロ</span>
+                    <span class="tool-tag">Wi-Fi簡単接続</span>
+                    <span class="tool-tag">ロゴ埋め込み</span>
+                    <span class="tool-tag">高画質SVG対応</span>
+                    <span class="tool-tag">クリップボードコピー</span>
+                </div>
+                <a href="QRCode.html" class="tool-btn">ツールを開く →</a>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -397,7 +562,6 @@
                 カメラアプリでQRコードを読み取ると、スマートフォンやタブレットのブラウザから直接本ポータルをご利用いただけます。
             </div>
         </div>
-
     </div>
 </div>
 
@@ -405,6 +569,40 @@
     © 2026 <span class="copyright-name"><a href="https://note.com/octopus_yama" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">山下オクトパス</a>
      ／ <a href="license_web.html" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">All rights reserved. LICENSE.</a></span>
 </footer>
+
+<!-- ツールカード order自動ソートスクリプト -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const grid = document.querySelector(".tools-grid");
+    if (!grid || typeof OCTOPUS_NAV_ITEMS === "undefined") return;
+
+    const cards = Array.from(grid.querySelectorAll(".tool-card"));
+
+    // common.js の OCTOPUS_NAV_ITEMS の order 昇順でカードを整列
+    cards.sort((a, b) => {
+        const getOrder = (card) => {
+            // 1. data-tool-icon 属性からIDを取得
+            const iconEl = card.querySelector("[data-tool-icon]");
+            const toolId = iconEl ? iconEl.getAttribute("data-tool-icon") : null;
+            let item = OCTOPUS_NAV_ITEMS.find(t => t.id === toolId);
+
+            // 2. フォールバック: ボタンのリンク先URLから取得
+            if (!item) {
+                const btn = card.querySelector("a.tool-btn");
+                const href = btn ? btn.getAttribute("href") : "";
+                item = OCTOPUS_NAV_ITEMS.find(t => t.url === href);
+            }
+
+            return item && typeof item.order === "number" ? item.order : 999;
+        };
+
+        return getOrder(a) - getOrder(b);
+    });
+
+    // ソート順に DOM を再配置
+    cards.forEach(card => grid.appendChild(card));
+});
+</script>
 
 </body>
 </html>

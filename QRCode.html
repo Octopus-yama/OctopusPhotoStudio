@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octopus QR Code｜Octopus Photo Studio</title>
+    <!-- ファビコン指定 -->
+    <link rel="icon" href="img/icon_octopus_qrcode.ico" type="image/x-icon">
+    <meta name="description" content="外部通信ゼロで安全にQRコードを即座に作成・保存できるWebツール。Wi-Fi接続QR、中央ロゴ合成、高画質SVGベクター出力対応。" />
+
+    <!-- 依存ライブラリ -->
+    <script src="qrcode.min.js"></script>
+    <!-- 共通スタイルシート -->
+    <link rel="stylesheet" href="common.css">
+    <!-- 共通管理スクリプト -->
+    <script src="common.js"></script>
+
+    <style>
+        /* ---------------------------------
+           QR Code 固有スタイル
+        ------------------------------------ */
+
+        /* タブ切り替えボタングループ */
+        .tab-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            color: var(--text-color);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .tab-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        /* ロゴ用クリップボード貼り付けボタン */
+        .stage-paste-btn {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 7px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .stage-paste-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        /* ロゴプレビューバッジ */
+        .logo-preview-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+        }
+        .logo-thumb {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            border-radius: 4px;
+            background: #ffffff;
+            border: 1px solid var(--border-color);
+            padding: 2px;
+        }
+        .logo-info {
+            flex: 1;
+            font-size: 12px;
+            color: var(--text-color);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* プレビュー表示エリア（透過チェッカー模様） */
+        .qr-stage-wrapper {
+            margin-top: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+        .qr-canvas-container {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background-color: #ffffff;
+            background-image: 
+                linear-gradient(45deg, #e6e6e6 25%, transparent 25%), 
+                linear-gradient(-45deg, #e6e6e6 25%, transparent 25%), 
+                linear-gradient(45deg, transparent 75%, #e6e6e6 75%), 
+                linear-gradient(-45deg, transparent 75%, #e6e6e6 75%);
+            background-size: 16px 16px;
+            background-position: 0 0, 0 8px, 8px -8px, -8px 0px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 20px;
+            max-width: 100%;
+            overflow: hidden;
+        }
+        #qr-canvas {
+            display: block;
+            max-width: 100%;
+            height: auto !important;
+            border-radius: 2px;
+        }
+
+        /* アクションボタングループ */
+        .export-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: 100%;
+            max-width: 480px;
+        }
+        .action-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+        .action-row .main-btn, .action-row .sub-btn {
+            flex: 1;
+            margin-top: 0;
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+        .sub-btn {
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            font-weight: 700;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(84, 35, 102, 0.2);
+            text-align: center;
+        }
+        .sub-btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(84, 35, 102, 0.3);
+        }
+        .clipboard-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 11px 16px;
+            border-radius: var(--radius-md);
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+            text-align: center;
+        }
+        .clipboard-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .extra-links {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 12.5px;
+            margin-top: 8px;
+        }
+        .extra-links a {
+            color: var(--text-muted);
+            text-decoration: underline;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .extra-links a:hover {
+            color: var(--primary);
+        }
+
+        .guard-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--accent);
+            background: var(--accent-light);
+            border: 1px solid var(--accent-border);
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-left: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <div class="header">
+        <h1>
+            <img src="img/icon_octopus_qrcode.png" alt="Octopus QR Code アイコン" class="header-icon" onerror="this.outerHTML='<span>🏁</span>';">
+            Octopus QR Code
+        </h1>
+        <div class="header-controls">
+            <span class="version" id="version-display"></span>
+            <button class="wide-toggle-btn" id="wide-toggle-btn" title="表示幅を最大2000pxに拡大します">⤢ ワイド表示</button>
+            <button class="theme-toggle" id="theme-btn" aria-label="テーマ切替">🌙</button>
+        </div>
+    </div>
+
+    <!-- 共通グローバルナビゲーション -->
+    <nav id="global-nav"></nav>
+
+    <!-- 1. 入力データ アコーディオン -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion('content-input', this)">
+            QRコード内容の入力 <span>▼</span>
+        </div>
+        <div class="accordion-content open" id="content-input">
+            <!-- タブ切り替え -->
+            <div class="tab-group">
+                <button type="button" class="tab-btn active" id="tab-mode-text">🔗 URL・自由テキスト</button>
+                <button type="button" class="tab-btn" id="tab-mode-wifi">📶 Wi-Fi簡単接続</button>
+            </div>
+
+            <!-- パネルA: URL・テキスト入力 -->
+            <div id="panel-mode-text">
+                <div class="form-group">
+                    <label for="input-text">変換するテキストまたはURL</label>
+                    <textarea id="input-text" rows="5" placeholder="https://example.com や 任意のメッセージを入力してください"></textarea>
+                </div>
+            </div>
+
+            <!-- パネルB: Wi-Fi接続情報入力 -->
+            <div id="panel-mode-wifi" style="display: none;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="wifi-ssid">ネットワーク名 (SSID)</label>
+                        <input type="text" id="wifi-ssid" placeholder="例: Buffalo-G-XXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="wifi-encryption">暗号化方式 (セキュリティ)</label>
+                        <select id="wifi-encryption">
+                            <option value="WPA" selected>WPA / WPA2 / WPA3 (標準)</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">暗号化なし (パスワード不要)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group" id="wifi-password-group" style="margin-top: 12px;">
+                    <label for="wifi-password">パスワード (暗号化キー)</label>
+                    <input type="text" id="wifi-password" placeholder="Wi-Fiパスワードを入力">
+                </div>
+
+                <div style="margin-top: 12px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
+                        <input type="checkbox" id="wifi-hidden" style="width: 16px; height: 16px; accent-color: var(--primary);">
+                        <span style="font-size: 13px; font-weight: 600;">非公開ネットワーク（ステルスSSID）</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. デザイン・コード設定 アコーディオン -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion('content-design', this)">
+            デザイン・コード設定 <span>▼</span>
+        </div>
+        <div class="accordion-content open" id="content-design">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="qr-ecl">
+                        誤り訂正レベル
+                        <span id="ecl-guard-badge" class="guard-badge" style="display: none;">ロゴ設定により H に固定中</span>
+                    </label>
+                    <select id="qr-ecl">
+                        <option value="L">L（7% 復元 / 単純なコード向き）</option>
+                        <option value="M" selected>M（15% 復元 / 標準）</option>
+                        <option value="Q">Q（25% 復元 / 高密度）</option>
+                        <option value="H">H（30% 復元 / 高耐久・ロゴ推奨）</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="qr-margin">余白（クワイエットゾーン）: <span id="val-qr-margin" style="font-weight: 700; color: var(--primary);">2</span></label>
+                    <input type="range" id="qr-margin" min="0" max="4" step="1" value="2" style="margin-top: 6px;">
+                </div>
+
+                <div class="form-group">
+                    <label>コード色 (前景色)</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="color" id="qr-color-dark" value="#000000" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
+                        <input type="text" id="qr-color-dark-text" value="#000000" style="flex: 1; font-family: monospace;" maxlength="7">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>背景色</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="color" id="qr-color-light" value="#ffffff" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
+                        <input type="text" id="qr-color-light-text" value="#ffffff" style="flex: 1; font-family: monospace;" maxlength="7">
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 14px;">
+                <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
+                    <input type="checkbox" id="qr-transparent" style="width: 16px; height: 16px; accent-color: var(--primary);">
+                    <span style="font-size: 13px; font-weight: 600;">背景を透過する（※PNG / SVG 出力時に有効）</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 中央ロゴ埋め込み（オプション） アコーディオン -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion('content-logo', this)">
+            中央ロゴ埋め込み (オプション) <span>▼</span>
+        </div>
+        <div class="accordion-content" id="content-logo">
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+                QRコードの中央にお好きなアイコンやロゴマークを配置できます。<br>
+                ※ロゴ追加時は、読み取り精度を確保するため誤り訂正レベルが自動的に「H（30%）」に固定されます。
+            </p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+                <button type="button" class="stage-paste-btn" id="btn-select-logo-file">📁 画像ファイルを選択</button>
+                <input type="file" id="logo-file-input" accept="image/png, image/jpeg, image/svg+xml, image/webp" style="display: none;">
+                <button type="button" class="stage-paste-btn" id="btn-paste-logo-clipboard">📋 クリップボードから貼り付け</button>
+            </div>
+
+            <!-- ロゴ選択中のプレビュー＆クリア -->
+            <div id="logo-preview-box" class="logo-preview-card" style="display: none;">
+                <img id="logo-thumb-img" class="logo-thumb" alt="ロゴプレビュー">
+                <div class="logo-info">
+                    <strong id="logo-filename-label">ロゴ画像</strong>
+                    <div style="font-size: 11px; color: var(--text-muted);">中央に合成されます</div>
+                </div>
+                <button type="button" id="btn-clear-logo" class="clear-btn" style="position: static; border-radius: 4px; width: auto; height: auto; padding: 4px 8px; font-size: 11px;">✕ 解除</button>
+            </div>
+
+            <div id="logo-options-group" style="display: none; margin-top: 16px;">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="logo-size-range">ロゴサイズ比率: <span id="val-logo-size" style="font-weight: 700; color: var(--primary);">15%</span></label>
+                        <input type="range" id="logo-size-range" min="10" max="20" step="1" value="15" style="margin-top: 6px;">
+                    </div>
+                </div>
+
+                <div style="margin-top: 12px;">
+                    <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
+                        <input type="checkbox" id="logo-padding-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
+                        <span style="font-size: 13px; font-weight: 600;">ロゴ背後に四角い白座布団（余白）を敷く（誤読防止）</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- メイン更新ボタン -->
+    <button id="generate-btn" class="main-btn">🔄 QRコードを生成・更新する</button>
+    <div id="status-text" style="text-align: center; margin-top: 12px; font-weight: bold; font-size: 13.5px; color: var(--primary);"></div>
+
+    <!-- プレビュー＆保存エリア -->
+    <div class="qr-stage-wrapper" id="result-stage">
+        <div class="qr-canvas-container">
+            <canvas id="qr-canvas"></canvas>
+        </div>
+
+        <div class="export-actions">
+            <div class="form-group" style="margin-bottom: 6px;">
+                <label for="export-size-select" style="text-align: center; display: block;">書き出し画像サイズ</label>
+                <select id="export-size-select">
+                    <option value="256">256 × 256 px（Web・小サイズ用）</option>
+                    <option value="512" selected>512 × 512 px（標準・SNS用）</option>
+                    <option value="1024">1024 × 1024 px（高解像度用）</option>
+                    <option value="2048">2048 × 2048 px（特大・印刷用）</option>
+                </select>
+            </div>
+
+            <div class="action-row">
+                <button type="button" class="main-btn" id="btn-download-png">💾 PNG画像を保存</button>
+                <button type="button" class="sub-btn" id="btn-download-svg">📐 SVGベクターを保存</button>
+            </div>
+
+            <button type="button" class="clipboard-btn" id="btn-copy-clipboard">📋 クリップボードに画像をコピー</button>
+
+            <div class="extra-links">
+                <span>他の形式で保存:</span>
+                <a id="link-download-jpeg">JPEG形式</a>
+                <a id="link-download-webp">WebP形式</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 説明セクション -->
+<div class="explanation">
+    <div class="usage-section">
+        <h3> 本ツールについて</h3>
+        <p>・入力されたURLやテキスト、Wi-Fi接続情報などのデータは、一切外部サーバーに送信されず、お使いの端末内（ブラウザ完全ローカル）で即座にQRコード画像へ変換されます。</p>
+        <p>・機密パスワードや社内URLなども安心して変換・書き出しいただけます。</p>
+
+        <h3> Wi-Fi簡単接続QRコードの使い方</h3>
+        <p>・「Wi-Fi簡単接続」タブでご自宅やオフィスのSSIDとパスワードを入力して生成します。</p>
+        <p>・生成されたQRコードをスマートフォンの標準カメラアプリでかざすだけで、パスワードの手入力なしで即座にWi-Fiネットワークへ接続できます。</p>
+
+        <h3> SVG（ベクター）保存について</h3>
+        <p>・SVG形式で保存すると、ポスターやパンフレット等の印刷物でどれだけ大きく引き伸ばしても一切ドットが粗くならず、極めて鮮明な状態で印刷が可能です。</p>
+    </div>
+</div>
+
+<footer class="footer usage-section">
+    © 2026 <span class="copyright-name"><a href="https://note.com/octopus_yama" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">山下オクトパス</a>
+     ／ <a href="license_web.html" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">All rights reserved. LICENSE.</a></span>
+</footer>
+
+<!-- ツール固有スクリプト -->
+<script src="js/qr-code.js"></script>
+
+</body>
+</html>

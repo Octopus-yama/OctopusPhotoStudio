@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Octopus Watermark｜Octopus Photo Studio</title>
+    <!-- ファビコン指定 -->
+    <link rel="icon" href="img/icon_watermark.ico" type="image/x-icon">
+    <meta name="description" content="写真・画像へサイン・著作権テキスト・透過ロゴを好みのレイアウト（四隅・中央・斜め全面等）で一括刻印できるWebツール。" />
+    
+    <!-- 依存ライブラリ -->
+    <script src="full.umd.js"></script>
+    <script src="piexif.js"></script>
+    <!-- 共通スタイルシート -->
+    <link rel="stylesheet" href="common.css">
+    <!-- 共通管理スクリプト -->
+    <script src="common.js"></script>
+
+    <style>
+        /* ---------------------------------
+           Watermark Batch 固有スタイル
+        ------------------------------------ */
+        .drop-area {
+            position: relative;
+            padding-bottom: 48px;
+        }
+
+        .stage-paste-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 12px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            z-index: 5;
+            max-width: calc(100% - 24px);
+        }
+        .stage-paste-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 600px) {
+            .drop-area {
+                padding-bottom: 20px;
+            }
+            .stage-paste-btn {
+                position: static;
+                margin-top: 14px;
+                white-space: normal;
+                font-size: 11px;
+                text-align: center;
+                justify-content: center;
+                width: auto;
+            }
+        }
+
+        /* 投入ファイル一覧グリッド */
+        .file-list { 
+            margin-top: 18px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); 
+            gap: 12px; 
+            text-align: left; 
+        }
+        .file-item { 
+            position: relative; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-sm); 
+            padding: 6px; 
+            text-align: center; 
+            font-size: 11px; 
+            box-shadow: var(--shadow-sm); 
+            transition: var(--transition); 
+        }
+        .file-item:hover { 
+            border-color: var(--primary); 
+        }
+        .file-item img { 
+            width: 100%; 
+            height: 70px; 
+            object-fit: cover; 
+            border-radius: 4px; 
+            display: block; 
+            margin: 0 auto 6px; 
+            background: var(--card-bg-sub); 
+        }
+        .file-item .file-name { 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap; 
+            color: var(--text-muted); 
+            font-weight: 500; 
+        }
+        .file-item .file-status-badge {
+            display: block;
+            margin-top: 4px;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 3px;
+            background: var(--card-bg-sub);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+        }
+        .file-item.is-processing {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px var(--primary-glow);
+        }
+        .file-item.is-processing .file-status-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            border-color: var(--primary-border);
+        }
+        .file-item.is-done .file-status-badge {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+        .file-item.is-error .file-status-badge {
+            background: rgba(201, 74, 74, 0.1);
+            color: var(--danger-color);
+            border-color: var(--danger-color);
+        }
+
+        .clear-btn { 
+            position: absolute; 
+            top: -6px; 
+            right: -6px; 
+            background: var(--danger-color); 
+            color: #fff; 
+            border: 2px solid var(--card-bg); 
+            border-radius: 50%; 
+            width: 22px; 
+            height: 22px; 
+            font-size: 13px; 
+            cursor: pointer; 
+            line-height: 18px; 
+            padding: 0; 
+            text-align: center; 
+            font-weight: bold; 
+            transition: var(--transition); 
+        }
+        .clear-btn:hover { 
+            background: var(--danger-hover); 
+            transform: scale(1.1); 
+        }
+        .clear-all-btn { 
+            display: none; 
+            margin-top: 14px; 
+            background: var(--danger-color); 
+            color: #fff; 
+            border: none; 
+            padding: 10px 18px; 
+            border-radius: var(--radius-sm); 
+            cursor: pointer; 
+            width: 100%; 
+            font-weight: 600; 
+            font-size: 13px; 
+            transition: var(--transition); 
+        }
+        .clear-all-btn:hover { 
+            background: var(--danger-hover); 
+            transform: translateY(-1px); 
+        }
+
+        /* PC用 左右2カラムレイアウト */
+        .editor-two-column {
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 20px;
+            align-items: start;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 860px) {
+            .editor-two-column {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        .editor-col-left {
+            position: sticky;
+            top: 16px;
+            z-index: 10;
+        }
+        @media (max-width: 860px) {
+            .editor-col-left {
+                position: static;
+            }
+        }
+
+        .editor-col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* リアルタイム ミニプレビューボックス */
+        .preview-box-container {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
+        }
+        .preview-header-bar {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .preview-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .preview-canvas-wrapper {
+            width: 100%;
+            height: 320px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #181c15;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        @media (max-width: 860px) {
+            .preview-canvas-wrapper {
+                height: 240px;
+            }
+        }
+        #watermark-preview-canvas {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        /* プレビュー対象画像セレクター */
+        .preview-target-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 6px 10px;
+        }
+        .preview-target-row label {
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .preview-target-row select {
+            flex: 1;
+            padding: 4px 8px;
+            font-size: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--card-bg-sub);
+            color: var(--text-color);
+        }
+
+        /* 9点アンカー選択グリッド */
+        .anchor-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 44px);
+            grid-template-rows: repeat(3, 38px);
+            gap: 4px;
+            justify-content: center;
+            margin: 6px 0;
+        }
+        .anchor-btn {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .anchor-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+        .anchor-btn.active {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        /* スライダー共通 */
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .slider-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary);
+        }
+        .slider-val {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 52px;
+            text-align: right;
+            font-family: monospace;
+        }
+
+        /* クイックプリセット操作バー＆サブボタンデザイン */
+        .preset-quick-bar {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .preset-select-input {
+            flex: 1;
+            min-width: 200px;
+            height: 38px;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-size: 13.5px;
+            box-sizing: border-box;
+        }
+        .action-sub-btn {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            white-space: nowrap;
+            height: 38px;
+            box-sizing: border-box;
+            user-select: none;
+        }
+        .action-sub-btn:hover {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .action-sub-btn.primary {
+            background: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+            box-shadow: 0 2px 6px var(--primary-glow);
+        }
+        .action-sub-btn.primary:hover {
+            background: var(--primary-hover);
+            color: #ffffff;
+            box-shadow: 0 4px 10px var(--primary-glow);
+        }
+
+        /* モーダル共通スタイル（92%〜94% 前面全域） */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            box-sizing: border-box;
+        }
+        .modal-overlay.open {
+            display: flex;
+        }
+        .preset-manager-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+            width: 94vw;
+            max-width: 1040px;
+            height: 90vh;
+            height: 90dvh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: modalFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96) translateY(8px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .modal-header {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-bg-sub);
+            flex-shrink: 0;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+        }
+        .modal-tabs {
+            display: flex;
+            background: var(--card-bg-sub);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .modal-tab-btn {
+            flex: 1;
+            padding: 11px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .modal-tab-btn.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--card-bg);
+        }
+        .modal-tab-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background: var(--bg-color);
+            min-height: 0;
+        }
+
+        /* プリセットカード */
+        .preset-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 10px;
+            transition: var(--transition);
+        }
+        .preset-card:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .preset-card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+        .preset-card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        .preset-badges {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-top: 6px;
+        }
+        .preset-badge {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-size: 10.5px;
+            color: var(--text-muted);
+        }
+        .preset-badge.highlight {
+            background: var(--primary-light);
+            border-color: var(--primary-border);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ロゴ画像管理カードグリッド */
+        .logo-db-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 14px;
+        }
+        .logo-db-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+        .logo-db-thumb {
+            width: 100%;
+            height: 90px;
+            object-fit: contain;
+            background: repeating-conic-gradient(#808080 0% 25%, #fff 0% 50%) 50% / 16px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+        }
+        .logo-db-name {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-color);
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .logo-db-meta {
+            font-size: 10.5px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* 進捗プログレスバー */
+        .progress-box {
+            display: none;
+            margin-top: 20px;
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 8px;
+        }
+        .progress-track {
+            width: 100%;
+            height: 8px;
+            background: var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: var(--primary);
+            transition: width 0.15s ease-out;
+        }
+
+        /* リザルトプレビューグリッド */
+        .result-area { 
+            margin-top: 32px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 16px; 
+            justify-content: center; 
+        }
+        .result-item { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 8px; 
+            background: var(--card-bg-sub); 
+            border: 1px solid var(--border-color); 
+            padding: 12px; 
+            border-radius: var(--radius-md); 
+            box-shadow: var(--shadow-sm); 
+            transition: var(--transition); 
+        }
+        .result-item:hover { 
+            transform: translateY(-3px); 
+            border-color: var(--primary-border); 
+            box-shadow: var(--shadow-md); 
+        }
+        .result-thumb { 
+            width: 100%; 
+            max-width: 140px; 
+            aspect-ratio: 1; 
+            object-fit: contain; 
+            border: 1px solid var(--border-color); 
+            border-radius: var(--radius-sm); 
+            cursor: pointer; 
+            background: var(--card-bg); 
+            transition: transform 0.2s; 
+        }
+        .result-thumb:hover { 
+            transform: scale(1.04); 
+        }
+        .result-filename {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-color);
+            width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+        }
+        .single-download-btn { 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            padding: 7px 12px; 
+            font-size: 12px; 
+            font-weight: 600; 
+            border-radius: var(--radius-sm); 
+            cursor: pointer; 
+            width: 100%; 
+            text-align: center;
+            transition: var(--transition);
+        }
+        .single-download-btn:hover { 
+            background: var(--primary-hover); 
+        }
+        .single-copy-btn { 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-color); 
+            padding: 6px 10px; 
+            font-size: 10px; 
+            font-weight: 600; 
+            border-radius: var(--radius-sm); 
+            cursor: pointer; 
+            width: 100%; 
+            text-align: center;
+            transition: var(--transition);
+        }
+        .single-copy-btn:hover:not(:disabled) { 
+            border-color: var(--primary); 
+            background: var(--primary-light); 
+            color: var(--primary); 
+        }
+        #download-btn { 
+            background: var(--accent) !important; 
+            box-shadow: 0 4px 14px rgba(84, 35, 102, 0.25) !important; 
+        }
+        #download-btn:hover { 
+            background: var(--accent-hover) !important; 
+            box-shadow: 0 6px 20px rgba(84, 35, 102, 0.35) !important; 
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="main-container">
+    <div class="header">
+        <h1>
+            <img src="img/icon_watermark.png" alt="Octopus Watermark アイコン" class="header-icon" onerror="this.outerHTML='<span>🖋</span>';">
+            Octopus Watermark
+        </h1>
+        <div class="header-controls">
+            <span class="version" id="version-display"></span>
+            <button class="wide-toggle-btn" id="wide-toggle-btn" title="表示幅を最大2000pxに拡大します">⤢ ワイド表示</button>
+            <button class="theme-toggle" id="theme-btn" aria-label="テーマ切替">🌙</button>
+        </div>
+    </div>
+
+    <!-- 共通グローバルナビゲーション -->
+    <nav id="global-nav"></nav>
+
+    <!-- ドロップエリア -->
+    <div class="drop-area" id="drop-area">
+        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
+        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
+        
+        <div class="file-list" id="file-list"></div>
+        <button id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
+    </div>
+
+    <!-- PC左右2カラムセクション（左: プレビュー / 右: 刻印内容＆配置） -->
+    <div class="editor-two-column">
+
+        <!-- 左カラム: プレビューボックス＆画像切り替えセレクター -->
+        <div class="editor-col-left">
+            <div class="preview-box-container">
+                <div class="preview-header-bar">
+                    <div class="preview-title-row">
+                        <span style="font-size: 13px; font-weight: 700; color: var(--text-color);">👁️ リアルタイムプレビュー</span>
+                        <span id="preview-sample-label" style="font-size: 11px; color: var(--text-muted);">（サンプル画像）</span>
+                    </div>
+
+                    <!-- プレビュー対象画像セレクター -->
+                    <div class="preview-target-row" id="preview-target-container" style="display: none;">
+                        <label for="preview-target-select">プレビュー画像:</label>
+                        <select id="preview-target-select"></select>
+                    </div>
+                </div>
+
+                <div class="preview-canvas-wrapper">
+                    <canvas id="watermark-preview-canvas" width="600" height="400"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右カラム: 刻印内容アコーディオン ＆ 配置スタイルアコーディオン -->
+        <div class="editor-col-right">
+
+            <!-- 1. 刻印内容設定（テキスト＆ロゴの多重レイヤー） -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion('content-watermark-source', this)">
+                    刻印内容の設定（テキスト ＆ ロゴ画像） <span>▼</span>
+                </div>
+                <div class="accordion-content open" id="content-watermark-source">
+                    <!-- レイヤー1: テキスト刻印 -->
+                    <div style="background: var(--card-bg-sub); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 14px;">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; font-weight: 700;">
+                            <input type="checkbox" id="wm-text-enabled" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
+                            <span>✒️ テキスト / サイン刻印を有効化</span>
+                        </label>
+
+                        <div id="wm-text-controls" style="margin-top: 12px;">
+                            <!-- 定型文プリセット選択プルダウン -->
+                            <div class="form-group" style="margin-bottom: 8px;">
+                                <label>定型文プリセットから選ぶ</label>
+                                <select id="wm-text-preset">
+                                    <option value="custom">（手動入力 / カスタム）</option>
+                                    <option value="preset_copyright" selected>© 2026 〇〇 〇〇. All rights reserved.</option>
+                                    <option value="preset_photo_by">Photo by 〇〇 〇〇</option>
+                                    <option value="preset_c_name">© 2026 〇〇 〇〇</option>
+                                    <option value="preset_norepost">Do Not Repost / 無断転載禁止</option>
+                                    <option value="preset_sample">SAMPLE / 見本</option>
+                                    <option value="preset_proof">PROOF / 複製禁止</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 10px;">
+                                <label>刻印テキスト（手動で編集可能）</label>
+                                <input type="text" id="wm-text-string" value="© 2026 〇〇 〇〇. All rights reserved." placeholder="刻印する文字を入力（例: © 2026 〇〇 〇〇）">
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>フォント</label>
+                                    <select id="wm-text-font">
+                                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" selected>ゴシック体 (標準 / Sans-serif)</option>
+                                        <option value="'Times New Roman', 'Yu Mincho', serif">明朝体 (Serif)</option>
+                                        <option value="'Brush Script MT', 'Dancing Script', cursive">筆記体風 (Script / Cursive)</option>
+                                        <option value="'Courier New', monospace">等幅 (Monospace)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>文字の太さ</label>
+                                    <select id="wm-text-weight">
+                                        <option value="normal">標準 (Normal)</option>
+                                        <option value="bold" selected>太字 (Bold)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>文字色</label>
+                                    <div style="display: flex; gap: 8px; align-items: center;">
+                                        <input type="color" id="wm-text-color" value="#ffffff" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
+                                        <span style="font-size: 12px; color: var(--text-muted);">カラー選択</span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>文字サイズ: <span id="val-text-size" class="slider-val">3.5%</span></label>
+                                    <div class="slider-row">
+                                        <input type="range" id="wm-text-size" min="1.0" max="15.0" step="0.5" value="3.5">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <!-- ⑥ デフォルト不透明度 60% -->
+                                    <label>不透明度: <span id="val-text-opacity" class="slider-val">60%</span></label>
+                                    <div class="slider-row">
+                                        <input type="range" id="wm-text-opacity" min="5" max="100" step="5" value="60">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>文字の影・装飾</label>
+                                    <select id="wm-text-shadow">
+                                        <option value="soft" selected>やわらかな影（黒）</option>
+                                        <option value="hard">くっきりした影</option>
+                                        <option value="outline">細い白フチ / 黒文字用</option>
+                                        <option value="none">影・フチなし</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- レイヤー2: ロゴ画像刻印 -->
+                    <div style="background: var(--card-bg-sub); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; font-weight: 700;">
+                            <input type="checkbox" id="wm-logo-enabled" style="width: 16px; height: 16px; accent-color: var(--primary);">
+                            <span>🖼️ ロゴ画像 / 透かし刻印を有効化</span>
+                        </label>
+
+                        <div id="wm-logo-controls" style="margin-top: 12px; display: none;">
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label>ロゴ画像の選択</label>
+                                    <select id="wm-logo-select">
+                                        <optgroup label="内蔵ベクターロゴ">
+                                            <option value="builtin:copyright" selected>© 著作権シンボル</option>
+                                            <option value="builtin:camera">📷 カメラアイコン</option>
+                                            <option value="builtin:sample">SAMPLE 透かしスタンプ</option>
+                                            <option value="builtin:proof">PROOF 透かしスタンプ</option>
+                                        </optgroup>
+                                        <optgroup label="保存済み自作ロゴ画像 (ブラウザ内DB)" id="wm-custom-logo-options">
+                                            <!-- IndexedDBから動的生成 -->
+                                        </optgroup>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>自作ロゴ画像の新規登録 (透過PNG/SVG等)</label>
+                                    <input type="file" id="wm-logo-upload-input" accept="image/png, image/svg+xml, image/webp" style="font-size: 12px;">
+                                </div>
+
+                                <!-- ①＆② ロゴサイズ: デフォルト3%、下限0.1%刻み -->
+                                <div class="form-group">
+                                    <label>ロゴサイズ: <span id="val-logo-size" class="slider-val">3.0%</span></label>
+                                    <div class="slider-row">
+                                        <input type="range" id="wm-logo-size" min="0.1" max="30" step="0.1" value="3.0">
+                                    </div>
+                                </div>
+
+                                <!-- ⑥ デフォルト不透明度 60% -->
+                                <div class="form-group">
+                                    <label>ロゴ不透明度: <span id="val-logo-opacity" class="slider-val">60%</span></label>
+                                    <div class="slider-row">
+                                        <input type="range" id="wm-logo-opacity" min="5" max="100" step="5" value="60">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. 配置・レイアウト設定 -->
+            <div class="accordion">
+                <div class="accordion-header" onclick="toggleAccordion('content-watermark-layout', this)">
+                    配置スタイル ＆ 余白・レイアウト設定 <span>▼</span>
+                </div>
+                <div class="accordion-content open" id="content-watermark-layout">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>配置スタイル</label>
+                            <select id="wm-layout-mode">
+                                <option value="single" selected>単一配置（9点アンカー指定）</option>
+                                <option value="repeat-grid">全面格子リピート（無断転載防止タイル）</option>
+                                <option value="repeat-diagonal">斜め透かしリピート（傾きスタンプ）</option>
+                                <option value="band">下部半透明リボン帯</option>
+                            </select>
+                        </div>
+
+                        <!-- 単一配置用：アンカーグリッド -->
+                        <div class="form-group" id="layout-single-controls">
+                            <label style="text-align: center;">刻印位置（9箇所アンカー）</label>
+                            <div class="anchor-grid">
+                                <button type="button" class="anchor-btn" data-anchor="tl">左上</button>
+                                <button type="button" class="anchor-btn" data-anchor="tc">上中</button>
+                                <button type="button" class="anchor-btn" data-anchor="tr">右上</button>
+                                <button type="button" class="anchor-btn" data-anchor="ml">左中</button>
+                                <button type="button" class="anchor-btn" data-anchor="mc">中央</button>
+                                <button type="button" class="anchor-btn" data-anchor="mr">右中</button>
+                                <button type="button" class="anchor-btn" data-anchor="bl">左下</button>
+                                <button type="button" class="anchor-btn" data-anchor="bc">下中</button>
+                                <button type="button" class="anchor-btn active" data-anchor="br">右下</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid" style="margin-top: 14px;">
+                        <div class="form-group" id="margin-x-group">
+                            <label>左右マージン: <span id="val-margin-x" class="slider-val">3.0%</span></label>
+                            <div class="slider-row">
+                                <input type="range" id="wm-margin-x" min="0" max="25" step="0.5" value="3.0">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="margin-y-group">
+                            <label>上下マージン: <span id="val-margin-y" class="slider-val">3.0%</span></label>
+                            <div class="slider-row">
+                                <input type="range" id="wm-margin-y" min="0" max="25" step="0.5" value="3.0">
+                            </div>
+                        </div>
+
+                        <!-- ③ リピート間隔: 最低1pxに拡張 -->
+                        <div class="form-group" id="repeat-gap-group" style="display: none;">
+                            <label>リピート間隔: <span id="val-repeat-gap" class="slider-val">120px</span></label>
+                            <div class="slider-row">
+                                <input type="range" id="wm-repeat-gap" min="1" max="300" step="1" value="120">
+                            </div>
+                        </div>
+
+                        <div class="form-group" id="angle-group">
+                            <label>回転角度: <span id="val-rotate-angle" class="slider-val">0°</span></label>
+                            <div class="slider-row">
+                                <input type="range" id="wm-rotate-angle" min="-90" max="90" step="5" value="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 3. プリセット選択＆クイック管理（1カラム） -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion('content-preset', this)">
+            刻印プリセットの選択 ＆ 管理 <span>▼</span>
+        </div>
+        <div class="accordion-content open" id="content-preset">
+            <!-- ④ ボタンデザインと余白を改善したクイックバー -->
+            <div class="preset-quick-bar">
+                <select id="quick-preset-select" class="preset-select-input">
+                    <option value="">(登録済みプリセットを選択)</option>
+                </select>
+                <button type="button" class="action-sub-btn primary" id="btn-apply-quick-preset">✔ 適用</button>
+                <button type="button" class="action-sub-btn" id="btn-restore-last">↺ 前回設定を復帰</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
+                <button type="button" class="main-btn" id="btn-save-current-preset" style="flex: 1; margin-top: 0; padding: 10px; font-size: 13px;">＋ 現在の設定をプリセット登録</button>
+                <button type="button" class="action-sub-btn" id="btn-open-manager-modal" style="flex: 1; height: auto; padding: 10px; font-size: 13px; font-weight: 700; background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border);">⚙️ プリセット ＆ 保存画像マネージャー</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. 保存・エクスポート設定 -->
+    <div class="accordion">
+        <div class="accordion-header" onclick="toggleAccordion('content-export', this)">
+            保存・エクスポート設定 <span>▼</span>
+        </div>
+        <div class="accordion-content open" id="content-export">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>保存フォーマット</label>
+                    <select id="export-format">
+                        <option value="jpeg" selected>JPEG (.jpg)</option>
+                        <option value="png">PNG (.png)</option>
+                        <option value="webp">WebP (.webp)</option>
+                    </select>
+                </div>
+
+                <div class="form-group" id="quality-group">
+                    <label>JPEG品質 (圧縮率): <span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
+                    <input type="range" id="export-quality" min="70" max="100" step="1" value="95" style="margin-top: 6px;">
+                </div>
+
+                <!-- ⑦ ファイル名規則: wmからwaterへ -->
+                <div class="form-group">
+                    <label>ファイル名規則</label>
+                    <select id="export-namemode">
+                        <option value="prefix" selected>接頭辞（例: water_xxx.jpg）</option>
+                        <option value="suffix">接尾辞（例: xxx_water.jpg）</option>
+                        <option value="keep">元ファイル名そのまま</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="margin-top: 14px;" id="exif-option-container">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
+                    <input type="checkbox" id="export-exif-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
+                    <span>Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影日時・カメラ機材・センサー情報を完全維持）</span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- アクションボタン群 -->
+    <button id="batch-run-btn" class="main-btn">⚡ 一括刻印を実行する</button>
+    <button id="download-btn" class="main-btn" style="display: none;">一括ダウンロードする</button>
+
+    <!-- 処理進捗表示エリア -->
+    <div class="progress-box" id="progress-box">
+        <div class="progress-header">
+            <span id="progress-label">処理中...</span>
+            <span id="progress-counter">0 / 0</span>
+        </div>
+        <div class="progress-track">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </div>
+    
+    <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
+
+    <!-- 処理完了画像一覧エリア -->
+    <div class="result-area" id="result-area"></div>
+</div>
+
+<!-- 92% 前面全域 プリセット ＆ 自作ロゴ画像マネージャーモーダル -->
+<div id="watermark-manager-modal" class="modal-overlay">
+    <div class="preset-manager-box">
+        <div class="modal-header">
+            <h3><span>⚙️</span> プリセット ＆ 保存画像マネージャー</h3>
+            <button type="button" class="modal-close" id="btn-modal-close" title="閉じる">&times;</button>
+        </div>
+
+        <div class="modal-tabs">
+            <button type="button" class="modal-tab-btn active" id="tab-btn-presets" data-tab="tab-content-presets">📋 刻印プリセット一覧</button>
+            <button type="button" class="modal-tab-btn" id="tab-btn-logos" data-tab="tab-content-logos">🖼️ 保存済み自作ロゴ画像 (プライバシー管理)</button>
+        </div>
+
+        <!-- タブ1: 刻印プリセット管理 -->
+        <div class="modal-tab-content" id="tab-content-presets">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <select id="modal-preset-sort" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--card-bg-sub); color: var(--text-color); font-size: 12px;">
+                        <option value="created-desc">作成日: 新しい順</option>
+                        <option value="created-asc">作成日: 古い順</option>
+                        <option value="name-asc">名前: 昇順</option>
+                        <option value="name-desc">名前: 降順</option>
+                    </select>
+                </div>
+                <div style="display: flex; gap: 6px;">
+                    <button type="button" class="stage-btn" id="btn-pm-import-all" style="padding: 6px 10px; font-size: 12px;">📥 JSONインポート</button>
+                    <button type="button" class="stage-btn" id="btn-pm-export-all" style="padding: 6px 10px; font-size: 12px;">📤 JSONエクスポート</button>
+                    <input type="file" id="pm-import-file-input" accept=".json" style="display: none;">
+                </div>
+            </div>
+
+            <div id="modal-preset-list-container"></div>
+        </div>
+
+        <!-- タブ2: 自作ロゴ画像管理 (IndexedDB) -->
+        <div class="modal-tab-content" id="tab-content-logos" style="display: none;">
+            <div style="background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
+                🔒 <strong>プライバシー・データ保護について:</strong><br>
+                アップロードされた自作ロゴ画像は、外部サーバーへ送信されることなく端末内のブラウザ内データベース（IndexedDB）に安全に保存されています。<br>
+                不要になった画像は、以下の「🗑 削除」ボタンから端末内から完全に消去できます。
+            </div>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                <span id="logo-db-total-count" style="font-size: 13px; font-weight: 700; color: var(--text-color);">保存済み画像: 0件</span>
+                <button type="button" class="stage-btn" id="btn-clear-all-logos" style="color: var(--danger-color); border-color: var(--danger-color); padding: 5px 12px; font-size: 11.5px;">⚠️ 保存画像をすべて消去</button>
+            </div>
+
+            <div class="logo-db-grid" id="modal-logo-grid-container"></div>
+        </div>
+
+        <div style="padding: 12px 18px; border-top: 1px solid var(--border-color); background: var(--card-bg-sub); display: flex; justify-content: flex-end;">
+            <button type="button" class="action-sub-btn" id="btn-modal-footer-close" style="padding: 7px 20px;">閉じる</button>
+        </div>
+    </div>
+</div>
+
+<!-- 説明セクション -->
+<div class="explanation">
+    <div class="usage-section">
+        <h3> 本ツールについて</h3>
+        <p>・撮影写真や公開用画像に対し、著作権テキスト・撮影者サイン・透過ロゴを好みのレイアウト（四隅、中央、斜め全面リピート等）で一括合成し、安全に高速書き出しを行うWebツールです。</p>
+        <p>・画像の読み込み・レンダリング・Exif再構築はすべてお使いの端末内（完全クライアントサイド）で順次実行されます。写真やロゴ画像が外部サーバーへ送信されることは一切ありません。</p>
+        
+        <h3> 使い方</h3>
+        <p>・1. 「刻印内容の設定」で、定型文プリセットや入力フォームから好みのテキスト・フォント・カラーを設定します。</p>
+        <p>・2. 必要に応じて透過ロゴ画像をONにし、内蔵ロゴまたは自作ロゴを選択します（不透明度は60%が標準です）。</p>
+        <p>・3. 「配置スタイル」で、四隅アンカーや斜めリピート、マージン・回転角度を調整します。左側のリアルタイムプレビューに即座に反映されます。</p>
+        <p>・4. 写真をドロップし、プレビュー画像セレクターで写真ごとの見え方を確認して、「⚡ 一括刻印を実行する」をクリックします。</p>
+        <p>・5. 完了後、サムネイルをタップすると、共通ビューアーで拡大プレビューを確認できます。「クリップボードにコピー」で長辺2048px画像を即座にSNS等へ貼り付けも可能です。</p>
+    </div>
+</div>
+
+<footer class="footer usage-section">
+    © 2026 <span class="copyright-name"><a href="https://note.com/octopus_yama" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">山下オクトパス</a>
+     ／ <a href="license_web.html" target="_blank" rel="noopener" style="color: inherit; text-decoration: none;">All rights reserved. LICENSE.</a></span>
+</footer>
+
+<!-- ツール固有スクリプト -->
+<script src="js/watermark-batch.js"></script>
+
+</body>
+</html>

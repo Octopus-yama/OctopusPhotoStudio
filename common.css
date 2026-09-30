@@ -231,6 +231,271 @@ body {
     pointer-events: none;
 }
 
+/* ==========================================
+   共通グローバルナビゲーション（動的ランチャー対応）
+   ========================================== */
+
+/* --- 基本スタイル（スマホ幅：860px以下） --- */
+.global-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    position: relative;
+    user-select: none;
+}
+
+/* スマホ時のスクロールトラック（従来通り横スクロール） */
+.nav-track {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    white-space: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+}
+.nav-track::-webkit-scrollbar {
+    display: none;
+}
+
+/* ナビアイテム（ピル型ボタン） */
+.nav-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-color);
+    background: var(--card-bg-sub);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: var(--transition);
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+.nav-item:hover {
+    border-color: var(--primary);
+    background: var(--primary-light);
+    color: var(--primary);
+}
+.nav-item.active {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    box-shadow: 0 2px 8px var(--primary-glow);
+    pointer-events: none;
+}
+
+/* スマホ表示時はランチャーボタンを非表示 */
+.nav-launcher-wrap {
+    display: none;
+}
+
+/* --- PC表示スタイル（861px以上） --- */
+@media (min-width: 861px) {
+    .global-nav {
+        overflow: visible;
+        justify-content: space-between;
+    }
+
+     /* PC時はスクロールを解除し、JSで表示・非表示を制御 */
+    .nav-track {
+        overflow: hidden;
+        padding-bottom: 0;
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        gap: 8px;
+    }
+
+    /* ランチャーラッパー */
+    .nav-launcher-wrap {
+        display: block;
+        position: relative;
+        flex-shrink: 0;
+        margin-left: 4px;
+    }
+
+    /* 「⊞ 全ツール ▾」ボタン */
+    .nav-launcher-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--text-color);
+        background: var(--card-bg-sub);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        cursor: pointer;
+        transition: var(--transition);
+        white-space: nowrap;
+    }
+    .nav-launcher-btn:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+    .nav-launcher-btn.open {
+        border-color: var(--primary);
+        color: var(--primary);
+        box-shadow: 0 0 0 2px var(--primary-glow);
+    }
+
+    /* 開いているツールがバーから溢れてランチャー内にあるときのアクティブ点灯 */
+    .nav-launcher-btn.active {
+        background: var(--primary);
+        color: #ffffff;
+        border-color: var(--primary);
+        box-shadow: 0 2px 8px var(--primary-glow);
+    }
+    .nav-launcher-btn.active:hover {
+        background: var(--primary-hover);
+        color: #ffffff;
+    }
+
+    .nav-launcher-arrow {
+        font-size: 10px;
+        transition: transform 0.2s ease;
+        line-height: 1;
+    }
+    .nav-launcher-btn.open .nav-launcher-arrow {
+        transform: rotate(180deg);
+    }
+
+    /* 全ツール一覧ポップオーバー */
+    .nav-launcher-popover {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        width: 450px;
+        background: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        box-shadow: var(--shadow-md);
+        z-index: 920;
+        padding: 16px;
+        display: none;
+        box-sizing: border-box;
+    }
+    .nav-launcher-popover.open {
+        display: block;
+        animation: navPopoverFade 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes navPopoverFade {
+        from { opacity: 0; transform: translateY(-6px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .nav-launcher-popover-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .nav-launcher-popover-title {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .nav-launcher-popover-close {
+        background: transparent;
+        border: none;
+        font-size: 16px;
+        color: var(--text-muted);
+        cursor: pointer;
+        padding: 2px 6px;
+        line-height: 1;
+        border-radius: 4px;
+        transition: var(--transition);
+    }
+    .nav-launcher-popover-close:hover {
+        color: var(--text-color);
+        background: var(--card-bg-sub);
+    }
+
+    /* 3列グリッドカード一覧 */
+    .nav-launcher-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+    .nav-launcher-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 12px 8px;
+        background: var(--card-bg-sub);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        text-decoration: none;
+        color: var(--text-color);
+        transition: var(--transition);
+        text-align: center;
+        position: relative;
+    }
+    .nav-launcher-card:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+        color: var(--primary);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-sm);
+    }
+    .nav-launcher-card-icon {
+        font-size: 22px;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .nav-launcher-card-icon img {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+        border-radius: 4px;
+    }
+    .nav-launcher-card-name {
+        font-size: 11.5px;
+        font-weight: 600;
+        line-height: 1.25;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    /* 現在開いているツールのカード */
+    .nav-launcher-card.active {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        color: var(--primary);
+        font-weight: 700;
+        pointer-events: none;
+    }
+    .nav-launcher-card.active::after {
+        content: "●";
+        position: absolute;
+        top: 6px;
+        right: 8px;
+        font-size: 9px;
+        color: var(--primary);
+    }
+}
+
+
+
 /* 共通アップロードドロップエリア */
 .drop-area { 
     border: 2px dashed var(--primary-border); 
