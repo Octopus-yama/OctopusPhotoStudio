@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>プライバシーポリシー｜Octopus Photo Studio</title>
+    <link rel="icon" href="img/icon_Octopus_丸.png" type="image/png">
+    
+    <link rel="stylesheet" href="common.css">
+    <script src="common.js"></script>
+
+    <style>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .page-container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 20px 16px 48px 16px;
+            box-sizing: border-box;
+        }
+
+        .back-nav {
+            margin-bottom: 16px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--primary);
+            font-size: 14px;
+            font-weight: 700;
+            text-decoration: none;
+            padding: 4px 8px;
+            border-radius: var(--radius-sm);
+            transition: var(--transition);
+        }
+        .back-link:hover {
+            background: var(--primary-light);
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+        .page-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-color);
+            margin: 0 0 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .page-desc {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .policy-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .policy-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px dashed var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .policy-body {
+            font-size: 13px;
+            line-height: 1.7;
+            color: var(--text-color);
+        }
+
+        .policy-body p {
+            margin: 0 0 10px 0;
+        }
+        .policy-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight-box {
+            background: var(--card-bg-sub);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            margin: 10px 0;
+        }
+
+        .policy-list {
+            margin: 8px 0 12px 0;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .policy-list li {
+            margin-bottom: 4px;
+        }
+
+        .link-text {
+            color: var(--primary);
+            text-decoration: none;
+            word-break: break-all;
+        }
+        .link-text:hover {
+            text-decoration: underline;
+        }
+
+        .meta-info {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: right;
+            margin-top: 24px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+
+    <div class="back-nav">
+        <a href="index.html" class="back-link">‹ TOPに戻る</a>
+    </div>
+
+    <div class="page-header">
+        <h1 class="page-title">🔒 プライバシーポリシー</h1>
+        <p class="page-desc">山下オクトパス（以下、「当方」）が提供するWebアプリケーション「Octopus Photo Studio」（以下、「本サービス」）における、利用者情報の取り扱いおよび保護方針について定めています。</p>
+    </div>
+
+    <!-- 1. 写真データおよびExifメタデータ -->
+    <div class="policy-card">
+        <div class="policy-card-title">📷 写真データおよびExifメタデータの取り扱い</div>
+        <div class="policy-body">
+            <p>本サービスは、ブラウザ上で写真のExif情報確認・編集、各種フレーム合成、画像調色、リサイズ等の処理を行うツール群です。</p>
+            <div class="highlight-box">
+                <strong>【ブラウザ内・完全ローカル処理の宣言】</strong><br>
+                本サービスで選択・ドロップされた写真画像、およびExifメタデータ（撮影日時、カメラ設定、GPS位置情報など）は、<strong>HTML5 File API、Canvas、Web Worker等を用いて、すべて利用者のブラウザ内（クライアント環境）でのみ処理されます。</strong><br>
+                当方が管理するWebサーバーや外部の第三者サーバーへ写真画像やExifデータが送信・アップロード・収集されることは一切ありません。
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. アクセス解析・Cookie -->
+    <div class="policy-card">
+        <div class="policy-card-title">📊 収集する情報とその利用目的</div>
+        <div class="policy-body">
+            <p>本サービスでは、サイトの利用状況把握、利便性向上、および品質改善を目的として、Google LLCが提供するアクセス解析ツール「Google アナリティクス（GA4）」を利用しています。</p>
+            <p>本ツールは、トラフィックデータの収集のためにCookie（クッキー）を使用し、以下の情報を匿名で収集・集計します。</p>
+            <ul class="policy-list">
+                <li>ブラウザの種類、OS、アクセス元の国・地域などの閲覧環境情報</li>
+                <li>サイト内の閲覧ページ、滞在時間、クリック状況などの利用ログ</li>
+            </ul>
+            <p>※これらの情報には、氏名、住所、メールアドレスなど、特定の個人を直接識別できる情報は一切含まれません。ブラウザの設定でCookieを無効にすることにより、収集を拒否することも可能です。</p>
+        </div>
+    </div>
+
+    <!-- 3. 第三者提供・外部送信 -->
+    <div class="policy-card">
+        <div class="policy-card-title">🌐 情報の外部送信および第三者提供</div>
+        <div class="policy-body">
+            <p>当方は、前条に定めるGoogle アナリティクスを通じてGoogle LLCへ統計データが送信される場合を除き、利用者の同意を得ることなく第三者へ情報を開示または提供することはありません。</p>
+            <p>Google社における利用データの取り扱いおよびプライバシー方針については、同社の公式規定をご確認ください。</p>
+            <ul class="policy-list">
+                <li><a href="https://policies.google.com/privacy" class="link-text" target="_blank" rel="noopener">Google プライバシー ポリシー</a></li>
+                <li><a href="https://policies.google.com/technologies/partner-sites" class="link-text" target="_blank" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- 4. 免責事項 -->
+    <div class="policy-card">
+        <div class="policy-card-title">⚠️ 免責事項</div>
+        <div class="policy-body">
+            <p>本サービスの利用および提供するツールの動作に関して、最大限の安全性確保と品質維持に努めておりますが、予期せぬブラウザの異常終了等により発生した損害（データの消失、画像の破損等を含む）について、当方は一切の責任を負いかねます。</p>
+            <p>大切な写真データの加工・編集を行う際は、事前にバックアップを取得した上でご利用いただくようお願いいたします。</p>
+        </div>
+    </div>
+
+    <!-- 5. ポリシーの改定 -->
+    <div class="policy-card">
+        <div class="policy-card-title">📝 プライバシーポリシーの改定</div>
+        <div class="policy-body">
+            <p>本ポリシーの内容は、関連法令の変更やサービスの機能アップデート等に伴い、予告なく改定されることがあります。改定された最新のプライバシーポリシーは、本ページへの掲示をもって効力を生じるものとします。</p>
+        </div>
+    </div>
+
+    <!-- 6. お問い合わせ窓口 -->
+    <div class="policy-card">
+        <div class="policy-card-title">📮 お問い合わせ窓口</div>
+        <div class="policy-body">
+            <p>本ポリシー、または本サービスにおける利用者情報の取り扱いに関するご意見・ご質問は、以下の窓口までお問い合わせください。</p>
+            <ul class="policy-list">
+                <li><strong>開発者 / 運営者：</strong>山下オクトパス</li>
+                <li><strong>連絡先：</strong>yamashita.octopus.app+support@gmail.com</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="meta-info">
+        制定日：2026年10月1日<br>
+        改定日：2026年10月12日
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -15,14 +15,19 @@
 // 1. バージョン・更新内容の一元管理
 // ==========================================
 const OCTOPUS_APP_INFO = {
-    version: "1.88",
-    date: "2026-09-30",
-    updateNote: "PC向けヘッダーナビゲーションの刷新：画面幅連動の動的オーバーフロー（Priority+）および3列グリッド型クイックランチャーの実装",
+    version: "2.12",
+    date: "2026-10-12",
+    updateNote: "バックアップ、リセット機能への対応をフォトギャラリーに対応",
     tools: {
+        rawviewer: {
+            name: "フォトギャラリー",
+            subVersion: "111",
+            updateNote: "バックアップ、リセット機能への対応"
+        },
         index: {
-            name: "TOP",
-            subVersion: "18",
-            updateNote: "ツールカードの自動整列（order連動）スクリプトの実装および「Octopus Photo Grid」カードの追加"
+            name: "TOP/メニュー",
+            subVersion: "121",
+            updateNote: "バックアップ復元、リセット画面の更新"
         },
         exif: {
             name: "EXIF Frame",
@@ -36,57 +41,57 @@ const OCTOPUS_APP_INFO = {
         },
         cleaner: {
             name: "EXIF Cleaner",
-            subVersion: "7",
+            subVersion: "107",
             updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
         },
         viewedit: {
             name: "EXIF View & Edit",
-            subVersion: "30",
+            subVersion: "130",
             updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
         },
         photoprocess: {
             name: "Photo Process",
-            subVersion: "15",
+            subVersion: "115",
             updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
         },
         analyzer: {
             name: "EXIF Analyzer",
-            subVersion: "18",
+            subVersion: "118",
             updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
         },
         photobatch: {
             name: "Photo Batch",
-            subVersion: "3",
+            subVersion: "103",
             updateNote: "拡大プレビューのファイル名タイトル連動表示、指追従スワイプ・PCキー切替に対応"
         },
         resizer: {
             name: "Image Resizer",
-            subVersion: "6",
+            subVersion: "106",
             updateNote: "一括モード拡大プレビューを共通Lightbox（指追従スワイプ・PCキー切替・セーフエリア枠外タップ）へ刷新"
         },
         grid: {
             name: "Photo Grid",
-            subVersion: "7",
+            subVersion: "107",
             updateNote: "共通クイックヘルプ対応、セル内パン操作ガイド連携およびモーダル戻る操作に対応"
         },
         watermark: {
             name: "Watermark",
-            subVersion: "1",
+            subVersion: "101",
             updateNote: "新規開発：サイン・テキスト・透過ロゴの一括刻印、全面斜めリピート、Exif完全保持、IndexedDB画像管理"
         },
         qrcode: {
             name: "QR Code",
-            subVersion: "1",
+            subVersion: "101",
             updateNote: "新規リリース：完全クライアントサイド動作のQRコード作成、Wi-Fi簡単接続、中央ロゴ合成、高画質SVGベクター出力"
         },
         motiongif: {
             name: "Motion GIF",
-            subVersion: "1",
+            subVersion: "101",
             updateNote: "新規リリース：写真スライドショー＆短尺動画からのアニメーションGIF/APNG生成、Web Worker高速エンコード対応"
         },
         titleimage: {
-            name: "Title Image",
-            subVersion: "15",
+            name: "タイトル作成",
+            subVersion: "115",
             updateNote: "複数写真プリセット全10系統の配置座標・テキストセンタリングの完全最適化およびオフセット誤連動バグの解消"
         }
     }
@@ -98,11 +103,21 @@ const OCTOPUS_APP_INFO = {
 const OCTOPUS_TOOL_HELPS = {
     index: {
         title: "Octopus Tools について",
-        desc: "端末のブラウザ上で写真のExifメタデータ編集、フレーム合成、現像、解析を完全ローカルで安全に行える専用ツール群です。",
+        desc: "写真のExifメタデータ編集、フレーム合成、現像、解析を完全ローカルで安全に行える専用ツール群です。",
         points: [
             "写真は外部サーバーへ一切送信されず、端末内（ブラウザ・アプリ）で高速に処理されます。",
             "画面上部のグローバルナビ、または下部メニューから各ツールを自由に切り替えられます。",
             "書き出し画像はファイル保存のほか、長辺2048pxクリップボード直接コピーにも対応しています。"
+        ]
+    },
+    rawviewer: {
+        title: "フォトギャラリー の使い方",
+        desc: "代表的なミラーレスカメラのRAW画像や動画もスムーズに閲覧・整理できる簡易メディアビューアです。",
+        points: [
+            "ORF/RW2/ARW/RAF/CR2/CR3/DNG等のRAWファイルに内包されたプレビューを展開し、待たずに高速表示します。",
+            "RAW画像をそのまま開いているのではなく、RAWに含まれるJPGプレビュー画像を利用することで、Androidスマートフォンでの高速閲覧を実現しています。",
+            "シャッター速度、F値、ISO、換算焦点距離、GPS位置情報などの詳細なExifメタデータを一覧確認できます。",
+            "星評価（★1〜5）やフラグ付け、選択した写真をワンタップで各Octopus編集ツールへ直接引き渡せます。"
         ]
     },
     exif: {
@@ -223,7 +238,7 @@ const OCTOPUS_TOOL_HELPS = {
         ]
     },
     titleimage: {
-        title: "Title Image の使い方",
+        title: "タイトル作成 の使い方",
         desc: "写真とテキストを入力するだけで、アイキャッチやブログサムネイル用のタイトル画像を瞬時に生成します。",
         points: [
             "単体写真だけでなく、最大6枚の写真を使った雑誌風コラージュや分割レイアウトに対応しています。",
@@ -252,6 +267,20 @@ const OCTOPUS_NAV_ITEMS = [
     isSingleOnly: false
   },
   {
+    id: "rawviewer",
+    name: "フォトギャラリー",
+    tabName: "ギャラリー",
+    url: "app://rawviewer",
+    icon: "👁",
+    iconImage: "img/icon_raw_gallery.png",
+    order: 5,
+    showInTab: true,
+    showInOther: true,
+    maxFilesPC: 0,
+    maxFilesMobile: 0,
+    isSingleOnly: false
+  },
+  {
     id: "exif",
     name: "EXIFフレーム",
     tabName: "フレーム",
@@ -260,7 +289,7 @@ const OCTOPUS_NAV_ITEMS = [
     iconImage: "img/Exif_Frame_Tool_icon.png",
     order: 10,
     showInTab: true,
-    showInOther: false,
+    showInOther: true,
     maxFilesPC: 50,
     maxFilesMobile: 30,
     isSingleOnly: false
@@ -274,7 +303,7 @@ const OCTOPUS_NAV_ITEMS = [
     iconImage: "img/Mosaic_Blur_Tool_icon.png",
     order: 15,
     showInTab: true,
-    showInOther: false,
+    showInOther: true,
     maxFilesPC: 1,
     maxFilesMobile: 1,
     isSingleOnly: true
@@ -288,10 +317,24 @@ const OCTOPUS_NAV_ITEMS = [
     iconImage: "img/ico_photo_Process.png",
     order: 25,
     showInTab: true,
-    showInOther: false,
+    showInOther: true,
     maxFilesPC: 1,
     maxFilesMobile: 1,
     isSingleOnly: true
+  },
+  {
+    id: "photobatch",
+    name: "一括写真加工",
+    tabName: "一括加工",
+    url: "PhotoBatch.html",
+    icon: "⚡",
+    iconImage: "img/ico_photo_Process_batch.png",
+    order: 27,
+    showInTab: false,
+    showInOther: true,
+    maxFilesPC: 50,
+    maxFilesMobile: 10,
+    isSingleOnly: false
   },
   {
     id: "resizer",
@@ -301,24 +344,10 @@ const OCTOPUS_NAV_ITEMS = [
     icon: "📐",
     iconImage: "img/ico_image_resize.png",
     order: 35,
-    showInTab: true,
-    showInOther: false,
-    maxFilesPC: 50,
-    maxFilesMobile: 15,
-    isSingleOnly: false
-  },
-  {
-    id: "photobatch",
-    name: "一括写真加工",
-    tabName: "一括加工",
-    url: "PhotoBatch.html",
-    icon: "⚡",
-    iconImage: "img/ico_photo_Process_batch.png",
-    order: 42,
     showInTab: false,
     showInOther: true,
     maxFilesPC: 50,
-    maxFilesMobile: 10,
+    maxFilesMobile: 15,
     isSingleOnly: false
   },
   {
@@ -351,8 +380,8 @@ const OCTOPUS_NAV_ITEMS = [
   },
   {
     id: "titleimage",
-    name: "Title Image",
-    tabName: "タイトル作成",
+    name: "タイトル作成",
+    tabName: "タイトル",
     url: "TitleImage.html",
     icon: "🏷️",
     iconImage: "img/icon_title_image.png",
@@ -453,7 +482,7 @@ const OCTOPUS_NAV_ITEMS = [
     tabName: "その他",
     url: "#other",
     icon: "📂",
-    iconImage: "",
+    iconImage: "img/icon_folder.png",
     order: 900,
     showInTab: true,
     showInOther: false,
@@ -1310,7 +1339,7 @@ window.octopusShowImageViewer = function(options) {
         if (!navContainer) return;
 
         const targetItems = OCTOPUS_NAV_ITEMS
-            .filter(item => item.id !== "menu" && item.id !== "other")
+            .filter(item => item.id !== "menu" && item.id !== "other" && item.id !== "rawviewer")
             .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 
         const isSubDir = window.location.pathname.includes('/app/');
@@ -1319,6 +1348,10 @@ window.octopusShowImageViewer = function(options) {
         // 1. バー用ピル群HTML
         const trackHtml = targetItems.map(item => {
             const isActive = item.id === currentKey ? " active" : "";
+            // ★ 追加：RAW Viewer の場合はネイティブ起動のJSを叩く
+            if (item.id === "rawviewer") {
+                return `<a href="#" onclick="if(window.AndroidBridge){AndroidBridge.openRawViewer();} return false;" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${item.name}</a>`;
+            }
             const href = isSubDir ? pathPrefix + item.url : item.url;
             return `<a href="${href}" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${item.name}</a>`;
         }).join("");
@@ -1330,6 +1363,16 @@ window.octopusShowImageViewer = function(options) {
             const iconHtml = item.iconImage
                 ? `<img src="${pathPrefix + item.iconImage}" alt="${item.name}" onerror="this.outerHTML='<span>${item.icon}</span>'">`
                 : `<span>${item.icon}</span>`;
+            
+            // ★ 追加：RAW Viewer の場合はネイティブ起動のJSを叩く
+            if (item.id === "rawviewer") {
+                return `
+                    <a href="#" onclick="if(window.AndroidBridge){AndroidBridge.openRawViewer();} return false;" class="nav-launcher-card${isActive}">
+                        <div class="nav-launcher-card-icon">${iconHtml}</div>
+                        <div class="nav-launcher-card-name">${item.tabName || item.name}</div>
+                    </a>
+                `;
+            }
             return `
                 <a href="${href}" class="nav-launcher-card${isActive}">
                     <div class="nav-launcher-card-icon">${iconHtml}</div>
@@ -1337,6 +1380,7 @@ window.octopusShowImageViewer = function(options) {
                 </a>
             `;
         }).join("");
+
 
         navContainer.className = "global-nav";
         navContainer.setAttribute("aria-label", "ツール切り替え");
