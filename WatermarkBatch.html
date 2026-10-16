@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Watermark 専用辞書JS -->
+    <script src="lang/watermark-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -720,13 +722,13 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP 対応（推奨上限: 最大 </span><span data-octopus-max-files>50</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
         
         <div class="file-list" id="file-list"></div>
-        <button id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
+        <button id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
     </div>
 
     <!-- PC左右2カラムセクション（左: プレビュー / 右: 刻印内容＆配置） -->
@@ -737,13 +739,13 @@
             <div class="preview-box-container">
                 <div class="preview-header-bar">
                     <div class="preview-title-row">
-                        <span style="font-size: 13px; font-weight: 700; color: var(--text-color);">👁️ リアルタイムプレビュー</span>
-                        <span id="preview-sample-label" style="font-size: 11px; color: var(--text-muted);">（サンプル画像）</span>
+                        <span style="font-size: 13px; font-weight: 700; color: var(--text-color);" data-i18n="preview_title">👁️ リアルタイムプレビュー</span>
+                        <span id="preview-sample-label" style="font-size: 11px; color: var(--text-muted);" data-i18n="preview_sample_label">（サンプル画像）</span>
                     </div>
 
                     <!-- プレビュー対象画像セレクター -->
                     <div class="preview-target-row" id="preview-target-container" style="display: none;">
-                        <label for="preview-target-select">プレビュー画像:</label>
+                        <label for="preview-target-select" data-i18n="lbl_preview_target">プレビュー画像:</label>
                         <select id="preview-target-select"></select>
                     </div>
                 </div>
@@ -760,80 +762,79 @@
             <!-- 1. 刻印内容設定（テキスト＆ロゴの多重レイヤー） -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-watermark-source', this)">
-                    刻印内容の設定（テキスト ＆ ロゴ画像） <span>▼</span>
+                    <span data-i18n="acc_watermark_source">刻印内容の設定（テキスト ＆ ロゴ画像）</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-watermark-source">
                     <!-- レイヤー1: テキスト刻印 -->
                     <div style="background: var(--card-bg-sub); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); margin-bottom: 14px;">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; font-weight: 700;">
                             <input type="checkbox" id="wm-text-enabled" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
-                            <span>✒️ テキスト / サイン刻印を有効化</span>
+                            <span data-i18n="lbl_enable_text">✒️ テキスト / サイン刻印を有効化</span>
                         </label>
 
                         <div id="wm-text-controls" style="margin-top: 12px;">
                             <!-- 定型文プリセット選択プルダウン -->
                             <div class="form-group" style="margin-bottom: 8px;">
-                                <label>定型文プリセットから選ぶ</label>
+                                <label data-i18n="lbl_text_preset">定型文プリセットから選ぶ</label>
                                 <select id="wm-text-preset">
-                                    <option value="custom">（手動入力 / カスタム）</option>
-                                    <option value="preset_copyright" selected>© 2026 〇〇 〇〇. All rights reserved.</option>
-                                    <option value="preset_photo_by">Photo by 〇〇 〇〇</option>
-                                    <option value="preset_c_name">© 2026 〇〇 〇〇</option>
-                                    <option value="preset_norepost">Do Not Repost / 無断転載禁止</option>
-                                    <option value="preset_sample">SAMPLE / 見本</option>
-                                    <option value="preset_proof">PROOF / 複製禁止</option>
+                                    <option value="custom" data-i18n="opt_preset_custom">（手動入力 / カスタム）</option>
+                                    <option value="preset_copyright" selected data-i18n="opt_preset_copyright">© 2026 〇〇 〇〇. All rights reserved.</option>
+                                    <option value="preset_photo_by" data-i18n="opt_preset_photo_by">Photo by 〇〇 〇〇</option>
+                                    <option value="preset_c_name" data-i18n="opt_preset_c_name">© 2026 〇〇 〇〇</option>
+                                    <option value="preset_norepost" data-i18n="opt_preset_norepost">Do Not Repost / 無断転載禁止</option>
+                                    <option value="preset_sample" data-i18n="opt_preset_sample">SAMPLE / 見本</option>
+                                    <option value="preset_proof" data-i18n="opt_preset_proof">PROOF / 複製禁止</option>
                                 </select>
                             </div>
 
                             <div class="form-group" style="margin-bottom: 10px;">
-                                <label>刻印テキスト（手動で編集可能）</label>
-                                <input type="text" id="wm-text-string" value="© 2026 〇〇 〇〇. All rights reserved." placeholder="刻印する文字を入力（例: © 2026 〇〇 〇〇）">
+                                <label data-i18n="lbl_text_string">刻印テキスト（手動で編集可能）</label>
+                                <input type="text" id="wm-text-string" value="© 2026 〇〇 〇〇. All rights reserved." placeholder="刻印する文字を入力（例: © 2026 〇〇 〇〇）" data-i18n-placeholder="ph_text_string">
                             </div>
 
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label>フォント</label>
+                                    <label data-i18n="lbl_font">フォント</label>
                                     <select id="wm-text-font">
-                                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" selected>ゴシック体 (標準 / Sans-serif)</option>
-                                        <option value="'Times New Roman', 'Yu Mincho', serif">明朝体 (Serif)</option>
-                                        <option value="'Brush Script MT', 'Dancing Script', cursive">筆記体風 (Script / Cursive)</option>
-                                        <option value="'Courier New', monospace">等幅 (Monospace)</option>
+                                        <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" selected data-i18n="opt_font_sans">ゴシック体 (標準 / Sans-serif)</option>
+                                        <option value="'Times New Roman', 'Yu Mincho', serif" data-i18n="opt_font_serif">明朝体 (Serif)</option>
+                                        <option value="'Brush Script MT', 'Dancing Script', cursive" data-i18n="opt_font_script">筆記体風 (Script / Cursive)</option>
+                                        <option value="'Courier New', monospace" data-i18n="opt_font_mono">等幅 (Monospace)</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>文字の太さ</label>
+                                    <label data-i18n="lbl_font_weight">文字の太さ</label>
                                     <select id="wm-text-weight">
-                                        <option value="normal">標準 (Normal)</option>
-                                        <option value="bold" selected>太字 (Bold)</option>
+                                        <option value="normal" data-i18n="opt_weight_normal">標準 (Normal)</option>
+                                        <option value="bold" selected data-i18n="opt_weight_bold">太字 (Bold)</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label>文字色</label>
+                                    <label data-i18n="lbl_text_color">文字色</label>
                                     <div style="display: flex; gap: 8px; align-items: center;">
                                         <input type="color" id="wm-text-color" value="#ffffff" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                        <span style="font-size: 12px; color: var(--text-muted);">カラー選択</span>
+                                        <span style="font-size: 12px; color: var(--text-muted);" data-i18n="lbl_color_pick">カラー選択</span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>文字サイズ: <span id="val-text-size" class="slider-val">3.5%</span></label>
+                                    <label><span data-i18n="lbl_text_size_prefix">文字サイズ: </span><span id="val-text-size" class="slider-val">3.5%</span></label>
                                     <div class="slider-row">
                                         <input type="range" id="wm-text-size" min="1.0" max="15.0" step="0.5" value="3.5">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <!-- ⑥ デフォルト不透明度 60% -->
-                                    <label>不透明度: <span id="val-text-opacity" class="slider-val">60%</span></label>
+                                    <label><span data-i18n="lbl_opacity_prefix">不透明度: </span><span id="val-text-opacity" class="slider-val">60%</span></label>
                                     <div class="slider-row">
                                         <input type="range" id="wm-text-opacity" min="5" max="100" step="5" value="60">
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label>文字の影・装飾</label>
+                                    <label data-i18n="lbl_text_shadow">文字の影・装飾</label>
                                     <select id="wm-text-shadow">
-                                        <option value="soft" selected>やわらかな影（黒）</option>
-                                        <option value="hard">くっきりした影</option>
-                                        <option value="outline">細い白フチ / 黒文字用</option>
-                                        <option value="none">影・フチなし</option>
+                                        <option value="soft" selected data-i18n="opt_shadow_soft">やわらかな影（黒）</option>
+                                        <option value="hard" data-i18n="opt_shadow_hard">くっきりした影</option>
+                                        <option value="outline" data-i18n="opt_shadow_outline">細い白フチ / 黒文字用</option>
+                                        <option value="none" data-i18n="opt_shadow_none">影・フチなし</option>
                                     </select>
                                 </div>
                             </div>
@@ -844,42 +845,40 @@
                     <div style="background: var(--card-bg-sub); padding: 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
                         <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13.5px; font-weight: 700;">
                             <input type="checkbox" id="wm-logo-enabled" style="width: 16px; height: 16px; accent-color: var(--primary);">
-                            <span>🖼️ ロゴ画像 / 透かし刻印を有効化</span>
+                            <span data-i18n="lbl_enable_logo">🖼️ ロゴ画像 / 透かし刻印を有効化</span>
                         </label>
 
                         <div id="wm-logo-controls" style="margin-top: 12px; display: none;">
                             <div class="form-grid">
                                 <div class="form-group">
-                                    <label>ロゴ画像の選択</label>
+                                    <label data-i18n="lbl_logo_select">ロゴ画像の選択</label>
                                     <select id="wm-logo-select">
-                                        <optgroup label="内蔵ベクターロゴ">
-                                            <option value="builtin:copyright" selected>© 著作権シンボル</option>
-                                            <option value="builtin:camera">📷 カメラアイコン</option>
-                                            <option value="builtin:sample">SAMPLE 透かしスタンプ</option>
-                                            <option value="builtin:proof">PROOF 透かしスタンプ</option>
+                                        <optgroup label="内蔵ベクターロゴ" data-i18n-label="optgroup_builtin_logo">
+                                            <option value="builtin:copyright" selected data-i18n="opt_logo_copyright">© 著作権シンボル</option>
+                                            <option value="builtin:camera" data-i18n="opt_logo_camera">📷 カメラアイコン</option>
+                                            <option value="builtin:sample" data-i18n="opt_logo_sample">SAMPLE 透かしスタンプ</option>
+                                            <option value="builtin:proof" data-i18n="opt_logo_proof">PROOF 透かしスタンプ</option>
                                         </optgroup>
-                                        <optgroup label="保存済み自作ロゴ画像 (ブラウザ内DB)" id="wm-custom-logo-options">
+                                        <optgroup label="保存済み自作ロゴ画像 (ブラウザ内DB)" id="wm-custom-logo-options" data-i18n-label="optgroup_custom_logo">
                                             <!-- IndexedDBから動的生成 -->
                                         </optgroup>
                                     </select>
                                 </div>
 
                                 <div class="form-group">
-                                    <label>自作ロゴ画像の新規登録 (透過PNG/SVG等)</label>
+                                    <label data-i18n="lbl_logo_upload">自作ロゴ画像の新規登録 (透過PNG/SVG等)</label>
                                     <input type="file" id="wm-logo-upload-input" accept="image/png, image/svg+xml, image/webp" style="font-size: 12px;">
                                 </div>
 
-                                <!-- ①＆② ロゴサイズ: デフォルト3%、下限0.1%刻み -->
                                 <div class="form-group">
-                                    <label>ロゴサイズ: <span id="val-logo-size" class="slider-val">3.0%</span></label>
+                                    <label><span data-i18n="lbl_logo_size_prefix">ロゴサイズ: </span><span id="val-logo-size" class="slider-val">3.0%</span></label>
                                     <div class="slider-row">
                                         <input type="range" id="wm-logo-size" min="0.1" max="30" step="0.1" value="3.0">
                                     </div>
                                 </div>
 
-                                <!-- ⑥ デフォルト不透明度 60% -->
                                 <div class="form-group">
-                                    <label>ロゴ不透明度: <span id="val-logo-opacity" class="slider-val">60%</span></label>
+                                    <label><span data-i18n="lbl_logo_opacity_prefix">ロゴ不透明度: </span><span id="val-logo-opacity" class="slider-val">60%</span></label>
                                     <div class="slider-row">
                                         <input type="range" id="wm-logo-opacity" min="5" max="100" step="5" value="60">
                                     </div>
@@ -893,62 +892,61 @@
             <!-- 2. 配置・レイアウト設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-watermark-layout', this)">
-                    配置スタイル ＆ 余白・レイアウト設定 <span>▼</span>
+                    <span data-i18n="acc_watermark_layout">配置スタイル ＆ 余白・レイアウト設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-watermark-layout">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>配置スタイル</label>
+                            <label data-i18n="lbl_layout_mode">配置スタイル</label>
                             <select id="wm-layout-mode">
-                                <option value="single" selected>単一配置（9点アンカー指定）</option>
-                                <option value="repeat-grid">全面格子リピート（無断転載防止タイル）</option>
-                                <option value="repeat-diagonal">斜め透かしリピート（傾きスタンプ）</option>
-                                <option value="band">下部半透明リボン帯</option>
+                                <option value="single" selected data-i18n="opt_layout_single">単一配置（9点アンカー指定）</option>
+                                <option value="repeat-grid" data-i18n="opt_layout_grid">全面格子リピート（無断転載防止タイル）</option>
+                                <option value="repeat-diagonal" data-i18n="opt_layout_diagonal">斜め透かしリピート（傾きスタンプ）</option>
+                                <option value="band" data-i18n="opt_layout_band">下部半透明リボン帯</option>
                             </select>
                         </div>
 
                         <!-- 単一配置用：アンカーグリッド -->
                         <div class="form-group" id="layout-single-controls">
-                            <label style="text-align: center;">刻印位置（9箇所アンカー）</label>
+                            <label style="text-align: center;" data-i18n="lbl_anchor_pos">刻印位置（9箇所アンカー）</label>
                             <div class="anchor-grid">
-                                <button type="button" class="anchor-btn" data-anchor="tl">左上</button>
-                                <button type="button" class="anchor-btn" data-anchor="tc">上中</button>
-                                <button type="button" class="anchor-btn" data-anchor="tr">右上</button>
-                                <button type="button" class="anchor-btn" data-anchor="ml">左中</button>
-                                <button type="button" class="anchor-btn" data-anchor="mc">中央</button>
-                                <button type="button" class="anchor-btn" data-anchor="mr">右中</button>
-                                <button type="button" class="anchor-btn" data-anchor="bl">左下</button>
-                                <button type="button" class="anchor-btn" data-anchor="bc">下中</button>
-                                <button type="button" class="anchor-btn active" data-anchor="br">右下</button>
+                                <button type="button" class="anchor-btn" data-anchor="tl" data-i18n="anchor_tl">左上</button>
+                                <button type="button" class="anchor-btn" data-anchor="tc" data-i18n="anchor_tc">上中</button>
+                                <button type="button" class="anchor-btn" data-anchor="tr" data-i18n="anchor_tr">右上</button>
+                                <button type="button" class="anchor-btn" data-anchor="ml" data-i18n="anchor_ml">左中</button>
+                                <button type="button" class="anchor-btn" data-anchor="mc" data-i18n="anchor_mc">中央</button>
+                                <button type="button" class="anchor-btn" data-anchor="mr" data-i18n="anchor_mr">右中</button>
+                                <button type="button" class="anchor-btn" data-anchor="bl" data-i18n="anchor_bl">左下</button>
+                                <button type="button" class="anchor-btn" data-anchor="bc" data-i18n="anchor_bc">下中</button>
+                                <button type="button" class="anchor-btn active" data-anchor="br" data-i18n="anchor_br">右下</button>
                             </div>
                         </div>
                     </div>
 
                     <div class="form-grid" style="margin-top: 14px;">
                         <div class="form-group" id="margin-x-group">
-                            <label>左右マージン: <span id="val-margin-x" class="slider-val">3.0%</span></label>
+                            <label><span data-i18n="lbl_margin_x_prefix">左右マージン: </span><span id="val-margin-x" class="slider-val">3.0%</span></label>
                             <div class="slider-row">
                                 <input type="range" id="wm-margin-x" min="0" max="25" step="0.5" value="3.0">
                             </div>
                         </div>
 
                         <div class="form-group" id="margin-y-group">
-                            <label>上下マージン: <span id="val-margin-y" class="slider-val">3.0%</span></label>
+                            <label><span data-i18n="lbl_margin_y_prefix">上下マージン: </span><span id="val-margin-y" class="slider-val">3.0%</span></label>
                             <div class="slider-row">
                                 <input type="range" id="wm-margin-y" min="0" max="25" step="0.5" value="3.0">
                             </div>
                         </div>
 
-                        <!-- ③ リピート間隔: 最低1pxに拡張 -->
                         <div class="form-group" id="repeat-gap-group" style="display: none;">
-                            <label>リピート間隔: <span id="val-repeat-gap" class="slider-val">120px</span></label>
+                            <label><span data-i18n="lbl_repeat_gap_prefix">リピート間隔: </span><span id="val-repeat-gap" class="slider-val">120px</span></label>
                             <div class="slider-row">
                                 <input type="range" id="wm-repeat-gap" min="1" max="300" step="1" value="120">
                             </div>
                         </div>
 
                         <div class="form-group" id="angle-group">
-                            <label>回転角度: <span id="val-rotate-angle" class="slider-val">0°</span></label>
+                            <label><span data-i18n="lbl_rotate_angle_prefix">回転角度: </span><span id="val-rotate-angle" class="slider-val">0°</span></label>
                             <div class="slider-row">
                                 <input type="range" id="wm-rotate-angle" min="-90" max="90" step="5" value="0">
                             </div>
@@ -963,21 +961,20 @@
     <!-- 3. プリセット選択＆クイック管理（1カラム） -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-preset', this)">
-            刻印プリセットの選択 ＆ 管理 <span>▼</span>
+            <span data-i18n="acc_preset_manage">刻印プリセットの選択 ＆ 管理</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-preset">
-            <!-- ④ ボタンデザインと余白を改善したクイックバー -->
             <div class="preset-quick-bar">
                 <select id="quick-preset-select" class="preset-select-input">
-                    <option value="">(登録済みプリセットを選択)</option>
+                    <option value="" data-i18n="opt_select_preset_default">(登録済みプリセットを選択)</option>
                 </select>
-                <button type="button" class="action-sub-btn primary" id="btn-apply-quick-preset">✔ 適用</button>
-                <button type="button" class="action-sub-btn" id="btn-restore-last">↺ 前回設定を復帰</button>
+                <button type="button" class="action-sub-btn primary" id="btn-apply-quick-preset" data-i18n="btn_apply_preset">✔ 適用</button>
+                <button type="button" class="action-sub-btn" id="btn-restore-last" data-i18n="btn_restore_last">↺ 前回設定を復帰</button>
             </div>
 
             <div style="display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;">
-                <button type="button" class="main-btn" id="btn-save-current-preset" style="flex: 1; margin-top: 0; padding: 10px; font-size: 13px;">＋ 現在の設定をプリセット登録</button>
-                <button type="button" class="action-sub-btn" id="btn-open-manager-modal" style="flex: 1; height: auto; padding: 10px; font-size: 13px; font-weight: 700; background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border);">⚙️ プリセット ＆ 保存画像マネージャー</button>
+                <button type="button" class="main-btn" id="btn-save-current-preset" style="flex: 1; margin-top: 0; padding: 10px; font-size: 13px;" data-i18n="btn_save_current_preset">＋ 現在の設定をプリセット登録</button>
+                <button type="button" class="action-sub-btn" id="btn-open-manager-modal" style="flex: 1; height: auto; padding: 10px; font-size: 13px; font-weight: 700; background: var(--primary-light); color: var(--primary); border: 1px solid var(--primary-border);" data-i18n="btn_open_manager_modal">⚙️ プリセット ＆ 保存画像マネージャー</button>
             </div>
         </div>
     </div>
@@ -985,12 +982,12 @@
     <!-- 4. 保存・エクスポート設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-export', this)">
-            保存・エクスポート設定 <span>▼</span>
+            <span data-i18n="acc_export_settings">保存・エクスポート設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-export">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>保存フォーマット</label>
+                    <label data-i18n="lbl_export_format">保存フォーマット</label>
                     <select id="export-format">
                         <option value="jpeg" selected>JPEG (.jpg)</option>
                         <option value="png">PNG (.png)</option>
@@ -999,17 +996,16 @@
                 </div>
 
                 <div class="form-group" id="quality-group">
-                    <label>JPEG品質 (圧縮率): <span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
+                    <label><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質 (圧縮率): </span><span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
                     <input type="range" id="export-quality" min="70" max="100" step="1" value="95" style="margin-top: 6px;">
                 </div>
 
-                <!-- ⑦ ファイル名規則: wmからwaterへ -->
                 <div class="form-group">
-                    <label>ファイル名規則</label>
+                    <label data-i18n="lbl_export_namemode">ファイル名規則</label>
                     <select id="export-namemode">
-                        <option value="prefix" selected>接頭辞（例: water_xxx.jpg）</option>
-                        <option value="suffix">接尾辞（例: xxx_water.jpg）</option>
-                        <option value="keep">元ファイル名そのまま</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞（例: water_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞（例: xxx_water.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名そのまま</option>
                     </select>
                 </div>
             </div>
@@ -1017,20 +1013,20 @@
             <div style="margin-top: 14px;" id="exif-option-container">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="export-exif-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
-                    <span>Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影日時・カメラ機材・センサー情報を完全維持）</span>
+                    <span data-i18n="lbl_export_exif">Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影日時・カメラ機材・センサー情報を完全維持）</span>
                 </label>
             </div>
         </div>
     </div>
 
     <!-- アクションボタン群 -->
-    <button id="batch-run-btn" class="main-btn">⚡ 一括刻印を実行する</button>
-    <button id="download-btn" class="main-btn" style="display: none;">一括ダウンロードする</button>
+    <button id="batch-run-btn" class="main-btn" data-i18n="btn_batch_run">⚡ 一括刻印を実行する</button>
+    <button id="download-btn" class="main-btn" style="display: none;" data-i18n="btn_download_all">一括ダウンロードする</button>
 
     <!-- 処理進捗表示エリア -->
     <div class="progress-box" id="progress-box">
         <div class="progress-header">
-            <span id="progress-label">処理中...</span>
+            <span id="progress-label" data-i18n="progress_processing">処理中...</span>
             <span id="progress-counter">0 / 0</span>
         </div>
         <div class="progress-track">
@@ -1048,13 +1044,13 @@
 <div id="watermark-manager-modal" class="modal-overlay">
     <div class="preset-manager-box">
         <div class="modal-header">
-            <h3><span>⚙️</span> プリセット ＆ 保存画像マネージャー</h3>
-            <button type="button" class="modal-close" id="btn-modal-close" title="閉じる">&times;</button>
+            <h3><span>⚙️</span> <span data-i18n="modal_manager_title">プリセット ＆ 保存画像マネージャー</span></h3>
+            <button type="button" class="modal-close" id="btn-modal-close" title="閉じる" data-i18n-title="modal_close_title">&times;</button>
         </div>
 
         <div class="modal-tabs">
-            <button type="button" class="modal-tab-btn active" id="tab-btn-presets" data-tab="tab-content-presets">📋 刻印プリセット一覧</button>
-            <button type="button" class="modal-tab-btn" id="tab-btn-logos" data-tab="tab-content-logos">🖼️ 保存済み自作ロゴ画像 (プライバシー管理)</button>
+            <button type="button" class="modal-tab-btn active" id="tab-btn-presets" data-tab="tab-content-presets" data-i18n="tab_presets_list">📋 刻印プリセット一覧</button>
+            <button type="button" class="modal-tab-btn" id="tab-btn-logos" data-tab="tab-content-logos" data-i18n="tab_logos_list">🖼️ 保存済み自作ロゴ画像 (プライバシー管理)</button>
         </div>
 
         <!-- タブ1: 刻印プリセット管理 -->
@@ -1062,15 +1058,15 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
                 <div style="display: flex; gap: 8px; align-items: center;">
                     <select id="modal-preset-sort" style="padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--card-bg-sub); color: var(--text-color); font-size: 12px;">
-                        <option value="created-desc">作成日: 新しい順</option>
-                        <option value="created-asc">作成日: 古い順</option>
-                        <option value="name-asc">名前: 昇順</option>
-                        <option value="name-desc">名前: 降順</option>
+                        <option value="created-desc" data-i18n="sort_created_desc">作成日: 新しい順</option>
+                        <option value="created-asc" data-i18n="sort_created_asc">作成日: 古い順</option>
+                        <option value="name-asc" data-i18n="sort_name_asc">名前: 昇順</option>
+                        <option value="name-desc" data-i18n="sort_name_desc">名前: 降順</option>
                     </select>
                 </div>
                 <div style="display: flex; gap: 6px;">
-                    <button type="button" class="stage-btn" id="btn-pm-import-all" style="padding: 6px 10px; font-size: 12px;">📥 JSONインポート</button>
-                    <button type="button" class="stage-btn" id="btn-pm-export-all" style="padding: 6px 10px; font-size: 12px;">📤 JSONエクスポート</button>
+                    <button type="button" class="stage-btn" id="btn-pm-import-all" style="padding: 6px 10px; font-size: 12px;" data-i18n="btn_pm_import">📥 JSONインポート</button>
+                    <button type="button" class="stage-btn" id="btn-pm-export-all" style="padding: 6px 10px; font-size: 12px;" data-i18n="btn_pm_export">📤 JSONエクスポート</button>
                     <input type="file" id="pm-import-file-input" accept=".json" style="display: none;">
                 </div>
             </div>
@@ -1080,7 +1076,7 @@
 
         <!-- タブ2: 自作ロゴ画像管理 (IndexedDB) -->
         <div class="modal-tab-content" id="tab-content-logos" style="display: none;">
-            <div style="background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; font-size: 12.5px; color: var(--text-muted); line-height: 1.6;">
+            <div style="background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; font-size: 12.5px; color: var(--text-muted); line-height: 1.6;" data-i18n="logo_privacy_notice_html">
                 🔒 <strong>プライバシー・データ保護について:</strong><br>
                 アップロードされた自作ロゴ画像は、外部サーバーへ送信されることなく端末内のブラウザ内データベース（IndexedDB）に安全に保存されています。<br>
                 不要になった画像は、以下の「🗑 削除」ボタンから端末内から完全に消去できます。
@@ -1088,14 +1084,14 @@
 
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                 <span id="logo-db-total-count" style="font-size: 13px; font-weight: 700; color: var(--text-color);">保存済み画像: 0件</span>
-                <button type="button" class="stage-btn" id="btn-clear-all-logos" style="color: var(--danger-color); border-color: var(--danger-color); padding: 5px 12px; font-size: 11.5px;">⚠️ 保存画像をすべて消去</button>
+                <button type="button" class="stage-btn" id="btn-clear-all-logos" style="color: var(--danger-color); border-color: var(--danger-color); padding: 5px 12px; font-size: 11.5px;" data-i18n="btn_clear_all_logos">⚠️ 保存画像をすべて消去</button>
             </div>
 
             <div class="logo-db-grid" id="modal-logo-grid-container"></div>
         </div>
 
         <div style="padding: 12px 18px; border-top: 1px solid var(--border-color); background: var(--card-bg-sub); display: flex; justify-content: flex-end;">
-            <button type="button" class="action-sub-btn" id="btn-modal-footer-close" style="padding: 7px 20px;">閉じる</button>
+            <button type="button" class="action-sub-btn" id="btn-modal-footer-close" style="padding: 7px 20px;" data-i18n="btn_close">閉じる</button>
         </div>
     </div>
 </div>
@@ -1103,16 +1099,16 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・撮影写真や公開用画像に対し、著作権テキスト・撮影者サイン・透過ロゴを好みのレイアウト（四隅、中央、斜め全面リピート等）で一括合成し、安全に高速書き出しを行うWebツールです。</p>
-        <p>・画像の読み込み・レンダリング・Exif再構築はすべてお使いの端末内（完全クライアントサイド）で順次実行されます。写真やロゴ画像が外部サーバーへ送信されることは一切ありません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・撮影写真や公開用画像に対し、著作権テキスト・撮影者サイン・透過ロゴを好みのレイアウト（四隅、中央、斜め全面リピート等）で一括合成し、安全に高速書き出しを行うWebツールです。</p>
+        <p data-i18n="exp_about_2">・画像の読み込み・レンダリング・Exif再構築はすべてお使いの端末内（完全クライアントサイド）で順次実行されます。写真やロゴ画像が外部サーバーへ送信されることは一切ありません。</p>
         
-        <h3> 使い方</h3>
-        <p>・1. 「刻印内容の設定」で、定型文プリセットや入力フォームから好みのテキスト・フォント・カラーを設定します。</p>
-        <p>・2. 必要に応じて透過ロゴ画像をONにし、内蔵ロゴまたは自作ロゴを選択します（不透明度は60%が標準です）。</p>
-        <p>・3. 「配置スタイル」で、四隅アンカーや斜めリピート、マージン・回転角度を調整します。左側のリアルタイムプレビューに即座に反映されます。</p>
-        <p>・4. 写真をドロップし、プレビュー画像セレクターで写真ごとの見え方を確認して、「⚡ 一括刻印を実行する」をクリックします。</p>
-        <p>・5. 完了後、サムネイルをタップすると、共通ビューアーで拡大プレビューを確認できます。「クリップボードにコピー」で長辺2048px画像を即座にSNS等へ貼り付けも可能です。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. 「刻印内容の設定」で、定型文プリセットや入力フォームから好みのテキスト・フォント・カラーを設定します。</p>
+        <p data-i18n="exp_usage_2">・2. 必要に応じて透過ロゴ画像をONにし、内蔵ロゴまたは自作ロゴを選択します（不透明度は60%が標準です）。</p>
+        <p data-i18n="exp_usage_3">・3. 「配置スタイル」で、四隅アンカーや斜めリピート、マージン・回転角度を調整します。左側のリアルタイムプレビューに即座に反映されます。</p>
+        <p data-i18n="exp_usage_4">・4. 写真をドロップし、プレビュー画像セレクターで写真ごとの見え方を確認して、「⚡ 一括刻印を実行する」をクリックします。</p>
+        <p data-i18n="exp_usage_5">・5. 完了後、サムネイルをタップすると、共通ビューアーで拡大プレビューを確認できます。「クリップボードにコピー」で長辺2048px画像を即座にSNS等へ貼り付けも可能です。</p>
     </div>
 </div>
 

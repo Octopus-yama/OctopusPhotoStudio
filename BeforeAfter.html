@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Before After 専用辞書JS -->
+    <script src="lang/before-after-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -107,7 +109,7 @@
         .workspace-container.active {
             display: grid;
             grid-template-columns: 1fr 340px;
-            align-items: start; /* スクロール追従（sticky）を有効化 */
+            align-items: start;
         }
         @media (max-width: 920px) {
             .workspace-container.active {
@@ -126,7 +128,7 @@
             align-items: center;
             justify-content: center;
             min-height: 440px;
-            position: sticky; /* 右パネルスクロール時に画面上部へ追従 */
+            position: sticky;
             top: 20px;
             user-select: none;
             transition: var(--transition);
@@ -204,7 +206,7 @@
             }
         }
 
-        /* 常駐2本指バッジ（写真の邪魔にならないツールバー内に配置） */
+        /* 常駐2本指バッジ */
         .two-finger-badge {
             display: none;
             font-size: 11px;
@@ -244,11 +246,10 @@
             width: auto;
             height: auto;
             cursor: default;
-            touch-action: pan-y; /* 1本指での縦スクロールを完全に許可 */
+            touch-action: pan-y;
             transition: max-width 0.08s ease-out;
         }
 
-        /* スマホ・アプリ表示時のプレビュー高さ抑制 */
         @media (max-width: 768px) {
             .stage-viewport {
                 max-height: 38dvh;
@@ -454,23 +455,23 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p id="drop-area-title">ここをタップするか、画像ファイル（2枚）をドラッグ＆ドロップ</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（Before用とAfter用の計 2 枚）</span>
+        <p id="drop-area-title" data-i18n="drop_area_title">ここをタップするか、画像ファイル（2枚）をドラッグ＆ドロップ</p>
+        <span id="limit-notice" data-i18n="limit_notice">JPEG / PNG / WebP 対応（Before用とAfter用の計 2 枚）</span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
-        <button type="button" id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
+        <button type="button" id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all">すべてのファイルをクリア</button>
     </div>
 
     <!-- ワークスペース（2カラム構成） -->
     <div class="workspace-container" id="workspace-area">
         <!-- 左側：プレビューステージ（スクロール追従） -->
-        <div class="stage-wrapper" id="stage-wrapper" title="境界線をドラッグでスプリット位置移動、写真をドラッグでパン微調整">
+        <div class="stage-wrapper" id="stage-wrapper" title="境界線をドラッグでスプリット位置移動、写真をドラッグでパン微調整" data-i18n-title="stage_wrapper_title">
             <div class="stage-toolbar">
-                <span>■ リアルタイム比較プレビュー</span>
+                <span data-i18n="stage_toolbar_title">■ リアルタイム比較プレビュー</span>
                 <div class="stage-actions">
-                    <div class="two-finger-badge" id="two-finger-badge">✌️ 2本指で写真位置調整</div>
+                    <div class="two-finger-badge" id="two-finger-badge" data-i18n="badge_two_finger">✌️ 2本指で写真位置調整</div>
                     <!-- 表示倍率（縮小）スライダー -->
-                    <div class="preview-zoom-wrapper" title="プレビューの表示倍率（縮小）を調整。クリックで100%にリセット">
+                    <div class="preview-zoom-wrapper" title="プレビューの表示倍率（縮小）を調整。クリックで100%にリセット" data-i18n-title="preview_zoom_title">
                         <span class="preview-zoom-label" id="btn-zoom-reset">🔍 <span id="preview-zoom-val">100%</span></span>
                         <input type="range" class="preview-zoom-slider" id="preview-zoom-slider" min="30" max="100" value="100" step="5">
                     </div>
@@ -480,12 +481,12 @@
             <div class="stage-viewport" id="stage-viewport">
                 <canvas id="preview-canvas"></canvas>
                 <!-- 1本指フリック時の動的案内トースト -->
-                <div class="beforeafter-touch-toast" id="beforeafter-touch-toast">✌️ 写真の位置調整は指2本で行えます</div>
+                <div class="beforeafter-touch-toast" id="beforeafter-touch-toast" data-i18n="toast_two_finger">✌️ 写真の位置調整は指2本で行えます</div>
             </div>
 
             <div class="stage-info-bar" id="stage-info-bar">
                 Before: <span id="info-before-dim">-</span> | After: <span id="info-after-dim">-</span>
-                <div class="stage-guide-hint">💡 境界線をドラッグで移動 / 写真をドラッグ（指2本）で位置微調整が可能です</div>
+                <div class="stage-guide-hint" data-i18n="stage_guide_hint">💡 境界線をドラッグで移動 / 写真をドラッグ（指2本）で位置微調整が可能です</div>
             </div>
         </div>
 
@@ -494,73 +495,73 @@
             <!-- 1. レイアウト ＆ アライメント -->
             <div class="panel-card">
                 <div class="panel-title">
-                    <span>◫ 合成レイアウト</span>
-                    <button type="button" class="swap-btn" id="btn-swap-images" title="BeforeとAfterの配置を反転">⇄ 左右を入れ替え</button>
+                    <span data-i18n="panel_layout_title">◫ 合成レイアウト</span>
+                    <button type="button" class="swap-btn" id="btn-swap-images" title="BeforeとAfterの配置を反転" data-i18n="btn_swap_images" data-i18n-title="btn_swap_images_title">⇄ 左右を入れ替え</button>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 12px;">
-                    <label>合成モード</label>
+                    <label data-i18n="lbl_split_mode">合成モード</label>
                     <select id="split-mode">
-                        <option value="split-h" selected>左右スプリット（縦境界線）</option>
-                        <option value="split-v">上下スプリット（横境界線）</option>
-                        <option value="split-diag">斜めスプリット（対角線分割）</option>
-                        <option value="side-h">左右並列（2枚並べ）</option>
-                        <option value="side-v">上下並列（2枚並べ）</option>
+                        <option value="split-h" selected data-i18n="opt_split_h">左右スプリット（縦境界線）</option>
+                        <option value="split-v" data-i18n="opt_split_v">上下スプリット（横境界線）</option>
+                        <option value="split-diag" data-i18n="opt_split_diag">斜めスプリット（対角線分割）</option>
+                        <option value="side-h" data-i18n="opt_side_h">左右並列（2枚並べ）</option>
+                        <option value="side-v" data-i18n="opt_side_v">上下並列（2枚並べ）</option>
                     </select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 12px;">
-                    <label>基準アスペクト比（画角）</label>
+                    <label data-i18n="lbl_aspect_base">基準アスペクト比（画角）</label>
                     <div style="display: flex; gap: 10px; margin-top: 4px;">
                         <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
                             <input type="radio" name="aspect-base" value="before" checked style="accent-color: var(--primary);">
-                            <span>Before画像基準</span>
+                            <span data-i18n="lbl_base_before">Before画像基準</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 6px; font-size: 13px; cursor: pointer;">
                             <input type="radio" name="aspect-base" value="after" style="accent-color: var(--primary);">
-                            <span>After画像基準</span>
+                            <span data-i18n="lbl_base_after">After画像基準</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group" id="split-pos-group">
-                    <label>スプリット境界位置: <span id="split-pos-display" style="font-weight: 700; color: var(--primary);">50%</span></label>
+                    <label><span data-i18n="lbl_split_pos_prefix">スプリット境界位置: </span><span id="split-pos-display" style="font-weight: 700; color: var(--primary);">50%</span></label>
                     <input type="range" id="split-pos" min="0" max="100" value="50" style="margin-top: 4px;">
                 </div>
 
                 <div class="form-group" id="pan-group" style="margin-top: 10px; border-top: 1px dashed var(--border-color); padding-top: 10px;">
-                    <label>切り抜き位置微調整（パン）: <span id="pan-display" style="font-weight: 700; color: var(--primary);">0%</span></label>
+                    <label><span data-i18n="lbl_pan_offset_prefix">切り抜き位置微調整（パン）: </span><span id="pan-display" style="font-weight: 700; color: var(--primary);">0%</span></label>
                     <input type="range" id="pan-offset" min="-100" max="100" value="0" style="margin-top: 4px;">
                 </div>
             </div>
 
             <!-- 2. 境界線設定 -->
             <div class="panel-card" id="separator-card">
-                <div class="panel-title">セパレーター境界線</div>
+                <div class="panel-title" data-i18n="panel_separator_title">セパレーター境界線</div>
                 
                 <div class="form-group" style="margin-bottom: 12px;">
-                    <label>線の太さ: <span id="line-width-display" style="font-weight: 700; color: var(--primary);">3px</span></label>
+                    <label><span data-i18n="lbl_line_width_prefix">線の太さ: </span><span id="line-width-display" style="font-weight: 700; color: var(--primary);">3px</span></label>
                     <input type="range" id="line-width" min="0" max="20" value="3" style="margin-top: 4px;">
                 </div>
 
                 <div class="form-group">
-                    <label>線の色</label>
+                    <label data-i18n="lbl_line_color">線の色</label>
                     <div class="color-picker-row">
                         <label class="color-radio-label">
                             <input type="radio" name="line-color" value="#FFFFFF" checked style="display:none;">
-                            <span class="color-dot" style="background:#FFFFFF;"></span> 白
+                            <span class="color-dot" style="background:#FFFFFF;"></span> <span data-i18n="color_white">白</span>
                         </label>
                         <label class="color-radio-label">
                             <input type="radio" name="line-color" value="#000000" style="display:none;">
-                            <span class="color-dot" style="background:#000000;"></span> 黒
+                            <span class="color-dot" style="background:#000000;"></span> <span data-i18n="color_black">黒</span>
                         </label>
                         <label class="color-radio-label">
                             <input type="radio" name="line-color" value="#607d3b" style="display:none;">
-                            <span class="color-dot" style="background:#607d3b;"></span> 黄緑
+                            <span class="color-dot" style="background:#607d3b;"></span> <span data-i18n="color_green">黄緑</span>
                         </label>
                         <label class="color-radio-label">
                             <input type="radio" name="line-color" value="#999999" style="display:none;">
-                            <span class="color-dot" style="background:#999999;"></span> グレー
+                            <span class="color-dot" style="background:#999999;"></span> <span data-i18n="color_gray">グレー</span>
                         </label>
                     </div>
                 </div>
@@ -568,39 +569,39 @@
 
             <!-- 3. ラベル刻印設定 -->
             <div class="panel-card">
-                <div class="panel-title">ラベル刻印</div>
+                <div class="panel-title" data-i18n="panel_label_title">ラベル刻印</div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px;">
                     <div class="form-group">
-                        <label style="font-size: 11px;">Beforeラベル</label>
+                        <label style="font-size: 11px;" data-i18n="lbl_before_text">Beforeラベル</label>
                         <input type="text" id="label-before-text" value="BEFORE">
                     </div>
                     <div class="form-group">
-                        <label style="font-size: 11px;">Afterラベル</label>
+                        <label style="font-size: 11px;" data-i18n="lbl_after_text">Afterラベル</label>
                         <input type="text" id="label-after-text" value="AFTER">
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 10px;">
-                    <label>表示スタイル</label>
+                    <label data-i18n="lbl_label_style">表示スタイル</label>
                     <select id="label-style">
-                        <option value="pill" selected>半透明ピル型バッジ</option>
-                        <option value="flat">フラット文字（影付き）</option>
-                        <option value="ribbon">下部帯リボン</option>
-                        <option value="none">非表示</option>
+                        <option value="pill" selected data-i18n="opt_style_pill">半透明ピル型バッジ</option>
+                        <option value="flat" data-i18n="opt_style_flat">フラット文字（影付き）</option>
+                        <option value="ribbon" data-i18n="opt_style_ribbon">下部帯リボン</option>
+                        <option value="none" data-i18n="opt_style_none">非表示</option>
                     </select>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 10px;">
-                    <label>配置位置</label>
+                    <label data-i18n="lbl_label_pos">配置位置</label>
                     <select id="label-position">
-                        <option value="edges" selected>四隅の端（左上 / 右下等）</option>
-                        <option value="border">境界線の両脇（スプリット連動追従）</option>
+                        <option value="edges" selected data-i18n="opt_pos_edges">四隅の端（左上 / 右下等）</option>
+                        <option value="border" data-i18n="opt_pos_border">境界線の両脇（スプリット連動追従）</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label>フォント書体</label>
+                    <label data-i18n="lbl_label_font">フォント書体</label>
                     <select id="label-font">
                         <option value="Noto Sans JP" selected>Noto Sans JP</option>
                         <option value="Google Sans Flex">Google Sans Flex</option>
@@ -618,22 +619,22 @@
 
             <!-- 4. 保存・エクスポート設定 -->
             <div class="panel-card">
-                <div class="panel-title">保存・書き出し</div>
+                <div class="panel-title" data-i18n="panel_export_title">保存・書き出し</div>
 
                 <div class="form-group" style="margin-bottom: 10px;">
-                    <label>出力解像度（長辺）</label>
+                    <label data-i18n="lbl_export_longside">出力解像度（長辺）</label>
                     <input type="number" id="export-longside" value="1920" min="200" max="10000" step="10">
                     
                     <div class="preset-grid">
                         <button type="button" class="preset-chip-btn active" data-long="1920">1920px (FHD)</button>
                         <button type="button" class="preset-chip-btn" data-long="2560">2560px (2K)</button>
                         <button type="button" class="preset-chip-btn" data-long="1200">1200px (SNS)</button>
-                        <button type="button" class="preset-chip-btn" data-long="0">原寸 100%</button>
+                        <button type="button" class="preset-chip-btn" data-long="0" data-i18n="chip_original_100">原寸 100%</button>
                     </div>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 10px;">
-                    <label>出力フォーマット</label>
+                    <label data-i18n="lbl_export_format">出力フォーマット</label>
                     <select id="export-format">
                         <option value="jpeg" selected>JPEG (.jpg)</option>
                         <option value="png">PNG (.png)</option>
@@ -642,12 +643,12 @@
                 </div>
 
                 <div class="form-group" id="quality-group" style="margin-bottom: 14px;">
-                    <label>JPEG品質: <span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
+                    <label><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質: </span><span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
                     <input type="range" id="export-quality" min="70" max="100" value="95">
                 </div>
 
-                <button type="button" class="main-btn" id="btn-save-image">💾 画像を保存する</button>
-                <button type="button" class="sub-action-btn" id="btn-copy-clipboard">📋 クリップボードにコピー</button>
+                <button type="button" class="main-btn" id="btn-save-image" data-i18n="btn_save_image">💾 画像を保存する</button>
+                <button type="button" class="sub-action-btn" id="btn-copy-clipboard" data-i18n="btn_copy_clipboard">📋 クリップボードにコピー</button>
             </div>
         </div>
     </div>
@@ -656,17 +657,17 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・現像前後の写真（Before / After）や時間差の風景など、2枚の写真をスプリットや並列で直感的に合成し、高解像度で書き出すWebツールです。</p>
-        <p>・画像の読み込み、比較描画、ファイル生成はすべてお使いのブラウザ内部（完全クライアントサイド）で処理されます。写真データが外部サーバーへ送信されることは一切ありません。</p>
-        <p>・2枚合成時のメタデータ衝突やプライバシーを考慮し、Exif情報は安全のため付与されません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・現像前後の写真（Before / After）や時間差の風景など、2枚の写真をスプリットや並列で直感的に合成し、高解像度で書き出すWebツールです。</p>
+        <p data-i18n="exp_about_2">・画像の読み込み、比較描画、ファイル生成はすべてお使いのブラウザ内部（完全クライアントサイド）で処理されます。写真データが外部サーバーへ送信されることは一切ありません。</p>
+        <p data-i18n="exp_about_3">・2枚合成時のメタデータ衝突やプライバシーを考慮し、Exif情報は安全のため付与されません。</p>
 
-        <h3> 使い方</h3>
-        <p>・1. ドロップエリアに比較したい写真を2枚まとめてドラッグ＆ドロップ、またはファイル選択します（1枚目がBefore、2枚目がAfterになります）。</p>
-        <p>・2. プレビュー画面上で境界線を直接ドラッグするか、設定パネルの各種スライダーでスプリット位置や構図（パン）を微調整します。</p>
-        <p>・3. スマホでは、境界線は1本指でスライドでき、写真のパン位置調整は指2本で行えます（写真の上を1本指でなぞると通常の画面スクロールになります）。</p>
-        <p>・4. 「⇄ 左右を入れ替え」で配置を反転したり、左右・上下・斜めスプリット、左右並列・上下並列をお好みのモードに変更します。</p>
-        <p>・5. 「💾 画像を保存する」を押すと、指定した長辺解像度で書き出しが行われます。また「📋 クリップボードにコピー」を押すとSNSや記事へ即座に貼り付け可能です。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. ドロップエリアに比較したい写真を2枚まとめてドラッグ＆ドロップ、またはファイル選択します（1枚目がBefore、2枚目がAfterになります）。</p>
+        <p data-i18n="exp_usage_2">・2. プレビュー画面上で境界線を直接ドラッグするか、設定パネルの各種スライダーでスプリット位置や構図（パン）を微調整します。</p>
+        <p data-i18n="exp_usage_3">・3. スマホでは、境界線は1本指でスライドでき、写真のパン位置調整は指2本で行えます（写真の上を1本指でなぞると通常の画面スクロールになります）。</p>
+        <p data-i18n="exp_usage_4">・4. 「⇄ 左右を入れ替え」で配置を反転したり、左右・上下・斜めスプリット、左右並列・上下並列をお好みのモードに変更します。</p>
+        <p data-i18n="exp_usage_5">・5. 「💾 画像を保存する」を押すと、指定した長辺解像度で書き出しが行われます。また「📋 クリップボードにコピー」を押すとSNSや記事へ即座に貼り付け可能です。</p>
     </div>
 </div>
 

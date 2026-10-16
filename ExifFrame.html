@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- EXIFフレーム専用外部辞書JS -->
+    <script src="lang/exif-frame-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -676,102 +678,102 @@
     <nav id="global-nav"></nav>
 
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
-        <span id="limit-notice">JPEG (.jpg / .jpeg) 対応（上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG (.jpg / .jpeg) 対応（上限: 最大 </span><span data-octopus-max-files>50</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
         
         <div class="file-list" id="file-list"></div>
-        <button id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け（※EXIFデータが正常に読み込めない場合があります）</button>
+        <button id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け（※EXIFデータが正常に読み込めない場合があります）</button>
     </div>
 
     <!-- 1. EXIF情報の確認・修正 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-exif', this)">
-            EXIF情報の確認・修正 <span>▼</span>
+            <span data-i18n="acc_exif_info">EXIF情報の確認・修正</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-exif">
             <div style="margin-bottom: 15px; display: flex; flex-wrap: wrap; gap: 16px;">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
-                    <input type="checkbox" id="exif-embed-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);"> EXIF情報を生成する写真に書き込む
+                    <input type="checkbox" id="exif-embed-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);"> <span data-i18n="chk_embed_exif">EXIF情報を生成する写真に書き込む</span>
                 </label>
             </div>
 
             <div id="extracted-exif-display" style="margin-bottom: 15px; font-size: 13px; background: var(--card-bg-sub); padding: 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); max-height: 250px; overflow-y: auto;">
-                <div style="color: var(--text-muted); text-align: center;">画像が選択されていません。</div>
+                <div style="color: var(--text-muted); text-align: center;" data-i18n="exif_no_images">画像が選択されていません。</div>
             </div>
 
             <div style="margin-top: 8px;">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
-                    <input type="checkbox" id="ov-main-chk" style="width: 16px; height: 16px; accent-color: var(--primary);"> EXIF情報強制上書きモードをONにする
+                    <input type="checkbox" id="ov-main-chk" style="width: 16px; height: 16px; accent-color: var(--primary);"> <span data-i18n="chk_override_mode">EXIF情報強制上書きモードをONにする</span>
                 </label>
             </div>
             
             <div id="override-container" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: none;">
-                <div style="text-align: right; margin-bottom: 8px; font-size: 12px; font-weight: bold; color: var(--primary); padding-right: 5px;">写真1の情報をコピーする ↓</div>
+                <div style="text-align: right; margin-bottom: 8px; font-size: 12px; font-weight: bold; color: var(--primary); padding-right: 5px;" data-i18n="copy_photo1_info_desc">写真1の情報をコピーする ↓</div>
                 <div class="override-row">
-                    <label>カメラモデル</label>
+                    <label data-i18n="lbl_camera_model">カメラモデル</label>
                     <input type="checkbox" id="ov-model-chk" disabled>
-                    <textarea id="ov-model-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-model-copy" onclick="copyExifToOverride('model')" disabled>コピー</button>
+                    <textarea id="ov-model-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-model-copy" onclick="copyExifToOverride('model')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>カメラメーカー</label>
+                    <label data-i18n="lbl_camera_make">カメラメーカー</label>
                     <input type="checkbox" id="ov-make-chk" disabled>
-                    <textarea id="ov-make-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-make-copy" onclick="copyExifToOverride('make')" disabled>コピー</button>
+                    <textarea id="ov-make-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-make-copy" onclick="copyExifToOverride('make')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>レンズモデル</label>
+                    <label data-i18n="lbl_lens_model">レンズモデル</label>
                     <input type="checkbox" id="ov-lens-chk" disabled>
-                    <textarea id="ov-lens-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-lens-copy" onclick="copyExifToOverride('lens')" disabled>コピー</button>
+                    <textarea id="ov-lens-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-lens-copy" onclick="copyExifToOverride('lens')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>焦点距離</label>
+                    <label data-i18n="lbl_focal_length">焦点距離</label>
                     <input type="checkbox" id="ov-focal-chk" disabled>
-                    <textarea id="ov-focal-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-focal-copy" onclick="copyExifToOverride('focal')" disabled>コピー</button>
+                    <textarea id="ov-focal-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-focal-copy" onclick="copyExifToOverride('focal')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>F値</label>
+                    <label data-i18n="lbl_fnumber">F値</label>
                     <input type="checkbox" id="ov-fnum-chk" disabled>
-                    <textarea id="ov-fnum-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-fnum-copy" onclick="copyExifToOverride('fnum')" disabled>コピー</button>
+                    <textarea id="ov-fnum-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-fnum-copy" onclick="copyExifToOverride('fnum')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>露出時間</label>
+                    <label data-i18n="lbl_exposure_time">露出時間</label>
                     <input type="checkbox" id="ov-exp-chk" disabled>
-                    <textarea id="ov-exp-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-exp-copy" onclick="copyExifToOverride('exp')" disabled>コピー</button>
+                    <textarea id="ov-exp-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-exp-copy" onclick="copyExifToOverride('exp')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>ISO感度</label>
+                    <label data-i18n="lbl_iso">ISO感度</label>
                     <input type="checkbox" id="ov-iso-chk" disabled>
-                    <textarea id="ov-iso-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-iso-copy" onclick="copyExifToOverride('iso')" disabled>コピー</button>
+                    <textarea id="ov-iso-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-iso-copy" onclick="copyExifToOverride('iso')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>撮影日時</label>
+                    <label data-i18n="lbl_datetime">撮影日時</label>
                     <input type="checkbox" id="ov-datetime-chk" disabled>
-                    <textarea id="ov-datetime-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-datetime-copy" onclick="copyExifToOverride('datetime')" disabled>コピー</button>
+                    <textarea id="ov-datetime-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-datetime-copy" onclick="copyExifToOverride('datetime')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
                 <div class="override-row">
-                    <label>署名</label>
+                    <label data-i18n="lbl_copyright">署名</label>
                     <input type="checkbox" id="ov-copyright-chk" disabled>
-                    <textarea id="ov-copyright-val" class="override-val" placeholder="上書き用設定を記載" disabled rows="1"></textarea>
-                    <button class="copy-btn" id="ov-copyright-copy" onclick="copyExifToOverride('copyright')" disabled>コピー</button>
+                    <textarea id="ov-copyright-val" class="override-val" placeholder="上書き用設定を記載" data-i18n-placeholder="ph_override" disabled rows="1"></textarea>
+                    <button class="copy-btn" id="ov-copyright-copy" onclick="copyExifToOverride('copyright')" data-i18n="btn_copy" disabled>コピー</button>
                 </div>
 
                 <div class="override-bulk-actions">
                     <div class="bulk-check-group">
-                        <span class="bulk-label">チェックボックスを</span>
-                        <button class="bulk-btn" id="bulk-check-all">すべてチェックする</button>
-                        <button class="bulk-btn" id="bulk-uncheck-all">すべて外す</button>
+                        <span class="bulk-label" data-i18n="bulk_label_checkbox">チェックボックスを</span>
+                        <button class="bulk-btn" id="bulk-check-all" data-i18n="btn_check_all">すべてチェックする</button>
+                        <button class="bulk-btn" id="bulk-uncheck-all" data-i18n="btn_uncheck_all">すべて外す</button>
                     </div>
                     <div class="bulk-copy-group">
-                        <button class="bulk-btn bulk-btn-copy" id="bulk-copy-all">すべてコピーする</button>
+                        <button class="bulk-btn bulk-btn-copy" id="bulk-copy-all" data-i18n="btn_copy_all">すべてコピーする</button>
                     </div>
                 </div>
             </div>
@@ -781,32 +783,32 @@
     <!-- 2. テンプレート設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-template', this)">
-            テンプレート設定 <span>▼</span>
+            <span data-i18n="acc_template_settings">テンプレート設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-template">
-            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);">
+            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);" data-i18n="sec_select_template">
             ◆ フレームレイアウトを選択</div>
             
             <div class="template-picker">
                 <label class="template-option">
                     <input type="radio" name="template-type" value="center-2" checked>
-                    <span class="template-label">センター / 2行</span>
+                    <span class="template-label" data-i18n="tpl_center_2">センター / 2行</span>
                 </label>
                 <label class="template-option">
                     <input type="radio" name="template-type" value="left-2">
-                    <span class="template-label">左揃え / 2行</span>
+                    <span class="template-label" data-i18n="tpl_left_2">左揃え / 2行</span>
                 </label>
                 <label class="template-option">
                     <input type="radio" name="template-type" value="right-2">
-                    <span class="template-label">右揃え / 2行</span>
+                    <span class="template-label" data-i18n="tpl_right_2">右揃え / 2行</span>
                 </label>
                 <label class="template-option">
                     <input type="radio" name="template-type" value="side-2">
-                    <span class="template-label">サイド2列 / 2行</span>
+                    <span class="template-label" data-i18n="tpl_side_2">サイド2列 / 2行</span>
                 </label>
             </div>
             
-            <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;">
+            <p style="font-size: 12px; color: var(--text-muted); margin-top: 12px;" data-i18n="template_note">
                 ※ 項目・フォント・フレーム設定は、各テンプレートごとに個別に保存されます。
             </p>
         </div>
@@ -815,15 +817,15 @@
     <!-- 3. 項目設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-items', this)">
-            項目設定 <span>▼</span>
+            <span data-i18n="acc_item_settings">項目設定</span> <span>▼</span>
         </div>
         <div class="accordion-content" id="content-items">
-            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+            <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;" data-i18n="item_settings_desc">
                 カードをつかんでドラッグ＆ドロップすると、順番や行の移動ができます。各チェックボックスで表示・非表示を切り替えられます。
             </p>
 
             <div style="margin-bottom: 14px; text-align: right;">
-                <button type="button" class="reset-order-btn" id="reset-order-btn" title="項目の配置と表示設定を初期状態に戻します">
+                <button type="button" class="reset-order-btn" id="reset-order-btn" title="項目の配置と表示設定を初期状態に戻します" data-i18n="btn_reset_order" data-i18n-title="btn_reset_order_title">
                     ↺ 配置を初期状態に戻す
                 </button>
             </div>
@@ -831,10 +833,10 @@
             <div class="drag-zone-group only-standard">
                 <div class="drag-zone-header">
                     <span class="drag-zone-title">
-                        ■ 1行目に記載する項目
+                        <span data-i18n="zone_line1_title">■ 1行目に記載する項目</span>
                         <span class="drag-zone-badge" id="line1-count">3項目</span>
                     </span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト1設定適用</span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_line1_desc">テキスト1設定適用</span>
                 </div>
                 <div class="drag-container" id="container-line1" data-line="line1"></div>
             </div>
@@ -842,60 +844,60 @@
             <div class="drag-zone-group only-standard" style="margin-top: 18px;">
                 <div class="drag-zone-header">
                     <span class="drag-zone-title">
-                        ■ 2行目に記載する項目
+                        <span data-i18n="zone_line2_title">■ 2行目に記載する項目</span>
                         <span class="drag-zone-badge" id="line2-count">10項目</span>
                     </span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト2設定適用</span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_line2_desc">テキスト2設定適用</span>
                 </div>
                 <div class="drag-container" id="container-line2" data-line="line2"></div>
             </div>
 
             <div class="drag-zone-group only-side-2">
                 <div class="drag-zone-header">
-                    <span class="drag-zone-title">■ 左1行目に記載する項目 <span class="drag-zone-badge" id="leftLine1-count">0項目</span></span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト1設定適用</span>
+                    <span class="drag-zone-title"><span data-i18n="zone_left_line1_title">■ 左1行目に記載する項目</span> <span class="drag-zone-badge" id="leftLine1-count">0項目</span></span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_line1_desc">テキスト1設定適用</span>
                 </div>
                 <div class="drag-container" id="container-leftLine1" data-line="leftLine1"></div>
             </div>
             <div class="drag-zone-group only-side-2" style="margin-top: 18px;">
                 <div class="drag-zone-header">
-                    <span class="drag-zone-title">■ 右1行目に記載する項目 <span class="drag-zone-badge" id="rightLine1-count">0項目</span></span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト2設定適用</span>
+                    <span class="drag-zone-title"><span data-i18n="zone_right_line1_title">■ 右1行目に記載する項目</span> <span class="drag-zone-badge" id="rightLine1-count">0項目</span></span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_line2_desc">テキスト2設定適用</span>
                 </div>
                 <div class="drag-container" id="container-rightLine1" data-line="rightLine1"></div>
             </div>
             <div class="drag-zone-group only-side-2" style="margin-top: 18px;">
                 <div class="drag-zone-header">
-                    <span class="drag-zone-title">■ 左2行目に記載する項目 <span class="drag-zone-badge" id="leftLine2-count">0項目</span></span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト3設定適用</span>
+                    <span class="drag-zone-title"><span data-i18n="zone_left_line2_title">■ 左2行目に記載する項目</span> <span class="drag-zone-badge" id="leftLine2-count">0項目</span></span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_left_line2_desc">テキスト3設定適用</span>
                 </div>
                 <div class="drag-container" id="container-leftLine2" data-line="leftLine2"></div>
             </div>
             <div class="drag-zone-group only-side-2" style="margin-top: 18px;">
                 <div class="drag-zone-header">
-                    <span class="drag-zone-title">■ 右2行目に記載する項目 <span class="drag-zone-badge" id="rightLine2-count">0項目</span></span>
-                    <span style="font-size: 11px; color: var(--text-muted);">テキスト4設定適用</span>
+                    <span class="drag-zone-title"><span data-i18n="zone_right_line2_title">■ 右2行目に記載する項目</span> <span class="drag-zone-badge" id="rightLine2-count">0項目</span></span>
+                    <span style="font-size: 11px; color: var(--text-muted);" data-i18n="zone_right_line2_desc">テキスト4設定適用</span>
                 </div>
                 <div class="drag-container" id="container-rightLine2" data-line="rightLine2"></div>
             </div>
 
             <div id="free-text-settings-container" style="display: none; margin-top: 24px; padding-top: 16px; border-top: 1px dashed var(--border-color);">
                 <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                    ■ フリーテキスト設定
-                    <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);">（枠内に自由に入力した文言を描画します）</span>
+                    <span data-i18n="free_text_title">■ フリーテキスト設定</span>
+                    <span style="font-size: 11px; font-weight: normal; color: var(--text-muted);" data-i18n="free_text_desc">（枠内に自由に入力した文言を描画します）</span>
                 </div>
                 <div class="form-grid">
                     <div class="form-group" id="group-free-text-1">
-                        <label>テキスト1 の内容</label>
-                        <input type="text" id="free-text-1" placeholder="カスタムテキスト1を入力">
+                        <label data-i18n="lbl_free_text_1">テキスト1 の内容</label>
+                        <input type="text" id="free-text-1" placeholder="カスタムテキスト1を入力" data-i18n-placeholder="ph_free_text_1">
                     </div>
                     <div class="form-group" id="group-free-text-2">
-                        <label>テキスト2 の内容</label>
-                        <input type="text" id="free-text-2" placeholder="カスタムテキスト2を入力">
+                        <label data-i18n="lbl_free_text_2">テキスト2 の内容</label>
+                        <input type="text" id="free-text-2" placeholder="カスタムテキスト2を入力" data-i18n-placeholder="ph_free_text_2">
                     </div>
                     <div class="form-group" id="group-free-text-3">
-                        <label>テキスト3 の内容</label>
-                        <input type="text" id="free-text-3" placeholder="カスタムテキスト3を入力">
+                        <label data-i18n="lbl_free_text_3">テキスト3 の内容</label>
+                        <input type="text" id="free-text-3" placeholder="カスタムテキスト3を入力" data-i18n-placeholder="ph_free_text_3">
                     </div>
                 </div>
             </div>
@@ -905,50 +907,50 @@
     <!-- 4. フォント設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-font', this)">
-            フォント設定 <span>▼</span>
+            <span data-i18n="acc_font_settings">フォント設定</span> <span>▼</span>
         </div>
         <div class="accordion-content" id="content-font">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>テキスト1 (1行目 or 左1行目) フォント(%)</label>
+                    <label data-i18n="lbl_font_size_1">テキスト1 (1行目 or 左1行目) フォント(%)</label>
                     <input type="number" id="font-size-1" value="38" min="1" max="200">
                 </div>
                 <div class="form-group">
-                    <label>テキスト2 (2行目 or 右1行目) フォント(%)</label>
+                    <label data-i18n="lbl_font_size_2">テキスト2 (2行目 or 右1行目) フォント(%)</label>
                     <input type="number" id="font-size-2" value="30" min="1" max="200">
                 </div>
                 <div class="form-group only-side-2">
-                    <label>テキスト3 (左2行目) フォント(%)</label>
+                    <label data-i18n="lbl_font_size_3">テキスト3 (左2行目) フォント(%)</label>
                     <input type="number" id="font-size-3" value="30" min="1" max="200">
                 </div>
                 <div class="form-group only-side-2">
-                    <label>テキスト4 (右2行目) フォント(%)</label>
+                    <label data-i18n="lbl_font_size_4">テキスト4 (右2行目) フォント(%)</label>
                     <input type="number" id="font-size-4" value="32" min="1" max="200">
                 </div>
 
                 <div class="form-group">
-                    <label>テキスト1 カラー</label>
+                    <label data-i18n="lbl_font_color_1">テキスト1 カラー</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="font-color-1" value="#252525" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="font-color-text-1" value="#252525" style="flex: 1; font-family: monospace;" maxlength="7">
                     </div>
                 </div>
                 <div class="form-group">
-                    <label>テキスト2 カラー</label>
+                    <label data-i18n="lbl_font_color_2">テキスト2 カラー</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="font-color-2" value="#6A6A6A" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="font-color-text-2" value="#6A6A6A" style="flex: 1; font-family: monospace;" maxlength="7">
                     </div>
                 </div>
                 <div class="form-group only-side-2">
-                    <label>テキスト3 カラー</label>
+                    <label data-i18n="lbl_font_color_3">テキスト3 カラー</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="font-color-3" value="#252525" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="font-color-text-3" value="#252525" style="flex: 1; font-family: monospace;" maxlength="7">
                     </div>
                 </div>
                 <div class="form-group only-side-2">
-                    <label>テキスト4 カラー</label>
+                    <label data-i18n="lbl_font_color_4">テキスト4 カラー</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="font-color-4" value="#6A6A6A" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="font-color-text-4" value="#6A6A6A" style="flex: 1; font-family: monospace;" maxlength="7">
@@ -957,7 +959,7 @@
             </div>
 
             <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 16px;">
-                <label>◆ フォント書体</label>
+                <label data-i18n="sec_font_family">◆ フォント書体</label>
                 <div class="font-picker">
                     <label class="font-option-container">
                         <input type="radio" name="font-family" value="Noto Sans JP" checked class="font-radio">
@@ -1007,70 +1009,70 @@
     <!-- 5. フレーム設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-frame-settings', this)">
-            フレーム設定 <span>▼</span>
+            <span data-i18n="acc_frame_settings">フレーム設定</span> <span>▼</span>
         </div>
         <div class="accordion-content" id="content-frame-settings">
-            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);">
+            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);" data-i18n="sec_frame_margin">
             ◆ 余白サイズ設定</div>
             
             <div class="form-grid">
                 <div class="form-group">
-                    <label>上 枠サイズ(%)</label>
+                    <label data-i18n="lbl_frame_top">上 枠サイズ(%)</label>
                     <input type="number" id="frame-top" value="4" min="0" max="50">
                 </div>
                 <div class="form-group">
-                    <label>下 枠サイズ(%)</label>
+                    <label data-i18n="lbl_frame_bottom">下 枠サイズ(%)</label>
                     <input type="number" id="frame-bottom" value="12" min="0" max="50">
                 </div>
                 <div class="form-group">
-                    <label>左 枠サイズ(%)</label>
+                    <label data-i18n="lbl_frame_left">左 枠サイズ(%)</label>
                     <input type="number" id="frame-left" value="4" min="0" max="50">
                 </div>
                 <div class="form-group">
-                    <label>右 枠サイズ(%)</label>
+                    <label data-i18n="lbl_frame_right">右 枠サイズ(%)</label>
                     <input type="number" id="frame-right" value="4" min="0" max="50">
                 </div>
             </div>
 
             <hr style="margin: 24px 0; border: none; border-top: 1px dashed var(--border-color);">
             
-            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);">
+            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);" data-i18n="sec_frame_color">
             ◆ フレームカラー設定</div>
 
             <div class="color-picker">
                 <label class="color-option">
                     <input type="radio" name="frame-color" value="#FFFFFF" checked>
                     <span class="color-swatch" style="background-color: #FFFFFF;"></span>
-                    <span class="color-label">白 (#FFFFFF)</span>
+                    <span class="color-label" data-i18n="color_white">白 (#FFFFFF)</span>
                 </label>
                 <label class="color-option">
                     <input type="radio" name="frame-color" value="#000000">
                     <span class="color-swatch" style="background-color: #000000;"></span>
-                    <span class="color-label">黒 (#000000)</span>
+                    <span class="color-label" data-i18n="color_black">黒 (#000000)</span>
                 </label>
                 <label class="color-option">
                     <input type="radio" name="frame-color" value="#A0A0A0">
                     <span class="color-swatch" style="background-color: #A0A0A0;"></span>
-                    <span class="color-label">グレー (#A0A0A0)</span>
+                    <span class="color-label" data-i18n="color_gray">グレー (#A0A0A0)</span>
                 </label>
             </div>
 
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-color);"></div>
-            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);">
+            <div style="margin-bottom: 16px; font-size: 13px; font-weight: 600; color: var(--text-sub);" data-i18n="sec_border_settings">
             ◆ 枠線設定</div>
             <div style="display:flex; flex-wrap: wrap;">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); margin: 0 10px 10px 10px;">
                     <input type="checkbox" id="frame-border-chk" style="width: 16px; height: 16px; accent-color: var(--primary);"> 
-                    <span style="font-size: 13px; font-weight: 600;">外枠線を設ける（グレー）</span>
+                    <span style="font-size: 13px; font-weight: 600;" data-i18n="chk_outer_border">外枠線を設ける（グレー）</span>
                 </label>
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color); margin: 0 10px 10px 10px;">
                     <input type="checkbox" id="inner-border-chk" style="width: 16px; height: 16px; accent-color: var(--primary);"> 
-                    <span style="font-size: 13px; font-weight: 600;">内枠線を設ける（グレー）</span>
+                    <span style="font-size: 13px; font-weight: 600;" data-i18n="chk_inner_border">内枠線を設ける（グレー）</span>
                 </label>
             </div>
 
             <div style="margin-top: 16px; padding-top: 16px; border-top: 1px dashed var(--border-color);"></div>
-            <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--text-sub);">
+            <div style="margin-bottom: 12px; font-size: 13px; font-weight: 600; color: var(--text-sub);" data-i18n="sec_separator_settings">
             ◆ 区切り文字設定</div>
             <div class="separator-picker">
                 <label class="separator-option">
@@ -1107,19 +1109,19 @@
                 </label>
                 <label class="separator-option">
                     <input type="radio" name="separator-char" value="   ">
-                    <span class="separator-label" title="半角スペース3つ">スペース</span>
+                    <span class="separator-label" title="半角スペース3つ" data-i18n="sep_space">スペース</span>
                 </label>
                 <label class="separator-option">
                     <input type="radio" name="separator-char" value=" ">
-                    <span class="separator-label" title="半角スペース1つ">なし</span>
+                    <span class="separator-label" title="半角スペース1つ" data-i18n="sep_none">なし</span>
                 </label>
             </div>
         </div>
     </div>
 
     <!-- アクションボタン群 -->
-    <button id="generate-btn" class="main-btn">フレームを生成する</button>
-    <button id="download-btn" class="main-btn" style="display: none;">一括ダウンロードする</button>
+    <button id="generate-btn" class="main-btn" data-i18n="btn_generate">フレームを生成する</button>
+    <button id="download-btn" class="main-btn" style="display: none;" data-i18n="btn_download_all">一括ダウンロードする</button>
     
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
 
@@ -1129,15 +1131,15 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・画像の読み込みやフレーム合成などの処理はブラウザ内（ローカル）で実施しています。<br>サーバ等へのアップロードは行われません。</p>
-        <p>・設定はブラウザ内（ローカル）に保存されますので、別のブラウザや端末には引き継がれません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・画像の読み込みやフレーム合成などの処理はブラウザ内（ローカル）で実施しています。<br>サーバ等へのアップロードは行われません。</p>
+        <p data-i18n="exp_about_2">・設定はブラウザ内（ローカル）に保存されますので、別のブラウザや端末には引き継がれません。</p>
         
-        <h3> できること</h3>
-        <p>・アップロードした画像に、EXIF情報のフレームを追加します。</p>
-        <p>・生成した画像のダウンロードができるとともに、生成時にクリップボードにも保存されるため、そのままペーストして利用が可能です。</p>
-        <p>・生成後のサムネイルをタップすると、スマホでは左右スワイプで前後の画像を滑らかにプレビュー確認できます。</p>
-        <p>・フォントサイズやフレーム枠などの細かい設定や、EXIF情報を強制上書きするモード、フリーテキストの挿入など、ご自身の好きな設定に変更ください。</p>
+        <h3 data-i18n="exp_features_title"> できること</h3>
+        <p data-i18n="exp_feat_1">・アップロードした画像に、EXIF情報のフレームを追加します。</p>
+        <p data-i18n="exp_feat_2">・生成した画像のダウンロードができるとともに、生成時にクリップボードにも保存されるため、そのままペーストして利用が可能です。</p>
+        <p data-i18n="exp_feat_3">・生成後のサムネイルをタップすると、スマホでは左右スワイプで前後の画像を滑らかにプレビュー確認できます。</p>
+        <p data-i18n="exp_feat_4">・フォントサイズやフレーム枠などの細かい設定や、EXIF情報を強制上書きするモード、フリーテキストの挿入など、ご自身の好きな設定に変更ください。</p>
     </div>
 </div>
 

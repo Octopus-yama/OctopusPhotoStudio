@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Image Resizer 専用辞書JS -->
+    <script src="lang/image-resize-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -134,7 +136,7 @@
         .single-mode-container.active {
             display: grid;
             grid-template-columns: 1fr 340px;
-            align-items: start; /* Sticky追従を正常に機能させるため開始位置揃え */
+            align-items: start;
         }
         @media (max-width: 900px) {
             .single-mode-container.active {
@@ -163,7 +165,6 @@
             box-shadow: 0 0 0 3px var(--primary-glow);
         }
 
-        /* PC表示時：画面スクロールに合わせて左プレビューを上部に追従固定 */
         @media (min-width: 901px) {
             .stage-wrapper {
                 position: sticky;
@@ -191,7 +192,6 @@
             pointer-events: none;
         }
 
-        /* スマホ・アプリ表示時のプレビュー高さ抑制（下部パネルのチラ見せ） */
         @media (max-width: 768px) {
             .stage-wrapper {
                 min-height: auto;
@@ -237,7 +237,7 @@
         .crop-grid-line-v1 { left: 33.333%; top: 0; bottom: 0; width: 1px; }
         .crop-grid-line-v2 { left: 66.666%; top: 0; bottom: 0; width: 1px; }
 
-        /* 動的案内トースト（1本指フリック時にフェード表示） */
+        /* 動的案内トースト */
         .crop-touch-toast {
             position: absolute;
             top: 50%;
@@ -814,16 +814,16 @@
 <!-- 1枚モード中 追加ドロップ確認モーダル -->
 <div class="confirm-modal-backdrop" id="drop-confirm-modal">
     <div class="confirm-modal-box">
-        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="閉じる" title="閉じる (Esc)">&times;</button>
-        <div class="confirm-modal-title">画像の投入方法を選択してください</div>
-        <div class="confirm-modal-desc">
+        <button type="button" class="modal-close-btn" id="modal-close-btn" aria-label="閉じる" title="閉じる (Esc)" data-i18n-title="modal_close_title">&times;</button>
+        <div class="confirm-modal-title" data-i18n="modal_drop_title">画像の投入方法を選択してください</div>
+        <div class="confirm-modal-desc" data-i18n="modal_drop_desc">
             現在「1枚調整モード」で作業中です。<br>
             新しく追加された画像をどのように扱いますか？
         </div>
         <div class="confirm-modal-actions">
-            <button type="button" class="modal-btn modal-btn-primary" id="modal-btn-replace">🔄 この画像に差し替えて1枚調整を続ける</button>
-            <button type="button" class="modal-btn modal-btn-secondary" id="modal-btn-switch-batch">⚡ 複数枚モードに切り替えて合算する</button>
-            <button type="button" class="modal-btn modal-btn-cancel" id="modal-btn-cancel">キャンセル</button>
+            <button type="button" class="modal-btn modal-btn-primary" id="modal-btn-replace" data-i18n="modal_btn_replace">🔄 この画像に差し替えて1枚調整を続ける</button>
+            <button type="button" class="modal-btn modal-btn-secondary" id="modal-btn-switch-batch" data-i18n="modal_btn_switch_batch">⚡ 複数枚モードに切り替えて合算する</button>
+            <button type="button" class="modal-btn modal-btn-cancel" id="modal-btn-cancel" data-i18n="modal_btn_cancel">キャンセル</button>
         </div>
     </div>
 </div>
@@ -846,21 +846,21 @@
 
     <!-- モード切替タブバー -->
     <div class="mode-nav-tabs">
-        <button type="button" class="mode-tab-btn active" id="tab-btn-single">
+        <button type="button" class="mode-tab-btn active" id="tab-btn-single" data-i18n="tab_single_mode">
             <span>🎯</span> 1枚調整モード (スマート構図・比率)
         </button>
-        <button type="button" class="mode-tab-btn" id="tab-btn-batch">
+        <button type="button" class="mode-tab-btn" id="tab-btn-batch" data-i18n="tab_batch_mode">
             <span>⚡</span> 複数枚一括モード (サイズ統一・圧縮)
         </button>
     </div>
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p id="drop-area-title">ここをタップするか、画像ファイルをドラッグ＆ドロップ</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <p id="drop-area-title" data-i18n="drop_area_title">ここをタップするか、画像ファイルをドラッグ＆ドロップ</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP 対応（推奨上限: 最大 </span><span data-octopus-max-files>50</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
-        <button type="button" id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
+        <button type="button" id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all">すべてのファイルをクリア</button>
     </div>
 
     <!-- ==============================================
@@ -868,7 +868,7 @@
     =================================================== -->
     <div class="single-mode-container" id="single-mode-area">
         <!-- プレビューステージ -->
-        <div class="stage-wrapper" id="stage-wrapper" title="ここに別の画像を直接ドロップして差し替え・追加も可能です">
+        <div class="stage-wrapper" id="stage-wrapper" title="ここに別の画像を直接ドロップして差し替え・追加も可能です" data-i18n-title="stage_wrapper_title">
             <div class="stage-viewport" id="stage-viewport">
                 <img id="stage-base-img" class="stage-base-img" alt="プレビュー">
                 <div class="crop-overlay" id="crop-overlay">
@@ -886,15 +886,15 @@
                 </div>
 
                 <!-- 1本指フリック時の動的案内トースト -->
-                <div class="crop-touch-toast" id="crop-touch-toast">✌️ 枠内の位置調整は指2本で行えます</div>
+                <div class="crop-touch-toast" id="crop-touch-toast" data-i18n="toast_two_finger">✌️ 枠内の位置調整は指2本で行えます</div>
             </div>
 
             <div class="stage-info-container">
                 <div class="stage-info-bar" id="stage-info-bar">
-                    元画像: <span id="info-orig-dim">-</span> | 出力目標: <span id="info-target-dim">-</span> (<span id="info-ratio-label">-</span>)
+                    <span data-i18n="info_orig_prefix">元画像: </span><span id="info-orig-dim">-</span> | <span data-i18n="info_target_prefix">出力目標: </span><span id="info-target-dim">-</span> (<span id="info-ratio-label">-</span>)
                 </div>
-                <!-- 常駐バッジ（写真の邪魔にならない枠外・右下に配置） -->
-                <div class="two-finger-badge" id="two-finger-badge">✌️ 2本指で位置調整</div>
+                <!-- 常駐バッジ -->
+                <div class="two-finger-badge" id="two-finger-badge" data-i18n="badge_two_finger">✌️ 2本指で位置調整</div>
             </div>
         </div>
 
@@ -903,45 +903,45 @@
             <!-- 出力目標サイズ設定 -->
             <div class="panel-card">
                 <div class="panel-title">
-                    <span>📐 目標出力サイズ</span>
-                    <button type="button" class="swap-dim-btn" id="btn-swap-dim" title="幅と高さを入れ替え">⇄ 縦横入替</button>
+                    <span data-i18n="panel_target_size">📐 目標出力サイズ</span>
+                    <button type="button" class="swap-dim-btn" id="btn-swap-dim" title="幅と高さを入れ替え" data-i18n="btn_swap_dim" data-i18n-title="btn_swap_dim_title">⇄ 縦横入替</button>
                 </div>
 
                 <div style="display:grid; grid-template-columns: 1fr auto 1fr; gap: 8px; align-items: center;">
                     <div class="form-group">
-                        <label style="font-size:11px;">幅 (px)</label>
+                        <label style="font-size:11px;" data-i18n="lbl_width_px">幅 (px)</label>
                         <input type="number" id="single-target-w" value="1280" min="10" max="10000">
                     </div>
                     <span style="font-size:14px; color:var(--text-muted); padding-top:16px;">×</span>
                     <div class="form-group">
-                        <label style="font-size:11px;">高さ (px)</label>
+                        <label style="font-size:11px;" data-i18n="lbl_height_px">高さ (px)</label>
                         <input type="number" id="single-target-h" value="670" min="10" max="10000">
                     </div>
                 </div>
 
                 <!-- プリセットボタン群 -->
                 <div class="preset-grid">
-                    <button type="button" class="preset-chip-btn active" data-w="1280" data-h="670" data-name="アイキャッチ">
+                    <button type="button" class="preset-chip-btn active" data-w="1280" data-h="670" data-name="アイキャッチ" data-i18n="preset_eyecatch">
                         アイキャッチ
                         <span>1280 × 670 (1.91:1)</span>
                     </button>
-                    <button type="button" class="preset-chip-btn" data-w="1920" data-h="1080" data-name="16:9 Full HD">
+                    <button type="button" class="preset-chip-btn" data-w="1920" data-h="1080" data-name="16:9 Full HD" data-i18n="preset_16_9">
                         16 : 9 ワイド
                         <span>1920 × 1080</span>
                     </button>
-                    <button type="button" class="preset-chip-btn" data-w="1080" data-h="1080" data-name="正方形 1:1">
+                    <button type="button" class="preset-chip-btn" data-w="1080" data-h="1080" data-name="正方形 1:1" data-i18n="preset_1_1">
                         1 : 1 正方形
                         <span>1080 × 1080</span>
                     </button>
-                    <button type="button" class="preset-chip-btn" data-w="1600" data-h="1200" data-name="4:3 標準">
+                    <button type="button" class="preset-chip-btn" data-w="1600" data-h="1200" data-name="4:3 標準" data-i18n="preset_4_3">
                         4 : 3 標準
                         <span>1600 × 1200</span>
                     </button>
-                    <button type="button" class="preset-chip-btn" data-w="1800" data-h="1200" data-name="3:2 一眼標準">
+                    <button type="button" class="preset-chip-btn" data-w="1800" data-h="1200" data-name="3:2 一眼標準" data-i18n="preset_3_2">
                         3 : 2 一眼
                         <span>1800 × 1200</span>
                     </button>
-                    <button type="button" class="preset-chip-btn" data-w="1200" data-h="630" data-name="SNS">
+                    <button type="button" class="preset-chip-btn" data-w="1200" data-h="630" data-name="SNS" data-i18n="preset_sns">
                         SNS
                         <span>1200 × 630</span>
                     </button>
@@ -950,41 +950,41 @@
 
             <!-- 変形方式 ＆ クイック配置 -->
             <div class="panel-card">
-                <div class="panel-title">構図合わせ・変形方式</div>
+                <div class="panel-title" data-i18n="panel_transform_mode">構図合わせ・変形方式</div>
 
                 <div class="mode-radio-group">
                     <label class="mode-radio-label">
                         <input type="radio" name="single-transform-mode" value="crop" checked>
                         <div>
-                            <strong>比率維持トリミング（推奨）</strong>
-                            <div style="font-size:11px; color:var(--text-muted);">枠をドラッグ（指2本）して好みの位置を切り抜きます。</div>
+                            <strong data-i18n="mode_crop_title">比率維持トリミング（推奨）</strong>
+                            <div style="font-size:11px; color:var(--text-muted);" data-i18n="mode_crop_desc">枠をドラッグ（指2本）して好みの位置を切り抜きます。</div>
                         </div>
                     </label>
                     <label class="mode-radio-label">
                         <input type="radio" name="single-transform-mode" value="distort">
                         <div>
-                            <strong>歪み変形（押しつぶし / 伸長）</strong>
-                            <div style="font-size:11px; color:var(--text-muted);">端を切らずに指定ピクセルへ画像を押し込みます。</div>
+                            <strong data-i18n="mode_distort_title">歪み変形（押しつぶし / 伸長）</strong>
+                            <div style="font-size:11px; color:var(--text-muted);" data-i18n="mode_distort_desc">端を切らずに指定ピクセルへ画像を押し込みます。</div>
                         </div>
                     </label>
                 </div>
 
                 <div id="quick-align-container" style="margin-top:14px; border-top:1px dashed var(--border-color); padding-top:10px;">
-                    <span style="font-size:11.5px; font-weight:700; color:var(--text-color);">■ クイック配置</span>
+                    <span style="font-size:11.5px; font-weight:700; color:var(--text-color);" data-i18n="lbl_quick_align">■ クイック配置</span>
                     <div class="align-btn-group">
-                        <button type="button" class="align-btn" id="btn-align-start">上 / 左揃え</button>
-                        <button type="button" class="align-btn" id="btn-align-center">中央揃え</button>
-                        <button type="button" class="align-btn" id="btn-align-end">下 / 右揃え</button>
+                        <button type="button" class="align-btn" id="btn-align-start" data-i18n="btn_align_start">上 / 左揃え</button>
+                        <button type="button" class="align-btn" id="btn-align-center" data-i18n="btn_align_center">中央揃え</button>
+                        <button type="button" class="align-btn" id="btn-align-end" data-i18n="btn_align_end">下 / 右揃え</button>
                     </div>
                 </div>
             </div>
 
             <!-- エクスポート設定 -->
             <div class="panel-card">
-                <div class="panel-title">保存設定</div>
+                <div class="panel-title" data-i18n="panel_save_settings">保存設定</div>
                 
                 <div class="form-group" style="margin-bottom:10px;">
-                    <label style="font-size:11px;">出力フォーマット</label>
+                    <label style="font-size:11px;" data-i18n="lbl_export_format">出力フォーマット</label>
                     <select id="single-export-format">
                         <option value="jpeg" selected>JPEG (.jpg)</option>
                         <option value="png">PNG (.png)</option>
@@ -993,28 +993,28 @@
                 </div>
 
                 <div class="form-group" id="single-quality-group" style="margin-bottom:10px;">
-                    <label style="font-size:11px;">JPEG品質: <span id="single-quality-val" style="font-weight:700; color:var(--primary);">92%</span></label>
+                    <label style="font-size:11px;"><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質: </span><span id="single-quality-val" style="font-weight:700; color:var(--primary);">92%</span></label>
                     <input type="range" id="single-export-quality" min="70" max="100" step="1" value="92">
                 </div>
 
                 <div class="form-group" style="margin-bottom:10px;">
-                    <label style="font-size:11px;">ファイル名規則</label>
+                    <label style="font-size:11px;" data-i18n="lbl_export_namemode">ファイル名規則</label>
                     <select id="single-export-namemode">
-                        <option value="prefix" selected>接頭辞（resize_xxx.jpg）</option>
-                        <option value="suffix">接尾辞（xxx_resize.jpg）</option>
-                        <option value="keep">元ファイル名そのまま</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞（resize_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞（xxx_resize.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名そのまま</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12px;">
                         <input type="checkbox" id="single-export-exif" checked style="accent-color:var(--primary); width:15px; height:15px;">
-                        <span>元画像のExif情報を引き継ぐ（JPEG出力時）</span>
+                        <span data-i18n="lbl_single_export_exif">元画像のExif情報を引き継ぐ（JPEG出力時）</span>
                     </label>
                 </div>
 
-                <button type="button" class="main-btn" id="btn-single-save" style="margin-top:16px;">💾 リサイズして保存する</button>
-                <button type="button" class="sub-action-btn" id="btn-single-copy">📋 クリップボードにコピー</button>
+                <button type="button" class="main-btn" id="btn-single-save" style="margin-top:16px;" data-i18n="btn_single_save">💾 リサイズして保存する</button>
+                <button type="button" class="sub-action-btn" id="btn-single-copy" data-i18n="btn_single_copy">📋 クリップボードにコピー</button>
             </div>
         </div>
     </div>
@@ -1027,31 +1027,31 @@
         <div class="batch-settings-bar">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>リサイズ方式</label>
+                    <label data-i18n="lbl_batch_resize_mode">リサイズ方式</label>
                     <select id="batch-resize-mode">
-                        <option value="longSide" selected>長辺ピクセル指定 (アスペクト比維持)</option>
-                        <option value="percent">パーセント指定 (%)</option>
+                        <option value="longSide" selected data-i18n="opt_mode_longside">長辺ピクセル指定 (アスペクト比維持)</option>
+                        <option value="percent" data-i18n="opt_mode_percent">パーセント指定 (%)</option>
                     </select>
                 </div>
 
                 <div class="form-group" id="group-batch-longside">
-                    <label>長辺目標サイズ (px)</label>
+                    <label data-i18n="lbl_batch_longside">長辺目標サイズ (px)</label>
                     <input type="number" id="batch-target-longside" value="1920" min="50" max="10000" step="10">
                 </div>
 
                 <div class="form-group" id="group-batch-percent" style="display: none;">
-                    <label>縮小率 (%): <span id="batch-percent-val" style="font-weight:700; color:var(--primary);">50%</span></label>
+                    <label><span data-i18n="lbl_batch_percent_prefix">縮小率 (%): </span><span id="batch-percent-val" style="font-weight:700; color:var(--primary);">50%</span></label>
                     <input type="range" id="batch-target-percent" min="5" max="100" step="5" value="50">
                 </div>
 
                 <div class="form-group">
-                    <label>比率強制オプション (中央カット)</label>
+                    <label data-i18n="lbl_batch_aspect_force">比率強制オプション (中央カット)</label>
                     <select id="batch-aspect-force">
-                        <option value="none" selected>元画像の比率をそのまま維持</option>
-                        <option value="16:9">16 : 9 ワイド (中央自動切り抜き)</option>
-                        <option value="4:3">4 : 3 標準 (中央自動切り抜き)</option>
-                        <option value="3:2">3 : 2 一眼 (中央自動切り抜き)</option>
-                        <option value="1:1">1 : 1 正方形 (中央自動切り抜き)</option>
+                        <option value="none" selected data-i18n="opt_aspect_none">元画像の比率をそのまま維持</option>
+                        <option value="16:9" data-i18n="opt_aspect_16_9">16 : 9 ワイド (中央自動切り抜き)</option>
+                        <option value="4:3" data-i18n="opt_aspect_4_3">4 : 3 標準 (中央自動切り抜き)</option>
+                        <option value="3:2" data-i18n="opt_aspect_3_2">3 : 2 一眼 (中央自動切り抜き)</option>
+                        <option value="1:1" data-i18n="opt_aspect_1_1">1 : 1 正方形 (中央自動切り抜き)</option>
                     </select>
                 </div>
             </div>
@@ -1060,7 +1060,7 @@
 
             <div class="form-grid">
                 <div class="form-group">
-                    <label>出力フォーマット</label>
+                    <label data-i18n="lbl_export_format">出力フォーマット</label>
                     <select id="batch-export-format">
                         <option value="jpeg" selected>JPEG (.jpg)</option>
                         <option value="png">PNG (.png)</option>
@@ -1069,16 +1069,16 @@
                 </div>
 
                 <div class="form-group" id="batch-quality-group">
-                    <label>JPEG品質: <span id="batch-quality-display" style="font-weight:700; color:var(--primary);">90%</span></label>
+                    <label><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質: </span><span id="batch-quality-display" style="font-weight:700; color:var(--primary);">90%</span></label>
                     <input type="range" id="batch-export-quality" min="70" max="100" step="1" value="90">
                 </div>
 
                 <div class="form-group" id="batch-export-namemode">
-                    <label>ファイル名規則</label>
+                    <label data-i18n="lbl_export_namemode">ファイル名規則</label>
                     <select id="batch-export-namemode-select">
-                        <option value="prefix" selected>接頭辞（resize_xxx.jpg）</option>
-                        <option value="suffix">接尾辞（xxx_resize.jpg）</option>
-                        <option value="keep">元ファイル名そのまま</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞（resize_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞（xxx_resize.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名そのまま</option>
                     </select>
                 </div>
             </div>
@@ -1086,7 +1086,7 @@
             <div style="margin-top: 14px;">
                 <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:12.5px;">
                     <input type="checkbox" id="batch-export-exif" checked style="accent-color:var(--primary); width:16px; height:16px;">
-                    <span>Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影機材・日時・寸法を完全更新維持）</span>
+                    <span data-i18n="lbl_batch_export_exif">Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影機材・日時・寸法を完全更新維持）</span>
                 </label>
             </div>
         </div>
@@ -1096,24 +1096,24 @@
             <table class="batch-table">
                 <thead>
                     <tr>
-                        <th style="width: 60px;">サムネ</th>
-                        <th>ファイル名</th>
-                        <th style="width: 130px;">元解像度</th>
-                        <th style="width: 170px;">変換予定サイズ</th>
-                        <th style="width: 60px; text-align: center;">除外</th>
+                        <th style="width: 60px;" data-i18n="th_thumb">サムネ</th>
+                        <th data-i18n="th_filename">ファイル名</th>
+                        <th style="width: 130px;" data-i18n="th_orig_res">元解像度</th>
+                        <th style="width: 170px;" data-i18n="th_target_res">変換予定サイズ</th>
+                        <th style="width: 60px; text-align: center;" data-i18n="th_remove">除外</th>
                     </tr>
                 </thead>
                 <tbody id="batch-table-body"></tbody>
             </table>
         </div>
 
-        <button type="button" class="main-btn" id="btn-batch-run" style="display: none;">⚡ 一括変換を実行する</button>
-        <button type="button" class="main-btn" id="download-btn" style="display: none;">すべて一括ダウンロードする</button>
+        <button type="button" class="main-btn" id="btn-batch-run" style="display: none;" data-i18n="btn_batch_run">⚡ 一括変換を実行する</button>
+        <button type="button" class="main-btn" id="download-btn" style="display: none;" data-i18n="btn_download_all">すべて一括ダウンロードする</button>
 
         <!-- 進捗プログレスバー -->
         <div class="progress-box" id="progress-box">
             <div class="progress-header">
-                <span id="progress-label">処理中...</span>
+                <span id="progress-label" data-i18n="progress_processing">処理中...</span>
                 <span id="progress-counter">0 / 0</span>
             </div>
             <div class="progress-track">
@@ -1131,14 +1131,14 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・アイキャッチ画像（1280×670）やSNS用比率への「スマート構図追い込み」から、大量写真の「長辺・パーセント一括リサイズ」までをブラウザ内で軽快に行うツールです。</p>
-        <p>・画像の展開、トリミング、リサイズ描画、Exifの更新再結合はすべてお使いの端末内（完全クライアントサイド）で行われます。写真が外部サーバーへ送信されることは一切ありません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・アイキャッチ画像（1280×670）やSNS用比率への「スマート構図追い込み」から、大量写真の「長辺・パーセント一括リサイズ」までをブラウザ内で軽快に行うツールです。</p>
+        <p data-i18n="exp_about_2">・画像の展開、トリミング、リサイズ描画、Exifの更新再結合はすべてお使いの端末内（完全クライアントサイド）で行われます。写真が外部サーバーへ送信されることは一切ありません。</p>
         
-        <h3> 2大モードの特長</h3>
-        <p>・<strong>1枚調整モード</strong>：目標のピクセル寸法を入力するだけで、写真の解像度を最大限活かした半透明クロップ枠が自動展開されます。枠を上下・左右にスライド（スマホは指2本）して直感的に構図を決め、元画像から一発で切り出しが可能です。</p>
-        <p>・<strong>複数枚一括モード</strong>：PC最大50枚、モバイル最大15枚の写真を安全に順次シリアル処理します。端末のメモリ枯渇を防ぐため、1枚ごとにメモリを確実に破棄しながら変換します。</p>
-        <p>・<strong>Exifメタデータの完全保持</strong>：最新のExif 2.3〜2.32規格（時差情報OffsetTimeや各種センサータグ等）に対応し、リサイズ後の実解像度（PixelXDimension / PixelYDimension）を正確に埋め戻した上で書き出します。</p>
+        <h3 data-i18n="exp_modes_title"> 2大モードの特長</h3>
+        <p data-i18n="exp_modes_1">・<strong>1枚調整モード</strong>：目標のピクセル寸法を入力するだけで、写真の解像度を最大限活かした半透明クロップ枠が自動展開されます。枠を上下・左右にスライド（スマホは指2本）して直感的に構図を決め、元画像から一発で切り出しが可能です。</p>
+        <p data-i18n="exp_modes_2">・<strong>複数枚一括モード</strong>：PC最大50枚、モバイル最大15枚の写真を安全に順次シリアル処理します。端末のメモリ枯渇を防ぐため、1枚ごとにメモリを確実に破棄しながら変換します。</p>
+        <p data-i18n="exp_modes_3">・<strong>Exifメタデータの完全保持</strong>：最新のExif 2.3〜2.32規格（時差情報OffsetTimeや各種センサータグ等）に対応し、リサイズ後の実解像度（PixelXDimension / PixelYDimension）を正確に埋め戻した上で書き出します。</p>
     </div>
 </div>
 

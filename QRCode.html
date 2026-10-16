@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- QR Code 専用辞書JS -->
+    <script src="lang/qr-code-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -251,20 +253,20 @@
     <!-- 1. 入力データ アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-input', this)">
-            QRコード内容の入力 <span>▼</span>
+            <span data-i18n="acc_qr_input">QRコード内容の入力</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-input">
             <!-- タブ切り替え -->
             <div class="tab-group">
-                <button type="button" class="tab-btn active" id="tab-mode-text">🔗 URL・自由テキスト</button>
-                <button type="button" class="tab-btn" id="tab-mode-wifi">📶 Wi-Fi簡単接続</button>
+                <button type="button" class="tab-btn active" id="tab-mode-text" data-i18n="tab_mode_text">🔗 URL・自由テキスト</button>
+                <button type="button" class="tab-btn" id="tab-mode-wifi" data-i18n="tab_mode_wifi">📶 Wi-Fi簡単接続</button>
             </div>
 
             <!-- パネルA: URL・テキスト入力 -->
             <div id="panel-mode-text">
                 <div class="form-group">
-                    <label for="input-text">変換するテキストまたはURL</label>
-                    <textarea id="input-text" rows="5" placeholder="https://example.com や 任意のメッセージを入力してください"></textarea>
+                    <label for="input-text" data-i18n="lbl_input_text">変換するテキストまたはURL</label>
+                    <textarea id="input-text" rows="5" placeholder="https://example.com や 任意のメッセージを入力してください" data-i18n-placeholder="ph_input_text"></textarea>
                 </div>
             </div>
 
@@ -272,28 +274,28 @@
             <div id="panel-mode-wifi" style="display: none;">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="wifi-ssid">ネットワーク名 (SSID)</label>
-                        <input type="text" id="wifi-ssid" placeholder="例: Buffalo-G-XXXX">
+                        <label for="wifi-ssid" data-i18n="lbl_wifi_ssid">ネットワーク名 (SSID)</label>
+                        <input type="text" id="wifi-ssid" placeholder="例: Buffalo-G-XXXX" data-i18n-placeholder="ph_wifi_ssid">
                     </div>
                     <div class="form-group">
-                        <label for="wifi-encryption">暗号化方式 (セキュリティ)</label>
+                        <label for="wifi-encryption" data-i18n="lbl_wifi_enc">暗号化方式 (セキュリティ)</label>
                         <select id="wifi-encryption">
-                            <option value="WPA" selected>WPA / WPA2 / WPA3 (標準)</option>
-                            <option value="WEP">WEP</option>
-                            <option value="nopass">暗号化なし (パスワード不要)</option>
+                            <option value="WPA" selected data-i18n="opt_enc_wpa">WPA / WPA2 / WPA3 (標準)</option>
+                            <option value="WEP" data-i18n="opt_enc_wep">WEP</option>
+                            <option value="nopass" data-i18n="opt_enc_nopass">暗号化なし (パスワード不要)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="form-group" id="wifi-password-group" style="margin-top: 12px;">
-                    <label for="wifi-password">パスワード (暗号化キー)</label>
-                    <input type="text" id="wifi-password" placeholder="Wi-Fiパスワードを入力">
+                    <label for="wifi-password" data-i18n="lbl_wifi_pass">パスワード (暗号化キー)</label>
+                    <input type="text" id="wifi-password" placeholder="Wi-Fiパスワードを入力" data-i18n-placeholder="ph_wifi_pass">
                 </div>
 
                 <div style="margin-top: 12px;">
                     <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
                         <input type="checkbox" id="wifi-hidden" style="width: 16px; height: 16px; accent-color: var(--primary);">
-                        <span style="font-size: 13px; font-weight: 600;">非公開ネットワーク（ステルスSSID）</span>
+                        <span style="font-size: 13px; font-weight: 600;" data-i18n="lbl_wifi_hidden">非公開ネットワーク（ステルスSSID）</span>
                     </label>
                 </div>
             </div>
@@ -303,30 +305,30 @@
     <!-- 2. デザイン・コード設定 アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-design', this)">
-            デザイン・コード設定 <span>▼</span>
+            <span data-i18n="acc_qr_design">デザイン・コード設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-design">
             <div class="form-grid">
                 <div class="form-group">
                     <label for="qr-ecl">
-                        誤り訂正レベル
-                        <span id="ecl-guard-badge" class="guard-badge" style="display: none;">ロゴ設定により H に固定中</span>
+                        <span data-i18n="lbl_qr_ecl">誤り訂正レベル</span>
+                        <span id="ecl-guard-badge" class="guard-badge" style="display: none;" data-i18n="badge_ecl_guard">ロゴ設定により H に固定中</span>
                     </label>
                     <select id="qr-ecl">
-                        <option value="L">L（7% 復元 / 単純なコード向き）</option>
-                        <option value="M" selected>M（15% 復元 / 標準）</option>
-                        <option value="Q">Q（25% 復元 / 高密度）</option>
-                        <option value="H">H（30% 復元 / 高耐久・ロゴ推奨）</option>
+                        <option value="L" data-i18n="opt_ecl_l">L（7% 復元 / 単純なコード向き）</option>
+                        <option value="M" selected data-i18n="opt_ecl_m">M（15% 復元 / 標準）</option>
+                        <option value="Q" data-i18n="opt_ecl_q">Q（25% 復元 / 高密度）</option>
+                        <option value="H" data-i18n="opt_ecl_h">H（30% 復元 / 高耐久・ロゴ推奨）</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <label for="qr-margin">余白（クワイエットゾーン）: <span id="val-qr-margin" style="font-weight: 700; color: var(--primary);">2</span></label>
+                    <label for="qr-margin"><span data-i18n="lbl_qr_margin_prefix">余白（クワイエットゾーン）: </span><span id="val-qr-margin" style="font-weight: 700; color: var(--primary);">2</span></label>
                     <input type="range" id="qr-margin" min="0" max="4" step="1" value="2" style="margin-top: 6px;">
                 </div>
 
                 <div class="form-group">
-                    <label>コード色 (前景色)</label>
+                    <label data-i18n="lbl_color_dark">コード色 (前景色)</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="qr-color-dark" value="#000000" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="qr-color-dark-text" value="#000000" style="flex: 1; font-family: monospace;" maxlength="7">
@@ -334,7 +336,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>背景色</label>
+                    <label data-i18n="lbl_color_light">背景色</label>
                     <div style="display: flex; gap: 8px;">
                         <input type="color" id="qr-color-light" value="#ffffff" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                         <input type="text" id="qr-color-light-text" value="#ffffff" style="flex: 1; font-family: monospace;" maxlength="7">
@@ -345,7 +347,7 @@
             <div style="margin-top: 14px;">
                 <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
                     <input type="checkbox" id="qr-transparent" style="width: 16px; height: 16px; accent-color: var(--primary);">
-                    <span style="font-size: 13px; font-weight: 600;">背景を透過する（※PNG / SVG 出力時に有効）</span>
+                    <span style="font-size: 13px; font-weight: 600;" data-i18n="lbl_qr_transparent">背景を透過する（※PNG / SVG 出力時に有効）</span>
                 </label>
             </div>
         </div>
@@ -354,34 +356,34 @@
     <!-- 3. 中央ロゴ埋め込み（オプション） アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-logo', this)">
-            中央ロゴ埋め込み (オプション) <span>▼</span>
+            <span data-i18n="acc_qr_logo">中央ロゴ埋め込み (オプション)</span> <span>▼</span>
         </div>
         <div class="accordion-content" id="content-logo">
-            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;">
+            <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 12px;" data-i18n="desc_qr_logo">
                 QRコードの中央にお好きなアイコンやロゴマークを配置できます。<br>
                 ※ロゴ追加時は、読み取り精度を確保するため誤り訂正レベルが自動的に「H（30%）」に固定されます。
             </p>
 
             <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-                <button type="button" class="stage-paste-btn" id="btn-select-logo-file">📁 画像ファイルを選択</button>
+                <button type="button" class="stage-paste-btn" id="btn-select-logo-file" data-i18n="btn_select_logo_file">📁 画像ファイルを選択</button>
                 <input type="file" id="logo-file-input" accept="image/png, image/jpeg, image/svg+xml, image/webp" style="display: none;">
-                <button type="button" class="stage-paste-btn" id="btn-paste-logo-clipboard">📋 クリップボードから貼り付け</button>
+                <button type="button" class="stage-paste-btn" id="btn-paste-logo-clipboard" data-i18n="btn_paste_logo_clipboard">📋 クリップボードから貼り付け</button>
             </div>
 
             <!-- ロゴ選択中のプレビュー＆クリア -->
             <div id="logo-preview-box" class="logo-preview-card" style="display: none;">
                 <img id="logo-thumb-img" class="logo-thumb" alt="ロゴプレビュー">
                 <div class="logo-info">
-                    <strong id="logo-filename-label">ロゴ画像</strong>
-                    <div style="font-size: 11px; color: var(--text-muted);">中央に合成されます</div>
+                    <strong id="logo-filename-label" data-i18n="lbl_logo_filename_default">ロゴ画像</strong>
+                    <div style="font-size: 11px; color: var(--text-muted);" data-i18n="desc_logo_center">中央に合成されます</div>
                 </div>
-                <button type="button" id="btn-clear-logo" class="clear-btn" style="position: static; border-radius: 4px; width: auto; height: auto; padding: 4px 8px; font-size: 11px;">✕ 解除</button>
+                <button type="button" id="btn-clear-logo" class="clear-btn" style="position: static; border-radius: 4px; width: auto; height: auto; padding: 4px 8px; font-size: 11px;" data-i18n="btn_clear_logo">✕ 解除</button>
             </div>
 
             <div id="logo-options-group" style="display: none; margin-top: 16px;">
                 <div class="form-grid">
                     <div class="form-group">
-                        <label for="logo-size-range">ロゴサイズ比率: <span id="val-logo-size" style="font-weight: 700; color: var(--primary);">15%</span></label>
+                        <label for="logo-size-range"><span data-i18n="lbl_logo_size_prefix">ロゴサイズ比率: </span><span id="val-logo-size" style="font-weight: 700; color: var(--primary);">15%</span></label>
                         <input type="range" id="logo-size-range" min="10" max="20" step="1" value="15" style="margin-top: 6px;">
                     </div>
                 </div>
@@ -389,7 +391,7 @@
                 <div style="margin-top: 12px;">
                     <label style="display: inline-flex; align-items: center; gap: 8px; cursor: pointer; color: var(--text-color);">
                         <input type="checkbox" id="logo-padding-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
-                        <span style="font-size: 13px; font-weight: 600;">ロゴ背後に四角い白座布団（余白）を敷く（誤読防止）</span>
+                        <span style="font-size: 13px; font-weight: 600;" data-i18n="lbl_logo_padding">ロゴ背後に四角い白座布団（余白）を敷く（誤読防止）</span>
                     </label>
                 </div>
             </div>
@@ -397,7 +399,7 @@
     </div>
 
     <!-- メイン更新ボタン -->
-    <button id="generate-btn" class="main-btn">🔄 QRコードを生成・更新する</button>
+    <button id="generate-btn" class="main-btn" data-i18n="btn_generate">🔄 QRコードを生成・更新する</button>
     <div id="status-text" style="text-align: center; margin-top: 12px; font-weight: bold; font-size: 13.5px; color: var(--primary);"></div>
 
     <!-- プレビュー＆保存エリア -->
@@ -408,26 +410,26 @@
 
         <div class="export-actions">
             <div class="form-group" style="margin-bottom: 6px;">
-                <label for="export-size-select" style="text-align: center; display: block;">書き出し画像サイズ</label>
+                <label for="export-size-select" style="text-align: center; display: block;" data-i18n="lbl_export_size">書き出し画像サイズ</label>
                 <select id="export-size-select">
-                    <option value="256">256 × 256 px（Web・小サイズ用）</option>
-                    <option value="512" selected>512 × 512 px（標準・SNS用）</option>
-                    <option value="1024">1024 × 1024 px（高解像度用）</option>
-                    <option value="2048">2048 × 2048 px（特大・印刷用）</option>
+                    <option value="256" data-i18n="opt_size_256">256 × 256 px（Web・小サイズ用）</option>
+                    <option value="512" selected data-i18n="opt_size_512">512 × 512 px（標準・SNS用）</option>
+                    <option value="1024" data-i18n="opt_size_1024">1024 × 1024 px（高解像度用）</option>
+                    <option value="2048" data-i18n="opt_size_2048">2048 × 2048 px（特大・印刷用）</option>
                 </select>
             </div>
 
             <div class="action-row">
-                <button type="button" class="main-btn" id="btn-download-png">💾 PNG画像を保存</button>
-                <button type="button" class="sub-btn" id="btn-download-svg">📐 SVGベクターを保存</button>
+                <button type="button" class="main-btn" id="btn-download-png" data-i18n="btn_download_png">💾 PNG画像を保存</button>
+                <button type="button" class="sub-btn" id="btn-download-svg" data-i18n="btn_download_svg">📐 SVGベクターを保存</button>
             </div>
 
-            <button type="button" class="clipboard-btn" id="btn-copy-clipboard">📋 クリップボードに画像をコピー</button>
+            <button type="button" class="clipboard-btn" id="btn-copy-clipboard" data-i18n="btn_copy_clipboard">📋 クリップボードに画像をコピー</button>
 
             <div class="extra-links">
-                <span>他の形式で保存:</span>
-                <a id="link-download-jpeg">JPEG形式</a>
-                <a id="link-download-webp">WebP形式</a>
+                <span data-i18n="lbl_other_formats">他の形式で保存:</span>
+                <a id="link-download-jpeg" data-i18n="link_download_jpeg">JPEG形式</a>
+                <a id="link-download-webp" data-i18n="link_download_webp">WebP形式</a>
             </div>
         </div>
     </div>
@@ -436,16 +438,16 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・入力されたURLやテキスト、Wi-Fi接続情報などのデータは、一切外部サーバーに送信されず、お使いの端末内（ブラウザ完全ローカル）で即座にQRコード画像へ変換されます。</p>
-        <p>・機密パスワードや社内URLなども安心して変換・書き出しいただけます。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・入力されたURLやテキスト、Wi-Fi接続情報などのデータは、一切外部サーバーに送信されず、お使いの端末内（ブラウザ完全ローカル）で即座にQRコード画像へ変換されます。</p>
+        <p data-i18n="exp_about_2">・機密パスワードや社内URLなども安心して変換・書き出しいただけます。</p>
 
-        <h3> Wi-Fi簡単接続QRコードの使い方</h3>
-        <p>・「Wi-Fi簡単接続」タブでご自宅やオフィスのSSIDとパスワードを入力して生成します。</p>
-        <p>・生成されたQRコードをスマートフォンの標準カメラアプリでかざすだけで、パスワードの手入力なしで即座にWi-Fiネットワークへ接続できます。</p>
+        <h3 data-i18n="exp_wifi_title"> Wi-Fi簡単接続QRコードの使い方</h3>
+        <p data-i18n="exp_wifi_1">・「Wi-Fi簡単接続」タブでご自宅やオフィスのSSIDとパスワードを入力して生成します。</p>
+        <p data-i18n="exp_wifi_2">・生成されたQRコードをスマートフォンの標準カメラアプリでかざすだけで、パスワードの手入力なしで即座にWi-Fiネットワークへ接続できます。</p>
 
-        <h3> SVG（ベクター）保存について</h3>
-        <p>・SVG形式で保存すると、ポスターやパンフレット等の印刷物でどれだけ大きく引き伸ばしても一切ドットが粗くならず、極めて鮮明な状態で印刷が可能です。</p>
+        <h3 data-i18n="exp_svg_title"> SVG（ベクター）保存について</h3>
+        <p data-i18n="exp_svg_1">・SVG形式で保存すると、ポスターやパンフレット等の印刷物でどれだけ大きく引き伸ばしても一切ドットが粗くならず、極めて鮮明な状態で印刷が可能です。</p>
     </div>
 </div>
 

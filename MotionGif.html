@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Motion GIF 専用辞書JS -->
+    <script src="lang/motion-gif-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -118,6 +120,10 @@
             display: block;
             margin-top: 6px;
         }
+        .drop-area span span {
+            display: inline;
+            margin-top: 0;
+        }
 
         /* 全ファイルクリアボタン */
         .clear-all-btn { 
@@ -139,7 +145,7 @@
             transform: translateY(-1px); 
         }
 
-        /* 左右2カラムレイアウト（Watermark準拠） */
+        /* 左右2カラムレイアウト */
         .editor-two-column {
             display: grid;
             grid-template-columns: 1.1fr 1fr;
@@ -207,7 +213,7 @@
             font-family: monospace;
         }
 
-        /* プレビュー表示キャンバス（タップ可能UI） */
+        /* プレビュー表示キャンバス */
         .stage-canvas-wrapper {
             width: 100%;
             height: 330px;
@@ -364,7 +370,7 @@
             cursor: pointer;
         }
 
-        /* 動画モード：トリミングシークバー（縦2段レイアウト） */
+        /* 動画モード：トリミングシークバー */
         .video-trim-box {
             display: none;
             flex-direction: column;
@@ -612,7 +618,7 @@
 <!-- 全画面ローディングオーバーレイ -->
 <div class="loading-overlay" id="loading-overlay">
     <div class="loading-spinner"></div>
-    <div class="loading-text" id="loading-text">ファイルを読み込み中...</div>
+    <div class="loading-text" id="loading-text" data-i18n="loading_files">ファイルを読み込み中...</div>
     <div class="loading-subtext" id="loading-subtext"></div>
 </div>
 
@@ -634,44 +640,44 @@
 
     <!-- 1. モード切替タブ -->
     <div class="mode-tabs">
-        <button type="button" class="mode-tab-btn active" id="tab-mode-photo">
+        <button type="button" class="mode-tab-btn active" id="tab-mode-photo" data-i18n="tab_mode_photo">
             <span>📷</span> 写真から作成（スライドショー）
         </button>
-        <button type="button" class="mode-tab-btn" id="tab-mode-video">
+        <button type="button" class="mode-tab-btn" id="tab-mode-video" data-i18n="tab_mode_video">
             <span>🎥</span> 短尺動画から作成（MP4 / MOV）
         </button>
     </div>
 
     <!-- 2. ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p id="drop-prompt">ここをタップするか、複数枚の写真をドラッグ＆ドロップして追加</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files id="max-files-display">20</span> 枚）</span>
+        <p id="drop-prompt" data-i18n="drop_prompt_photo">ここをタップするか、複数枚の写真をドラッグ＆ドロップして追加</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_photo_prefix">JPEG / PNG / WebP 対応（推奨上限: 最大 </span><span data-octopus-max-files id="max-files-display">20</span><span data-i18n="limit_notice_photo_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
-        <button type="button" id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
+        <button type="button" id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all_photos">すべてのファイルをクリア</button>
     </div>
 
-    <!-- 3. 左右2カラムエディターセクション（Watermark準拠） -->
+    <!-- 3. 左右2カラムエディターセクション -->
     <div class="editor-two-column">
 
-        <!-- 左カラム: プレビューステージ（Sticky固定） ＆ コマ/動画制御 -->
+        <!-- 左カラム: プレビューステージ ＆ コマ/動画制御 -->
         <div class="editor-col-left">
             <div class="stage-box">
                 <div class="stage-header">
-                    <span class="stage-title">👁️ ループ再生プレビュー</span>
-                    <span class="stage-counter" id="stage-counter">コマ: 0 / 0</span>
+                    <span class="stage-title" data-i18n="stage_title">👁️ ループ再生プレビュー</span>
+                    <span class="stage-counter" id="stage-counter" data-i18n="stage_counter_zero">コマ: 0 / 0</span>
                 </div>
 
                 <!-- キャンバス外枠タップで一時停止/再生 -->
-                <div class="stage-canvas-wrapper" id="stage-canvas-wrapper" title="クリック / タップで一時停止・再生">
+                <div class="stage-canvas-wrapper" id="stage-canvas-wrapper" title="クリック / タップで一時停止・再生" data-i18n-title="stage_canvas_title">
                     <canvas id="preview-canvas" width="480" height="360"></canvas>
                 </div>
 
                 <!-- プレビュー再生コントロールバー -->
                 <div class="stage-playback-bar">
                     <div class="playback-btn-group">
-                        <button type="button" class="playback-btn" id="btn-play-pause">⏸ 一時停止</button>
-                        <button type="button" class="playback-btn" id="btn-step-prev" title="1コマ前へ">◀</button>
-                        <button type="button" class="playback-btn" id="btn-step-next" title="1コマ次へ">▶</button>
+                        <button type="button" class="playback-btn" id="btn-play-pause" data-i18n="btn_pause">⏸ 一時停止</button>
+                        <button type="button" class="playback-btn" id="btn-step-prev" title="1コマ前へ" data-i18n-title="btn_step_prev_title">◀</button>
+                        <button type="button" class="playback-btn" id="btn-step-next" title="1コマ次へ" data-i18n-title="btn_step_next_title">▶</button>
                     </div>
                     <div style="font-size: 11.5px; color: var(--text-muted); font-weight: 600;" id="playback-speed-label">
                         再生速度: 1.0x
@@ -681,31 +687,31 @@
                 <!-- 写真モード時: サムネイル並び替えトレイ -->
                 <div class="frame-tray" id="photo-frame-tray">
                     <div class="frame-tray-header">
-                        <span>■ 再生順（ドラッグまたは◀▶で並び替え）</span>
+                        <span data-i18n="frame_tray_title">■ 再生順（ドラッグまたは◀▶で並び替え）</span>
                     </div>
                     <div class="frame-grid" id="frame-grid-container">
-                        <div style="grid-column: 1/-1; text-align:center; padding:18px; color:var(--text-muted); font-size:12px;">写真を追加してください</div>
+                        <div style="grid-column: 1/-1; text-align:center; padding:18px; color:var(--text-muted); font-size:12px;" data-i18n="msg_add_photos_placeholder">写真を追加してください</div>
                     </div>
                 </div>
 
-                <!-- 動画モード時: トリミングシークバー（縦2段レイアウト） -->
+                <!-- 動画モード時: トリミングシークバー -->
                 <div class="video-trim-box" id="video-trim-box">
                     <div class="frame-tray-header">
-                        <span>■ 切り出し範囲（最大10秒 / 推奨3〜5秒）</span>
+                        <span data-i18n="video_trim_title">■ 切り出し範囲（最大10秒 / 推奨3〜5秒）</span>
                         <span id="video-duration-label" style="font-family: monospace;">動画長: 0.0s</span>
                     </div>
 
                     <div class="trim-range-row">
                         <div class="trim-slider-item">
                             <div class="trim-labels">
-                                <span>開始位置: <strong id="lbl-trim-start" style="color:var(--primary);">0.0s</strong></span>
+                                <span><span data-i18n="lbl_trim_start_prefix">開始位置: </span><strong id="lbl-trim-start" style="color:var(--primary);">0.0s</strong></span>
                             </div>
                             <input type="range" id="trim-start-range" min="0" max="10" step="0.1" value="0">
                         </div>
                         <div class="trim-slider-item">
                             <div class="trim-labels">
-                                <span>終了位置: <strong id="lbl-trim-end" style="color:var(--primary);">3.0s</strong></span>
-                                <span>切り出し長: <strong id="lbl-trim-len" style="color:var(--primary);">3.0s</strong></span>
+                                <span><span data-i18n="lbl_trim_end_prefix">終了位置: </span><strong id="lbl-trim-end" style="color:var(--primary);">3.0s</strong></span>
+                                <span><span data-i18n="lbl_trim_len_prefix">切り出し長: </span><strong id="lbl-trim-len" style="color:var(--primary);">3.0s</strong></span>
                             </div>
                             <input type="range" id="trim-end-range" min="0.1" max="10" step="0.1" value="3.0">
                         </div>
@@ -720,43 +726,43 @@
             <!-- アコーディオン 1: 保存・エクスポート設定（共通） -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-export-settings', this)">
-                    書き出し形式 ＆ 解像度・ループ設定 <span>▼</span>
+                    <span data-i18n="acc_export_settings">書き出し形式 ＆ 解像度・ループ設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-export-settings">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>出力フォーマット</label>
+                            <label data-i18n="lbl_export_format">出力フォーマット</label>
                             <select id="export-format">
-                                <option value="gif" selected>アニメーションGIF（note・SNS・軽量推奨）</option>
-                                <option value="apng">APNG（Animated PNG / フルカラー高画質）</option>
+                                <option value="gif" selected data-i18n="opt_format_gif">アニメーションGIF（note・SNS・軽量推奨）</option>
+                                <option value="apng" data-i18n="opt_format_apng">APNG（Animated PNG / フルカラー高画質）</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>出力解像度（長辺px）</label>
+                            <label data-i18n="lbl_export_resolution">出力解像度（長辺px）</label>
                             <select id="export-resolution">
-                                <option value="320">320px（超軽量・SNS向き）</option>
-                                <option value="480" selected>480px（標準・note推奨）</option>
-                                <option value="640">640px（高精細）</option>
-                                <option value="800">800px（最大・画質最優先）</option>
+                                <option value="320" data-i18n="opt_res_320">320px（超軽量・SNS向き）</option>
+                                <option value="480" selected data-i18n="opt_res_480">480px（標準・note推奨）</option>
+                                <option value="640" data-i18n="opt_res_640">640px（高精細）</option>
+                                <option value="800" data-i18n="opt_res_800">800px（最大・画質最優先）</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>ループ再生設定</label>
+                            <label data-i18n="lbl_export_loop">ループ再生設定</label>
                             <select id="export-loop">
-                                <option value="0" selected>無限ループ再生（標準）</option>
-                                <option value="1">1回のみ再生（停止）</option>
-                                <option value="3">3回ループして停止</option>
+                                <option value="0" selected data-i18n="opt_loop_0">無限ループ再生（標準）</option>
+                                <option value="1" data-i18n="opt_loop_1">1回のみ再生（停止）</option>
+                                <option value="3" data-i18n="opt_loop_3">3回ループして停止</option>
                             </select>
                         </div>
 
                         <div class="form-group" id="gif-quality-group">
-                            <label>GIFカラー品質（減色パレット精度）</label>
+                            <label data-i18n="lbl_gif_quality">GIFカラー品質（減色パレット精度）</label>
                             <select id="gif-quality-select">
-                                <option value="10" selected>標準（バランス・推奨）</option>
-                                <option value="5">高品位（綺麗・少し処理時間増）</option>
-                                <option value="20">超高速（処理最優先）</option>
+                                <option value="10" selected data-i18n="opt_qual_10">標準（バランス・推奨）</option>
+                                <option value="5" data-i18n="opt_qual_5">高品位（綺麗・少し処理時間増）</option>
+                                <option value="20" data-i18n="opt_qual_20">超高速（処理最優先）</option>
                             </select>
                         </div>
                     </div>
@@ -766,21 +772,21 @@
             <!-- アコーディオン 2: コマ送り速度 ＆ アスペクト比フィット（写真モード専用） -->
             <div class="accordion" id="accordion-timing-settings">
                 <div class="accordion-header" onclick="toggleAccordion('content-timing-settings', this)">
-                    コマ速度 ＆ アスペクト比フィット <span>▼</span>
+                    <span data-i18n="acc_timing_settings">コマ速度 ＆ アスペクト比フィット</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-timing-settings">
                     <!-- 写真モード向けコマ秒数設定 -->
                     <div id="photo-timing-group">
                         <div class="form-group">
-                            <label>1コマあたりの表示時間: <span id="val-frame-delay" class="slider-val">1.0秒</span></label>
+                            <label><span data-i18n="lbl_frame_delay_prefix">1コマあたりの表示時間: </span><span id="val-frame-delay" class="slider-val" data-i18n="val_frame_delay_default">1.0秒</span></label>
                             <div class="slider-row">
                                 <input type="range" id="frame-delay-range" min="0.1" max="5.0" step="0.1" value="1.0">
                             </div>
                             <div class="preset-chip-group">
-                                <span class="preset-chip" data-delay="0.2">0.2秒 (超高速)</span>
-                                <span class="preset-chip" data-delay="0.5">0.5秒 (パラパラ)</span>
-                                <span class="preset-chip active" data-delay="1.0">1.0秒 (標準)</span>
-                                <span class="preset-chip" data-delay="2.0">2.0秒 (ゆったり)</span>
+                                <span class="preset-chip" data-delay="0.2" data-i18n="chip_delay_0_2">0.2秒 (超高速)</span>
+                                <span class="preset-chip" data-delay="0.5" data-i18n="chip_delay_0_5">0.5秒 (パラパラ)</span>
+                                <span class="preset-chip active" data-delay="1.0" data-i18n="chip_delay_1_0">1.0秒 (標準)</span>
+                                <span class="preset-chip" data-delay="2.0" data-i18n="chip_delay_2_0">2.0秒 (ゆったり)</span>
                             </div>
                         </div>
                     </div>
@@ -788,22 +794,22 @@
                     <!-- アスペクト比・フィット統一 -->
                     <div class="form-grid-col2" style="margin-top: 14px;">
                         <div class="form-group">
-                            <label>統一アスペクト比</label>
+                            <label data-i18n="lbl_aspect_ratio">統一アスペクト比</label>
                             <select id="aspect-ratio-select">
-                                <option value="source" selected>元画像基準（1コマ目準拠）</option>
-                                <option value="16:9">16:9（横長ワイド）</option>
-                                <option value="4:3">4:3（デジタル一眼・標準）</option>
-                                <option value="3:2">3:2（35mm一眼写真比率）</option>
-                                <option value="1:1">1:1（正方形・スクエア）</option>
-                                <option value="9:16">9:16（縦長スマホ/ストーリー）</option>
+                                <option value="source" selected data-i18n="opt_aspect_source">元画像基準（1コマ目準拠）</option>
+                                <option value="16:9" data-i18n="opt_aspect_16_9">16:9（横長ワイド）</option>
+                                <option value="4:3" data-i18n="opt_aspect_4_3">4:3（デジタル一眼・標準）</option>
+                                <option value="3:2" data-i18n="opt_aspect_3_2">3:2（35mm一眼写真比率）</option>
+                                <option value="1:1" data-i18n="opt_aspect_1_1">1:1（正方形・スクエア）</option>
+                                <option value="9:16" data-i18n="opt_aspect_9_16">9:16（縦長スマホ/ストーリー）</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>フィット方式</label>
+                            <label data-i18n="lbl_fit_mode">フィット方式</label>
                             <select id="fit-mode-select">
-                                <option value="crop" selected>中央フィット（余白なし切抜）</option>
-                                <option value="contain">全体収容（余白追加）</option>
+                                <option value="crop" selected data-i18n="opt_fit_crop">中央フィット（余白なし切抜）</option>
+                                <option value="contain" data-i18n="opt_fit_contain">全体収容（余白追加）</option>
                             </select>
                         </div>
                     </div>
@@ -813,35 +819,35 @@
             <!-- アコーディオン 3: 動画トリミング ＆ FPS・再生速度設定（動画モード専用） -->
             <div class="accordion" id="accordion-video-settings" style="display: none;">
                 <div class="accordion-header" onclick="toggleAccordion('content-video-fps-settings', this)">
-                    動画コマ撮り・FPS・再生速度設定 <span>▼</span>
+                    <span data-i18n="acc_video_settings">動画コマ撮り・FPS・再生速度設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-video-fps-settings">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>フレームレート（間引きFPS）</label>
+                            <label data-i18n="lbl_video_fps">フレームレート（間引きFPS）</label>
                             <select id="video-fps-select">
-                                <option value="5">5 fps（極小・容量節約）</option>
-                                <option value="10" selected>10 fps（標準・滑らか推奨）</option>
-                                <option value="15">15 fps（高品位・滑らか）</option>
+                                <option value="5" data-i18n="opt_fps_5">5 fps（極小・容量節約）</option>
+                                <option value="10" selected data-i18n="opt_fps_10">10 fps（標準・滑らか推奨）</option>
+                                <option value="15" data-i18n="opt_fps_15">15 fps（高品位・滑らか）</option>
                             </select>
                         </div>
 
                         <!-- スライダー化された再生速度 -->
                         <div class="form-group">
-                            <label>動画再生速度: <span id="val-video-speed" class="slider-val">1.0x</span></label>
+                            <label><span data-i18n="lbl_video_speed_prefix">動画再生速度: </span><span id="val-video-speed" class="slider-val">1.0x</span></label>
                             <div class="slider-row">
                                 <input type="range" id="video-speed-range" min="0.2" max="3.0" step="0.1" value="1.0">
                             </div>
                             <div class="preset-chip-group">
-                                <span class="preset-chip" data-speed="0.5">0.5x (スロー)</span>
-                                <span class="preset-chip active" data-speed="1.0">1.0x (等倍)</span>
-                                <span class="preset-chip" data-speed="1.5">1.5x (1.5倍)</span>
-                                <span class="preset-chip" data-speed="2.0">2.0x (倍速)</span>
+                                <span class="preset-chip" data-speed="0.5" data-i18n="chip_speed_0_5">0.5x (スロー)</span>
+                                <span class="preset-chip active" data-speed="1.0" data-i18n="chip_speed_1_0">1.0x (等倍)</span>
+                                <span class="preset-chip" data-speed="1.5" data-i18n="chip_speed_1_5">1.5x (1.5倍)</span>
+                                <span class="preset-chip" data-speed="2.0" data-i18n="chip_speed_2_0">2.0x (倍速)</span>
                             </div>
                         </div>
                     </div>
 
-                    <div style="background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 12px; font-size: 11.5px; color: var(--text-muted); line-height: 1.6;">
+                    <div style="background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 10px 12px; margin-top: 12px; font-size: 11.5px; color: var(--text-muted); line-height: 1.6;" data-i18n="video_mov_notice_html">
                         ℹ️ <strong>iPhone動画（MOV）について:</strong><br>
                         一部のブラウザ/端末では高効率HEVC形式のMOVが再生できない場合があります。その際はMP4ファイルをご利用ください。
                     </div>
@@ -851,10 +857,10 @@
         </div>
     </div>
 
-    <!-- 4. 処理進捗バー（読み込み中 ＆ Web Workerエンコード時） -->
+    <!-- 4. 処理進捗バー -->
     <div class="progress-box" id="progress-box">
         <div class="progress-header">
-            <span id="progress-label">アニメーションエンコード中...</span>
+            <span id="progress-label" data-i18n="progress_encoding">アニメーションエンコード中...</span>
             <span id="progress-counter" style="font-family: monospace;">0%</span>
         </div>
         <div class="progress-track">
@@ -864,13 +870,13 @@
 
     <!-- 5. メインアクションバー -->
     <div class="main-action-grid">
-        <button type="button" class="action-main-btn" id="btn-generate">
+        <button type="button" class="action-main-btn" id="btn-generate" data-i18n="btn_generate">
             <span>🎬</span> アニメーション生成
         </button>
-        <button type="button" class="action-sub-btn highlight" id="btn-download" disabled>
+        <button type="button" class="action-sub-btn highlight" id="btn-download" disabled data-i18n="btn_download">
             <span>💾</span> 保存する
         </button>
-        <button type="button" class="action-sub-btn" id="btn-copy-clipboard" disabled>
+        <button type="button" class="action-sub-btn" id="btn-copy-clipboard" disabled data-i18n="btn_copy_clipboard">
             <span>📋</span> クリップボードにコピー
         </button>
     </div>
@@ -879,7 +885,7 @@
 
     <!-- 6. 完成アニメーションリザルトエリア -->
     <div class="result-box" id="result-box">
-        <div style="font-size: 14.5px; font-weight: 700; color: var(--text-color);">🎉 アニメーションが完成しました！</div>
+        <div style="font-size: 14.5px; font-weight: 700; color: var(--text-color);" data-i18n="result_complete_title">🎉 アニメーションが完成しました！</div>
         <div class="result-meta-info" id="result-meta-info">サイズ: 0KB / 解像度: 0x0 / フォーマット: GIF</div>
         <div class="result-img-wrapper">
             <img id="result-img" class="result-img" alt="完成アニメーション">
@@ -887,22 +893,22 @@
     </div>
 </div>
 
-<!-- 非表示Videoデコーダー（動画再生・シーク専用） -->
+<!-- 非表示Videoデコーダー -->
 <video id="hidden-video" playsinline muted preload="auto"></video>
 
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・複数枚の写真からパラパラ写真（スライドショー）を作ったり、スマホで撮影した短尺動画（MP4/MOV）をnoteやブログ・SNSに最適なアニメーションGIF/APNGに変換できるWebツールです。[cite: 1, 13]</p>
-        <p>・すべてのエンコード処理はお使いの端末内（Web Worker）で並列実行されます。[cite: 1]写真や動画が外部サーバーへ送信されることは一切ありません。[cite: 1, 13]</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・複数枚の写真からパラパラ写真（スライドショー）を作ったり、スマホで撮影した短尺動画（MP4/MOV）をnoteやブログ・SNSに最適なアニメーションGIF/APNGに変換できるWebツールです。</p>
+        <p data-i18n="exp_about_2">・すべてのエンコード処理はお使いの端末内（Web Worker）で並列実行されます。写真や動画が外部サーバーへ送信されることは一切ありません。</p>
 
-        <h3> 使い方</h3>
-        <p>・1. 「写真から作成」または「短尺動画から作成」タブを選び、ファイルをドロップします。[cite: 1, 13]</p>
-        <p>・2. 写真モードではサムネイルをつかんで自由に再生順を並び替え、1コマあたりの表示時間を調整します。[cite: 1, 13]</p>
-        <p>・3. 動画モードでは、スライダーで使いたい範囲（最大10秒）を切り出し、間引きFPSを指定します。[cite: 1, 13]</p>
-        <p>・4. 「🎬 アニメーション生成」をクリックすると、ブラウザが固まることなく高速エンコードが走ります。[cite: 1, 13]</p>
-        <p>・5. 完成後は「保存する」または「クリップボードにコピー」で、SNSやブログに素早く貼り付けできます。[cite: 1, 13]</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. 「写真から作成」または「短尺動画から作成」タブを選び、ファイルをドロップします。</p>
+        <p data-i18n="exp_usage_2">・2. 写真モードではサムネイルをつかんで自由に再生順を並び替え、1コマあたりの表示時間を調整します。</p>
+        <p data-i18n="exp_usage_3">・3. 動画モードでは、スライダーで使いたい範囲（最大10秒）を切り出し、間引きFPSを指定します。</p>
+        <p data-i18n="exp_usage_4">・4. 「🎬 アニメーション生成」をクリックすると、ブラウザが固まることなく高速エンコードが走ります。</p>
+        <p data-i18n="exp_usage_5">・5. 完成後は「保存する」または「クリップボードにコピー」で、SNSやブログに素早く貼り付けできます。</p>
     </div>
 </div>
 

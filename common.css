@@ -11,8 +11,8 @@
 
 :root {
     /* メインカラー：アース黄緑 (Sage / Olive Green) */
-    --primary: #607d3b;
-    --primary-hover: #4f682f;
+    --primary: #64A488;
+    --primary-hover: #428468;
     --primary-light: #f2f6ec;
     --primary-border: #c4d7b3;
     --primary-glow: rgba(96, 125, 59, 0.2);
@@ -45,8 +45,8 @@
 
 /* ダークモード設定 */
 [data-theme="dark"] {
-    --primary: #86ad58;
-    --primary-hover: #9bc36c;
+    --primary: #64A488;
+    --primary-hover: #428468;
     --primary-light: #252e1f;
     --primary-border: #3d4a32;
     --primary-glow: rgba(134, 173, 88, 0.25);
@@ -527,6 +527,10 @@ body {
 
 /* ファイル上限枚数のインライン表示保証（改行防止） */
 [data-octopus-max-files] {
+    display: inline !important;
+}
+
+#limit-notice span{
     display: inline !important;
 }
 

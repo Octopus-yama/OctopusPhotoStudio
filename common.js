@@ -2,6 +2,7 @@
  * Octopus Photo Studio - 共通管理スクリプト
  * ・バージョンおよび更新内容の一元管理（メイン＋各ツール計11系統）
  * ・グローバルナビゲーション自動生成（PC動的Priority+ランチャー＆SP横スクロール両立）
+ * ・多言語対応（i18n）超軽量コアエンジンの提供（Web版完全互換＆個別辞書外出し対応）
  * ・ダークモード（テーマ）切り替え＆永続化
  * ・PCワイド表示切り替え＆永続化
  * ・アコーディオン開閉制御
@@ -15,84 +16,94 @@
 // 1. バージョン・更新内容の一元管理
 // ==========================================
 const OCTOPUS_APP_INFO = {
-    version: "2.12",
-    date: "2026-10-12",
-    updateNote: "バックアップ、リセット機能への対応をフォトギャラリーに対応",
+    version: "2.40",
+    date: "2026-10-16",
+    updateNote: "アプリアイコンの変更／カメラへのデフォルトレシピの追加／レシピカメラ機能の追加",
     tools: {
+        index: {
+            name: "TOP/メニュー",
+            subVersion: "122",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
+        },
         rawviewer: {
             name: "フォトギャラリー",
             subVersion: "111",
             updateNote: "バックアップ、リセット機能への対応"
         },
-        index: {
-            name: "TOP/メニュー",
-            subVersion: "121",
-            updateNote: "バックアップ復元、リセット画面の更新"
+        camera: {
+            name: "レシピカメラ",
+            subVersion: "105",
+            updateNote: "カメラへのレシピの追加、英語対応"
         },
         exif: {
             name: "EXIF Frame",
-            subVersion: "138",
-            updateNote: "拡大プレビューのファイル名タイトル連動表示、指追従スワイプ・PCキー切替に対応"
+            subVersion: "139",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         mosaic: {
             name: "Mosaic & Blur",
-            subVersion: "120",
-            updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
+            subVersion: "121",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         cleaner: {
             name: "EXIF Cleaner",
-            subVersion: "107",
-            updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
+            subVersion: "108",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         viewedit: {
             name: "EXIF View & Edit",
-            subVersion: "130",
-            updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
+            subVersion: "131",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         photoprocess: {
             name: "Photo Process",
-            subVersion: "115",
-            updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
+            subVersion: "117",
+            updateNote: "デフォルトレシピの追加"
         },
         analyzer: {
             name: "EXIF Analyzer",
-            subVersion: "118",
-            updateNote: "共通クイックヘルプ対応、モーダル表示時の端末戻る操作制御に対応"
+            subVersion: "119",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         photobatch: {
             name: "Photo Batch",
-            subVersion: "103",
-            updateNote: "拡大プレビューのファイル名タイトル連動表示、指追従スワイプ・PCキー切替に対応"
+            subVersion: "105",
+            updateNote: "デフォルトレシピの追加"
         },
         resizer: {
             name: "Image Resizer",
-            subVersion: "106",
-            updateNote: "一括モード拡大プレビューを共通Lightbox（指追従スワイプ・PCキー切替・セーフエリア枠外タップ）へ刷新"
+            subVersion: "107",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         grid: {
             name: "Photo Grid",
-            subVersion: "107",
-            updateNote: "共通クイックヘルプ対応、セル内パン操作ガイド連携およびモーダル戻る操作に対応"
+            subVersion: "108",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         watermark: {
             name: "Watermark",
-            subVersion: "101",
-            updateNote: "新規開発：サイン・テキスト・透過ロゴの一括刻印、全面斜めリピート、Exif完全保持、IndexedDB画像管理"
+            subVersion: "102",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         qrcode: {
             name: "QR Code",
-            subVersion: "101",
-            updateNote: "新規リリース：完全クライアントサイド動作のQRコード作成、Wi-Fi簡単接続、中央ロゴ合成、高画質SVGベクター出力"
+            subVersion: "102",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         motiongif: {
             name: "Motion GIF",
-            subVersion: "101",
-            updateNote: "新規リリース：写真スライドショー＆短尺動画からのアニメーションGIF/APNG生成、Web Worker高速エンコード対応"
+            subVersion: "102",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
+        },
+        beforeafter: {
+            name: "Before After",
+            subVersion: "102",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         },
         titleimage: {
             name: "タイトル作成",
-            subVersion: "115",
-            updateNote: "複数写真プリセット全10系統の配置座標・テキストセンタリングの完全最適化およびオフセット誤連動バグの解消"
+            subVersion: "116",
+            updateNote: "Androidアプリ向け多言語対応（英語/i18n）辞書外出しアーキテクチャの導入"
         }
     }
 };
@@ -249,16 +260,18 @@ const OCTOPUS_TOOL_HELPS = {
 };
 
 // ==========================================
-// 3. ツール定義ナビゲーションリスト（PC / SP 分離版）
+// 3. ツール定義ナビゲーションリスト（PC / SP 分離＆英語対訳対応）
 // ==========================================
 const OCTOPUS_NAV_ITEMS = [
   {
     id: "index",
     name: "TOP",
+    name_en: "Home",
     tabName: "TOPページ",
+    tabName_en: "Home",
     url: "index.html",
     icon: "🐙",
-    iconImage: "img/icon_Octopus_丸.png",
+    iconImage: "img/icon_OPS_App.png",
     order: 0,
     showInTab: false,
     showInOther: false,
@@ -269,7 +282,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "rawviewer",
     name: "フォトギャラリー",
+    name_en: "Photo Gallery",
     tabName: "ギャラリー",
+    tabName_en: "Gallery",
     url: "app://rawviewer",
     icon: "👁",
     iconImage: "img/icon_raw_gallery.png",
@@ -281,9 +296,27 @@ const OCTOPUS_NAV_ITEMS = [
     isSingleOnly: false
   },
   {
+    id: "camera",
+    name: "レシピカメラ",
+    name_en: "Recipe Camera",
+    tabName: "カメラ",
+    tabName_en: "Camera",
+    url: "app://camera",
+    icon: "📸",
+    iconImage: "img/icon_camera.png",
+    order: 8,
+    showInTab: true,
+    showInOther: true,
+    maxFilesPC: 0,
+    maxFilesMobile: 0,
+    isSingleOnly: false
+  },
+  {
     id: "exif",
     name: "EXIFフレーム",
+    name_en: "EXIF Frame",
     tabName: "フレーム",
+    tabName_en: "Frame",
     url: "ExifFrame.html",
     icon: "🖼️",
     iconImage: "img/Exif_Frame_Tool_icon.png",
@@ -297,7 +330,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "mosaic",
     name: "モザイク & ぼかし",
+    name_en: "Mosaic & Blur",
     tabName: "モザイク",
+    tabName_en: "Mosaic",
     url: "MosaicBlur.html",
     icon: "🎭",
     iconImage: "img/Mosaic_Blur_Tool_icon.png",
@@ -311,12 +346,14 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "photoprocess",
     name: "写真加工",
+    name_en: "Photo Process",
     tabName: "写真加工",
+    tabName_en: "Process",
     url: "PhotoProcess.html",
     icon: "🎨",
     iconImage: "img/ico_photo_Process.png",
     order: 25,
-    showInTab: true,
+    showInTab: false,
     showInOther: true,
     maxFilesPC: 1,
     maxFilesMobile: 1,
@@ -325,7 +362,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "photobatch",
     name: "一括写真加工",
+    name_en: "Photo Batch",
     tabName: "一括加工",
+    tabName_en: "Batch",
     url: "PhotoBatch.html",
     icon: "⚡",
     iconImage: "img/ico_photo_Process_batch.png",
@@ -339,7 +378,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "resizer",
     name: "画像リサイズ",
+    name_en: "Image Resizer",
     tabName: "リサイズ",
+    tabName_en: "Resize",
     url: "ImageResize.html",
     icon: "📐",
     iconImage: "img/ico_image_resize.png",
@@ -353,7 +394,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "viewedit",
     name: "EXIF View & Edit",
+    name_en: "EXIF View & Edit",
     tabName: "EXIF編集",
+    tabName_en: "View/Edit",
     url: "ExifViewEdit.html",
     icon: "📋",
     iconImage: "img/icon_view_edit.png",
@@ -367,7 +410,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "analyzer",
     name: "EXIF分析",
+    name_en: "EXIF Analyzer",
     tabName: "EXIF分析",
+    tabName_en: "Analyzer",
     url: "ExifAnalyzer.html",
     icon: "📊",
     iconImage: "img/icon_analyzer.png",
@@ -375,13 +420,15 @@ const OCTOPUS_NAV_ITEMS = [
     showInTab: false,
     showInOther: true,
     maxFilesPC: 3000,
-    maxFilesMobile: 500,
+    maxFilesMobile: 100,
     isSingleOnly: false
   },
   {
     id: "titleimage",
     name: "タイトル作成",
+    name_en: "Title Image",
     tabName: "タイトル",
+    tabName_en: "Title",
     url: "TitleImage.html",
     icon: "🏷️",
     iconImage: "img/icon_title_image.png",
@@ -395,7 +442,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "cleaner",
     name: "EXIFクリーナー",
+    name_en: "EXIF Cleaner",
     tabName: "EXIF消去",
+    tabName_en: "Cleaner",
     url: "ExifCleaner.html",
     icon: "🧹",
     iconImage: "img/icon_cleaner.png",
@@ -409,7 +458,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "grid",
     name: "均等グリッド並べ",
+    name_en: "Photo Grid",
     tabName: "グリッド",
+    tabName_en: "Grid",
     url: "PhotoGrid.html",
     icon: "▦",
     iconImage: "img/ico_photo_grid.png",
@@ -423,7 +474,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "motiongif",
     name: "Motion GIF",
+    name_en: "Motion GIF",
     tabName: "アニメGIF",
+    tabName_en: "GIF",
     url: "MotionGif.html",
     icon: "🎬",
     iconImage: "img/icon_motion_gif.png",
@@ -437,7 +490,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "beforeafter",
     name: "Before After",
+    name_en: "Before After",
     tabName: "比較画像",
+    tabName_en: "Compare",
     url: "BeforeAfter.html",
     icon: "◫",
     iconImage: "img/icon_before_after.png",
@@ -451,7 +506,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "watermark",
     name: "ウォーターマーク",
+    name_en: "Watermark",
     tabName: "透かし",
+    tabName_en: "Watermark",
     url: "WatermarkBatch.html",
     icon: "🖋",
     iconImage: "img/icon_watermark.png",
@@ -465,7 +522,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "qrcode",
     name: "Octopus QR Code",
+    name_en: "QR Code",
     tabName: "QR作成",
+    tabName_en: "QR Code",
     url: "QRCode.html",
     icon: "🏁",
     iconImage: "img/icon_octopus_qrcode.png",
@@ -479,7 +538,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "other",
     name: "その他ツール",
+    name_en: "Other Tools",
     tabName: "その他",
+    tabName_en: "Other",
     url: "#other",
     icon: "📂",
     iconImage: "img/icon_folder.png",
@@ -493,7 +554,9 @@ const OCTOPUS_NAV_ITEMS = [
   {
     id: "menu",
     name: "メニュー・設定",
+    name_en: "Menu & Settings",
     tabName: "メニュー",
+    tabName_en: "Menu",
     url: "app/Menu.html",
     icon: "⚙️",
     iconImage: "",
@@ -507,7 +570,120 @@ const OCTOPUS_NAV_ITEMS = [
 ];
 
 // ==========================================
-// 4. Web用 GA4 自動判定・配信スクリプト
+// 4. 多言語対応（i18n）超軽量コアエンジン
+// ==========================================
+window.octopusI18n = (function() {
+    // 全ツール共通の最小限システム辞書のみ保持（肥大化防止）
+    const dictionaries = {
+        en: {
+            "nav_all_tools": "All Tools",
+            "nav_master_list": "All Tools Master List",
+            "btn_wide_mode": "⤢ Wide Mode",
+            "btn_normal_width": "⤡ Normal Width",
+            "btn_ok": "OK",
+            "btn_cancel": "Cancel",
+            "btn_close": "Close",
+            "lightbox_title_default": "Image Preview"
+        },
+        ja: {
+            "nav_all_tools": "全ツール",
+            "nav_master_list": "全ツールマスター一覧",
+            "btn_wide_mode": "⤢ ワイド表示",
+            "btn_normal_width": "⤡ 標準幅に戻す",
+            "btn_ok": "了解",
+            "btn_cancel": "キャンセル",
+            "btn_close": "閉じる",
+            "lightbox_title_default": "画像プレビュー"
+        }
+    };
+
+    /**
+     * 現在の表示言語を取得（優先順位: html[data-lang] > localStorage > ja固定）
+     * Webブラウザ版アクセス時は未設定のため100% 'ja' にフォールバック
+     */
+    function getLang() {
+        const attrLang = document.documentElement.getAttribute('data-lang');
+        if (attrLang) return attrLang.toLowerCase().startsWith('en') ? 'en' : 'ja';
+
+        const saved = localStorage.getItem('octopus_language');
+        if (saved) return saved.toLowerCase().startsWith('en') ? 'en' : 'ja';
+
+        return 'ja';
+    }
+
+    /**
+     * 指定キーの対訳を取得（見つからない場合は null を返すように変更）
+     */
+    function t(key, fallback = '') {
+        const lang = getLang();
+        if (dictionaries[lang] && dictionaries[lang][key] !== undefined) {
+            return dictionaries[lang][key];
+        }
+        if (dictionaries.ja && dictionaries.ja[key] !== undefined) {
+            return dictionaries.ja[key];
+        }
+        return fallback || null; // ★キー名を返さず null を返す
+    }
+
+    /**
+     * 個別画面専用の外部辞書JSから対訳を追加登録するAPI
+     */
+    function loadDict(lang, newDict) {
+        if (!dictionaries[lang]) dictionaries[lang] = {};
+        Object.assign(dictionaries[lang], newDict);
+
+        // すでにDOMが構築済みなら登録直後に即時置換を反映
+        if (document.readyState !== 'loading') {
+            applyDom();
+        }
+    }
+
+    /**
+     * DOM内の [data-i18n] 要素を一括置換
+     */
+    function applyDom(root = document) {
+        const lang = getLang();
+        if (lang === 'ja') return;
+
+        root.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            const val = t(key);
+            if (val !== null && val !== '') {
+                // ★修正：HTMLタグが含まれている場合は innerHTML、それ以外は textContent で反映
+                if (val.includes('<') && val.includes('>')) {
+                    el.innerHTML = val;
+                } else {
+                    el.textContent = val;
+                }
+            }
+        });
+
+        root.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            const val = t(key);
+            if (val !== null && val !== '') el.setAttribute('placeholder', val);
+        });
+
+        root.querySelectorAll('[data-i18n-title]').forEach(el => {
+            const key = el.getAttribute('data-i18n-title');
+            const val = t(key);
+            if (val !== null && val !== '') el.setAttribute('title', val);
+        });
+    }
+
+    return {
+        getLang,
+        t,
+        loadDict,
+        applyDom
+    };
+})();
+
+// グローバルショートカット関数
+window.t = window.octopusI18n.t;
+
+// ==========================================
+// 5. Web用 GA4 自動判定・配信スクリプト
 // ==========================================
 (function() {
   if (window.AndroidBridge) {
@@ -549,23 +725,26 @@ function updateToolMaxFilesUI(toolId) {
 function updateToolIconsUI() {
   const isSubDir = window.location.pathname.includes('/app/');
   const pathPrefix = isSubDir ? '../' : '';
+  const isEn = window.octopusI18n.getLang() === 'en';
 
   document.querySelectorAll('[data-tool-icon]').forEach(el => {
     const toolId = el.getAttribute('data-tool-icon');
     const tool = OCTOPUS_NAV_ITEMS.find(t => t.id === toolId);
     if (!tool) return;
 
+    const toolDisplayName = isEn ? (tool.name_en || tool.name) : tool.name;
+
     if (el.tagName.toLowerCase() === 'img') {
       if (tool.iconImage) {
         el.src = pathPrefix + tool.iconImage;
-        el.alt = `${tool.name} アイコン`;
+        el.alt = `${toolDisplayName} Icon`;
       }
       el.onerror = () => {
         el.outerHTML = `<span class="tool-fallback-icon" style="font-size:22px; line-height:1;">${tool.icon || '🔧'}</span>`;
       };
     } else {
       if (tool.iconImage) {
-        el.innerHTML = `<img src="${pathPrefix + tool.iconImage}" alt="${tool.name}" class="header-icon" onerror="this.outerHTML='<span>${tool.icon || '🔧'}</span>'">`;
+        el.innerHTML = `<img src="${pathPrefix + tool.iconImage}" alt="${toolDisplayName}" class="header-icon" onerror="this.outerHTML='<span>${tool.icon || '🔧'}</span>'">`;
       } else {
         el.innerHTML = `<span>${tool.icon || '🔧'}</span>`;
       }
@@ -879,7 +1058,7 @@ function injectCommonStyles() {
 }
 
 // ==========================================
-// 5. モーダル管理 ＆ 戻るボタン/ジェスチャー制御
+// 6. モーダル管理 ＆ 戻るボタン/ジェスチャー制御
 // ==========================================
 window.octopusModal = (function() {
     const modalStack = [];
@@ -949,7 +1128,7 @@ window.octopusModal = (function() {
 })();
 
 // ==========================================
-// 6. 指追従スワイプ・セーフエリア付き共通Lightbox
+// 7. 指追従スワイプ・セーフエリア付き共通Lightbox
 // ==========================================
 window.octopusShowImageViewer = function(options) {
     injectCommonStyles();
@@ -972,16 +1151,17 @@ window.octopusShowImageViewer = function(options) {
     overlay.id = '_octopusCommonLightbox';
     overlay.className = 'octopus-lightbox-overlay';
 
-    const initialTitle = (titles && titles[currentIndex]) ? titles[currentIndex] : (title || '画像プレビュー');
+    const defaultTitle = window.octopusI18n.t("lightbox_title_default", "画像プレビュー");
+    const initialTitle = (titles && titles[currentIndex]) ? titles[currentIndex] : (title || defaultTitle);
 
     overlay.innerHTML = `
         <div class="octopus-lightbox-header">
             <span class="octopus-lightbox-title">${initialTitle}</span>
-            <button class="octopus-lightbox-close" aria-label="閉じる">✕</button>
+            <button class="octopus-lightbox-close" aria-label="${window.octopusI18n.t('btn_close', '閉じる')}">✕</button>
         </div>
         <div class="octopus-lightbox-stage">
             <div class="octopus-lightbox-slider" id="_octopusLightboxSlider">
-                <img src="${images[currentIndex]}" class="octopus-lightbox-img" id="_octopusLightboxImg" alt="拡大プレビュー">
+                <img src="${images[currentIndex]}" class="octopus-lightbox-img" id="_octopusLightboxImg" alt="${initialTitle}">
             </div>
             ${total > 1 ? '<button class="octopus-lightbox-nav prev" id="_octopusLightboxPrev">‹</button><button class="octopus-lightbox-nav next" id="_octopusLightboxNext">›</button>' : ''}
         </div>
@@ -1011,7 +1191,7 @@ window.octopusShowImageViewer = function(options) {
         imgEl.style.transition = 'none';
 
         if (titleEl) {
-            const currentTitle = (titles && titles[currentIndex]) ? titles[currentIndex] : (title || '画像プレビュー');
+            const currentTitle = (titles && titles[currentIndex]) ? titles[currentIndex] : (title || defaultTitle);
             titleEl.textContent = currentTitle;
             titleEl.title = currentTitle;
         }
@@ -1199,7 +1379,7 @@ window.octopusShowImageViewer = function(options) {
 };
 
 // ==========================================
-// 7. 共通UI・ヘルプモーダル制御 ＆ 動的ランチャーナビゲーション
+// 8. 共通UI・ヘルプモーダル制御 ＆ 動的ランチャーナビゲーション
 // ==========================================
 (function() {
     function getCurrentPageKey() {
@@ -1238,7 +1418,7 @@ window.octopusShowImageViewer = function(options) {
             <div class="octopus-help-dialog">
                 <div class="octopus-help-header">
                     <span class="octopus-help-title">💡 ${helpData.title}</span>
-                    <button class="octopus-help-close" aria-label="閉じる">✕</button>
+                    <button class="octopus-help-close" aria-label="${window.octopusI18n.t('btn_close', '閉じる')}">✕</button>
                 </div>
                 <div class="octopus-help-body">
                     <div class="octopus-help-desc">${helpData.desc}</div>
@@ -1247,7 +1427,7 @@ window.octopusShowImageViewer = function(options) {
                     </ul>
                 </div>
                 <div class="octopus-help-footer">
-                    <button class="octopus-help-btn">了解</button>
+                    <button class="octopus-help-btn">${window.octopusI18n.t('btn_ok', '了解')}</button>
                 </div>
             </div>
         `;
@@ -1300,12 +1480,15 @@ window.octopusShowImageViewer = function(options) {
         let isWideMode = localStorage.getItem('octopus_wide_mode') === 'true';
 
         const applyWideMode = (notify = false) => {
+            const btnWide = window.octopusI18n.t('btn_wide_mode', '⤢ ワイド表示');
+            const btnNormal = window.octopusI18n.t('btn_normal_width', '⤡ 標準幅に戻す');
+
             if (isWideMode) {
                 mainContainer.classList.add('wide-mode');
-                wideToggleBtn.textContent = '⤡ 標準幅に戻す';
+                wideToggleBtn.textContent = btnNormal;
             } else {
                 mainContainer.classList.remove('wide-mode');
-                wideToggleBtn.textContent = '⤢ ワイド表示';
+                wideToggleBtn.textContent = btnWide;
             }
             if (notify) {
                 window.dispatchEvent(new CustomEvent('octopus:widemode', { detail: { isWideMode } }));
@@ -1325,9 +1508,12 @@ window.octopusShowImageViewer = function(options) {
         const content = document.getElementById(contentId);
         if (!content) return;
         content.classList.toggle('open');
-        const span = headerEl ? headerEl.querySelector('span') : null;
-        if (span) {
-            span.textContent = content.classList.contains('open') ? '▲' : '▼';
+        if (!headerEl) return;
+
+        const spans = headerEl.querySelectorAll('span');
+        const arrowSpan = spans.length > 0 ? spans[spans.length - 1] : null;
+        if (arrowSpan) {
+            arrowSpan.textContent = content.classList.contains('open') ? '▲' : '▼';
         }
     };
 
@@ -1339,66 +1525,70 @@ window.octopusShowImageViewer = function(options) {
         if (!navContainer) return;
 
         const targetItems = OCTOPUS_NAV_ITEMS
-            .filter(item => item.id !== "menu" && item.id !== "other" && item.id !== "rawviewer")
+            .filter(item => item.id !== "menu" && item.id !== "other" && item.id !== "rawviewer" && item.id !== "camera")
             .sort((a, b) => (a.order ?? 999) - (b.order ?? 999));
 
         const isSubDir = window.location.pathname.includes('/app/');
         const pathPrefix = isSubDir ? '../' : '';
+        const isEn = window.octopusI18n.getLang() === 'en';
 
         // 1. バー用ピル群HTML
         const trackHtml = targetItems.map(item => {
             const isActive = item.id === currentKey ? " active" : "";
-            // ★ 追加：RAW Viewer の場合はネイティブ起動のJSを叩く
+            const displayName = isEn ? (item.name_en || item.name) : item.name;
+
             if (item.id === "rawviewer") {
-                return `<a href="#" onclick="if(window.AndroidBridge){AndroidBridge.openRawViewer();} return false;" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${item.name}</a>`;
+                return `<a href="#" onclick="if(window.AndroidBridge){AndroidBridge.openRawViewer();} return false;" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${displayName}</a>`;
             }
             const href = isSubDir ? pathPrefix + item.url : item.url;
-            return `<a href="${href}" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${item.name}</a>`;
+            return `<a href="${href}" class="nav-item${isActive}" data-nav-id="${item.id}"><span>${item.icon}</span> ${displayName}</a>`;
         }).join("");
 
         // 2. ランチャー内3列カード群HTML
         const gridHtml = targetItems.map(item => {
             const isActive = item.id === currentKey ? " active" : "";
             const href = isSubDir ? pathPrefix + item.url : item.url;
+            const displayName = isEn ? (item.tabName_en || item.name_en || item.name) : (item.tabName || item.name);
             const iconHtml = item.iconImage
-                ? `<img src="${pathPrefix + item.iconImage}" alt="${item.name}" onerror="this.outerHTML='<span>${item.icon}</span>'">`
+                ? `<img src="${pathPrefix + item.iconImage}" alt="${displayName}" onerror="this.outerHTML='<span>${item.icon}</span>'">`
                 : `<span>${item.icon}</span>`;
             
-            // ★ 追加：RAW Viewer の場合はネイティブ起動のJSを叩く
             if (item.id === "rawviewer") {
                 return `
                     <a href="#" onclick="if(window.AndroidBridge){AndroidBridge.openRawViewer();} return false;" class="nav-launcher-card${isActive}">
                         <div class="nav-launcher-card-icon">${iconHtml}</div>
-                        <div class="nav-launcher-card-name">${item.tabName || item.name}</div>
+                        <div class="nav-launcher-card-name">${displayName}</div>
                     </a>
                 `;
             }
             return `
                 <a href="${href}" class="nav-launcher-card${isActive}">
                     <div class="nav-launcher-card-icon">${iconHtml}</div>
-                    <div class="nav-launcher-card-name">${item.tabName || item.name}</div>
+                    <div class="nav-launcher-card-name">${displayName}</div>
                 </a>
             `;
         }).join("");
 
+        const labelAllTools = window.octopusI18n.t("nav_all_tools", "全ツール");
+        const labelMasterList = window.octopusI18n.t("nav_master_list", "全ツールマスター一覧");
 
         navContainer.className = "global-nav";
-        navContainer.setAttribute("aria-label", "ツール切り替え");
+        navContainer.setAttribute("aria-label", isEn ? "Tool Switcher" : "ツール切り替え");
         navContainer.innerHTML = `
             <div class="nav-track" id="_navTrack">${trackHtml}</div>
             <div class="nav-launcher-wrap" id="_navLauncherWrap">
                 <button type="button" class="nav-launcher-btn" id="_navLauncherBtn" aria-haspopup="true" aria-expanded="false">
                     <span class="nav-launcher-icon">⊞</span>
-                    <span class="nav-launcher-label" id="_navLauncherLabel">全ツール</span>
+                    <span class="nav-launcher-label" id="_navLauncherLabel">${labelAllTools}</span>
                     <span class="nav-launcher-arrow">▾</span>
                 </button>
                 <div class="nav-launcher-popover" id="_navLauncherPopover">
                     <div class="nav-launcher-popover-header">
                         <div class="nav-launcher-popover-title">
-                            <span>⊞ 全ツールマスター一覧</span>
+                            <span>⊞ ${labelMasterList}</span>
                             <span style="font-size: 11px; color: var(--text-muted); font-weight: normal;">(${targetItems.length})</span>
                         </div>
-                        <button type="button" class="nav-launcher-popover-close" id="_navLauncherClose" aria-label="閉じる">✕</button>
+                        <button type="button" class="nav-launcher-popover-close" id="_navLauncherClose" aria-label="${window.octopusI18n.t('btn_close', '閉じる')}">✕</button>
                     </div>
                     <div class="nav-launcher-grid">
                         ${gridHtml}
@@ -1415,13 +1605,11 @@ window.octopusShowImageViewer = function(options) {
         const closeBtn = document.getElementById('_navLauncherClose');
         const navItemEls = Array.from(trackEl.querySelectorAll('.nav-item'));
 
-        // 各アイテムの実寸幅キャッシュ（IDキーで完全保持）
         const itemWidthMap = new Map();
 
         function measureAllItemWidths() {
             navItemEls.forEach(el => {
                 const id = el.getAttribute('data-nav-id');
-                // 一時的に表示させて正確な実寸を取得
                 const currentDisplay = el.style.display;
                 if (currentDisplay === 'none') {
                     el.style.visibility = 'hidden';
@@ -1429,7 +1617,6 @@ window.octopusShowImageViewer = function(options) {
                 }
                 const rect = el.getBoundingClientRect();
                 if (rect.width > 0) {
-                    // 小数点の切り上げ＋1px余裕を持たせてキャッシュ
                     itemWidthMap.set(id, Math.ceil(rect.width) + 1);
                 }
                 if (currentDisplay === 'none') {
@@ -1439,14 +1626,14 @@ window.octopusShowImageViewer = function(options) {
             });
         }
 
-        // 動的幅計算とオーバーフロー制御（Priority+）
         function updateNavOverflow() {
             const isPC = window.innerWidth >= 861;
+            const currentAllToolsText = window.octopusI18n.t("nav_all_tools", "全ツール");
+
             if (!isPC) {
-                // スマホ表示：全件表示に戻して横スクロールに委ねる
                 navItemEls.forEach(el => el.style.display = '');
                 launcherBtn.classList.remove('active');
-                launcherLabel.textContent = '全ツール';
+                launcherLabel.textContent = currentAllToolsText;
                 return;
             }
 
@@ -1454,7 +1641,6 @@ window.octopusShowImageViewer = function(options) {
                 measureAllItemWidths();
             }
 
-            // トラックの実効幅（見切れ防止のため8pxの安全バッファを差し引く）
             const trackWidth = trackEl.clientWidth - 8;
             const gap = 8;
             let currentX = 0;
@@ -1465,7 +1651,6 @@ window.octopusShowImageViewer = function(options) {
                 const w = itemWidthMap.get(id) || 130;
                 const nextX = currentX === 0 ? w : currentX + gap + w;
 
-                // 安全枠内に100%収まるボタンだけを表示、少しでも超えたら即座に格納
                 if (nextX <= trackWidth) {
                     el.style.display = 'inline-flex';
                     currentX = nextX;
@@ -1477,18 +1662,17 @@ window.octopusShowImageViewer = function(options) {
                 }
             });
 
-            // 現在開いているツールがバーから溢れている場合のスマート通知
             const currentItem = targetItems.find(t => t.id === currentKey);
             if (!currentToolVisible && currentItem) {
+                const itemTabName = isEn ? (currentItem.tabName_en || currentItem.name_en || currentItem.name) : (currentItem.tabName || currentItem.name);
                 launcherBtn.classList.add('active');
-                launcherLabel.textContent = `全ツール (${currentItem.tabName || currentItem.name})`;
+                launcherLabel.textContent = `${currentAllToolsText} (${itemTabName})`;
             } else {
                 launcherBtn.classList.remove('active');
-                launcherLabel.textContent = '全ツール';
+                launcherLabel.textContent = currentAllToolsText;
             }
         }
 
-        // ポップオーバーのクリック開閉
         function togglePopover(open) {
             const willOpen = typeof open === 'boolean' ? open : !popover.classList.contains('open');
             popover.classList.toggle('open', willOpen);
@@ -1506,7 +1690,6 @@ window.octopusShowImageViewer = function(options) {
             togglePopover(false);
         });
 
-        // 枠外クリックまたはEscキーで閉じる
         document.addEventListener('click', (e) => {
             if (!launcherWrap.contains(e.target)) {
                 togglePopover(false);
@@ -1519,11 +1702,9 @@ window.octopusShowImageViewer = function(options) {
             }
         });
 
-        // 初回測定＆実行
         measureAllItemWidths();
         updateNavOverflow();
 
-        // Webフォント読み込み完了時に正確な文字幅で再同期
         if (document.fonts && document.fonts.ready) {
             document.fonts.ready.then(() => {
                 measureAllItemWidths();
@@ -1531,7 +1712,6 @@ window.octopusShowImageViewer = function(options) {
             });
         }
 
-        // リサイズ・ワイド表示連動
         let resizeTimer = null;
         window.addEventListener('resize', () => {
             clearTimeout(resizeTimer);
@@ -1547,11 +1727,12 @@ window.octopusShowImageViewer = function(options) {
         });
     }
 
-
-
     document.addEventListener("DOMContentLoaded", () => {
         const currentKey = getCurrentPageKey();
         const toolInfo = OCTOPUS_APP_INFO.tools[currentKey];
+
+        // 1. DOM内のi18n置換を実行
+        window.octopusI18n.applyDom(document);
 
         injectCommonStyles();
 

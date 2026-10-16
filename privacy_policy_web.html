@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>プライバシーポリシー｜Octopus Photo Studio</title>
-    <link rel="icon" href="img/icon_Octopus_丸.png" type="image/png">
+    <title>プライバシーポリシー / Privacy Policy｜Octopus Photo Studio</title>
+    <link rel="icon" href="img/icon_OPS_App.ico" type="image/png">
     
     <link rel="stylesheet" href="common.css">
     <script src="common.js"></script>
@@ -15,6 +15,7 @@
             color: var(--text-color);
             margin: 0;
             padding: 0;
+            scroll-behavior: smooth;
         }
 
         .page-container {
@@ -26,6 +27,9 @@
 
         .back-nav {
             margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         .back-link {
             display: inline-flex;
@@ -40,6 +44,21 @@
             transition: var(--transition);
         }
         .back-link:hover {
+            background: var(--primary-light);
+        }
+
+        .lang-jump-link {
+            font-size: 12.5px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 4px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            background: var(--card-bg);
+            transition: var(--transition);
+        }
+        .lang-jump-link:hover {
             background: var(--primary-light);
         }
 
@@ -107,6 +126,18 @@
             margin: 10px 0;
         }
 
+        .app-only-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            border: 1px solid var(--border-color);
+        }
+
         .policy-list {
             margin: 8px 0 12px 0;
             padding-left: 20px;
@@ -130,7 +161,28 @@
             font-size: 12px;
             color: var(--text-muted);
             text-align: right;
-            margin-top: 24px;
+            margin-top: 20px;
+        }
+
+        /* ─── 言語ブロックの区切り ─── */
+        .lang-divider {
+            margin: 48px 0 36px 0;
+            border: none;
+            border-top: 2px dashed var(--border-color);
+            position: relative;
+        }
+        .lang-divider-badge {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-color);
+            padding: 4px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
         }
     </style>
 </head>
@@ -138,87 +190,217 @@
 
 <div class="page-container">
 
-    <div class="back-nav">
-        <a href="index.html" class="back-link">‹ TOPに戻る</a>
-    </div>
+    <!-- ───────────────────────────────────────────── -->
+    <!-- 日本語ブロック (Japanese Block)               -->
+    <!-- ───────────────────────────────────────────── -->
+    <div id="lang-ja">
+        <div class="back-nav">
+            <a href="index.html" class="back-link">‹ TOPに戻る</a>
+            <a href="#lang-en" class="lang-jump-link">English version ↓</a>
+        </div>
 
-    <div class="page-header">
-        <h1 class="page-title">🔒 プライバシーポリシー</h1>
-        <p class="page-desc">山下オクトパス（以下、「当方」）が提供するWebアプリケーション「Octopus Photo Studio」（以下、「本サービス」）における、利用者情報の取り扱いおよび保護方針について定めています。</p>
-    </div>
+        <div class="page-header">
+            <h1 class="page-title">🔒 プライバシーポリシー</h1>
+            <p class="page-desc">山下オクトパス（以下、「当方」）が提供するサービス「Octopus Photo Studio」（Webツール版およびAndroidアプリ版、以下総称して「本サービス」）における、利用者情報の取り扱いおよび保護方針について定めています。</p>
+        </div>
 
-    <!-- 1. 写真データおよびExifメタデータ -->
-    <div class="policy-card">
-        <div class="policy-card-title">📷 写真データおよびExifメタデータの取り扱い</div>
-        <div class="policy-body">
-            <p>本サービスは、ブラウザ上で写真のExif情報確認・編集、各種フレーム合成、画像調色、リサイズ等の処理を行うツール群です。</p>
-            <div class="highlight-box">
-                <strong>【ブラウザ内・完全ローカル処理の宣言】</strong><br>
-                本サービスで選択・ドロップされた写真画像、およびExifメタデータ（撮影日時、カメラ設定、GPS位置情報など）は、<strong>HTML5 File API、Canvas、Web Worker等を用いて、すべて利用者のブラウザ内（クライアント環境）でのみ処理されます。</strong><br>
-                当方が管理するWebサーバーや外部の第三者サーバーへ写真画像やExifデータが送信・アップロード・収集されることは一切ありません。
+        <!-- 1. メディアデータ、カメラ機能およびExifメタデータ -->
+        <div class="policy-card">
+            <div class="policy-card-title">📷 写真・動画・Exifメタデータの取り扱いと動作環境について</div>
+            <div class="policy-body">
+                <p>本サービスは、写真・RAW画像・動画の閲覧、Exifメタデータの確認・編集、フレーム合成、画像調色等の処理を行うツール群です。</p>
+                
+                <div class="highlight-box">
+                    <strong>【完全ローカル処理の宣言】</strong><br>
+                    利用者が選択または撮影したすべての画像・動画データ、およびExifメタデータ（撮影日時、カメラ機材設定、GPS位置情報等）は、<strong>利用者の端末内（ブラウザまたはアプリのローカル環境）でのみ解析・表示・編集・生成されます。</strong><br>
+                    当方が管理する外部サーバーや第三者のサーバーへメディアデータやExif情報が送信・収集・蓄積されることは一切ありません。
+                </div>
+
+                <p><strong>【Web版とAndroidアプリ版の機能の違いについて】</strong><br>
+                ・<strong>Web公開版：</strong>利用者がファイル選択ダイアログやドラッグ＆ドロップによって「明示的に読み込ませた単一または複数のファイル」のみをブラウザのメモリ上で一時的に処理します。端末内ストレージを自動的にスキャン・探索したり、端末のカメラ機能やGPS位置情報を直接取得することは一切ありません。<br>
+                ・<strong>Androidアプリ版のみの機能：</strong>端末内ストレージ（SDカード等）に保存された写真・動画・RAW画像の自動走査・一覧表示（フォトギャラリー）、およびリアルタイムフォトレシピ撮影（カメラ機能）を提供します。</p>
+
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-color);">
+                    <span class="app-only-badge">※以下はAndroidアプリ版のみ該当</span><br>
+                    <strong>【カメラ権限および位置情報（GPSメタデータ）の利用について】</strong><br>
+                    ・<strong>カメラへのアクセス（CAMERA権限）：</strong>アプリ版のカメラ機能においてファインダー映像を表示し、写真を撮影・保存する目的でのみ使用します。<br>
+                    ・<strong>位置情報の利用（ACCESS_FINE_LOCATION / ACCESS_COARSE_LOCATION権限）：</strong>カメラ設定で「写真にGPS位置情報を登録する」を有効にした場合、撮影写真のEXIFメタデータに撮影地点（緯度・経度・高度）を記録する目的でのみ取得します。また、フォトギャラリーにおいて写真や動画のExif詳細画面で緯度経度をローカル表示する目的でのみ参照します。<br>
+                    当方が利用者の現在地や移動履歴を収集・追跡・外部送信することは一切ありません。なお、位置情報のリンクをタップした際のみ、OS標準のインテントを通じて外部地図アプリ（Googleマップ等）へ座標を引き渡して起動します。
+                </div>
             </div>
         </div>
-    </div>
 
-    <!-- 2. アクセス解析・Cookie -->
-    <div class="policy-card">
-        <div class="policy-card-title">📊 収集する情報とその利用目的</div>
-        <div class="policy-body">
-            <p>本サービスでは、サイトの利用状況把握、利便性向上、および品質改善を目的として、Google LLCが提供するアクセス解析ツール「Google アナリティクス（GA4）」を利用しています。</p>
-            <p>本ツールは、トラフィックデータの収集のためにCookie（クッキー）を使用し、以下の情報を匿名で収集・集計します。</p>
-            <ul class="policy-list">
-                <li>ブラウザの種類、OS、アクセス元の国・地域などの閲覧環境情報</li>
-                <li>サイト内の閲覧ページ、滞在時間、クリック状況などの利用ログ</li>
-            </ul>
-            <p>※これらの情報には、氏名、住所、メールアドレスなど、特定の個人を直接識別できる情報は一切含まれません。ブラウザの設定でCookieを無効にすることにより、収集を拒否することも可能です。</p>
+        <!-- 2. アクセス解析・Cookie -->
+        <div class="policy-card">
+            <div class="policy-card-title">📊 収集する情報とその利用目的</div>
+            <div class="policy-body">
+                <p>本サービスでは、利用状況把握、利便性向上、品質改善、およびアプリのクラッシュ不具合調査を目的として、Google LLCが提供するアクセス解析ツール（Web版：Google アナリティクス4 / アプリ版：Firebase Analytics）を利用しています。</p>
+                <p>これらのツールを通じて、以下の情報が匿名で自動的に収集・集計される場合があります。</p>
+                <ul class="policy-list">
+                    <li>ブラウザの種類、OSバージョン、デバイスモデル、画面解像度などの閲覧環境情報</li>
+                    <li>サイト・アプリ内の閲覧ページ、滞在時間、クリック状況、機能の利用頻度などの利用ログ</li>
+                    <li>アプリのクラッシュ診断情報（スタックトレース等）</li>
+                </ul>
+                <p>※これらの情報には、氏名、住所、電話番号、メールアドレス、および端末内の写真そのものなど、特定の個人を直接識別できる情報は一切含まれません。WebブラウザではCookieを無効化することで収集を拒否することも可能です。</p>
+            </div>
+        </div>
+
+        <!-- 3. 第三者提供・外部送信 -->
+        <div class="policy-card">
+            <div class="policy-card-title">🌐 情報の外部送信および第三者提供</div>
+            <div class="policy-body">
+                <p>当方は、前条に定めるアクセス解析ツールを通じてGoogle LLCへ統計データまたは診断データが送信される場合を除き、利用者の同意を得ることなく第三者へ情報を開示または提供することはありません。</p>
+                <p>Google社における利用データの取り扱いおよびプライバシー方針については、同社の公式規定をご確認ください。</p>
+                <ul class="policy-list">
+                    <li><a href="https://policies.google.com/privacy" class="link-text" target="_blank" rel="noopener">Google プライバシー ポリシー</a></li>
+                    <li><a href="https://policies.google.com/technologies/partner-sites" class="link-text" target="_blank" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. 免責事項 -->
+        <div class="policy-card">
+            <div class="policy-card-title">⚠️ 免責事項</div>
+            <div class="policy-body">
+                <p>本サービスの利用および提供するツールの動作に関して、最大限の安全性確保と品質維持に努めておりますが、予期せぬブラウザの異常終了や端末障害等により発生した損害（データの消失、画像の破損等を含む）について、当方は一切の責任を負いかねます。</p>
+                <p>大切な写真データの加工・編集・移動・削除を行う際は、事前にバックアップを取得した上でご利用いただくようお願いいたします。</p>
+            </div>
+        </div>
+
+        <!-- 5. ポリシーの改定 -->
+        <div class="policy-card">
+            <div class="policy-card-title">📝 プライバシーポリシーの改定</div>
+            <div class="policy-body">
+                <p>本ポリシーの内容は、関連法令の変更やサービスの機能アップデート等に伴い、予告なく改定されることがあります。改定された最新のプライバシーポリシーは、本ページへの掲示をもって効力を生じるものとします。</p>
+            </div>
+        </div>
+
+        <!-- 6. お問い合わせ窓口 -->
+        <div class="policy-card">
+            <div class="policy-card-title">📮 お問い合わせ窓口</div>
+            <div class="policy-body">
+                <p>本ポリシー、または本サービスにおける利用者情報の取り扱いに関するご意見・ご質問は、以下の窓口までお問い合わせください。</p>
+                <ul class="policy-list">
+                    <li><strong>開発者 / 運営者：</strong>山下オクトパス</li>
+                    <li><strong>連絡先：</strong>yamashita.octopus.app+support@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="meta-info">
+            制定日：2026年10月1日<br>
+            改定日：2026年10月16日
         </div>
     </div>
 
-    <!-- 3. 第三者提供・外部送信 -->
-    <div class="policy-card">
-        <div class="policy-card-title">🌐 情報の外部送信および第三者提供</div>
-        <div class="policy-body">
-            <p>当方は、前条に定めるGoogle アナリティクスを通じてGoogle LLCへ統計データが送信される場合を除き、利用者の同意を得ることなく第三者へ情報を開示または提供することはありません。</p>
-            <p>Google社における利用データの取り扱いおよびプライバシー方針については、同社の公式規定をご確認ください。</p>
-            <ul class="policy-list">
-                <li><a href="https://policies.google.com/privacy" class="link-text" target="_blank" rel="noopener">Google プライバシー ポリシー</a></li>
-                <li><a href="https://policies.google.com/technologies/partner-sites" class="link-text" target="_blank" rel="noopener">Google のサービスを使用するサイトやアプリから収集した情報の Google による使用</a></li>
-            </ul>
-        </div>
+
+    <!-- ─── 言語ブロックの境界 ─── -->
+    <div class="lang-divider">
+        <span class="lang-divider-badge">English / 英語</span>
     </div>
 
-    <!-- 4. 免責事項 -->
-    <div class="policy-card">
-        <div class="policy-card-title">⚠️ 免責事項</div>
-        <div class="policy-body">
-            <p>本サービスの利用および提供するツールの動作に関して、最大限の安全性確保と品質維持に努めておりますが、予期せぬブラウザの異常終了等により発生した損害（データの消失、画像の破損等を含む）について、当方は一切の責任を負いかねます。</p>
-            <p>大切な写真データの加工・編集を行う際は、事前にバックアップを取得した上でご利用いただくようお願いいたします。</p>
-        </div>
-    </div>
 
-    <!-- 5. ポリシーの改定 -->
-    <div class="policy-card">
-        <div class="policy-card-title">📝 プライバシーポリシーの改定</div>
-        <div class="policy-body">
-            <p>本ポリシーの内容は、関連法令の変更やサービスの機能アップデート等に伴い、予告なく改定されることがあります。改定された最新のプライバシーポリシーは、本ページへの掲示をもって効力を生じるものとします。</p>
+    <!-- ───────────────────────────────────────────── -->
+    <!-- 英語ブロック (English Block)                  -->
+    <!-- ───────────────────────────────────────────── -->
+    <div id="lang-en" lang="en">
+        <div class="back-nav">
+            <a href="index.html" class="back-link">‹ Back to TOP</a>
+            <a href="#lang-ja" class="lang-jump-link">↑ 日本語 (Japanese)</a>
         </div>
-    </div>
 
-    <!-- 6. お問い合わせ窓口 -->
-    <div class="policy-card">
-        <div class="policy-card-title">📮 お問い合わせ窓口</div>
-        <div class="policy-body">
-            <p>本ポリシー、または本サービスにおける利用者情報の取り扱いに関するご意見・ご質問は、以下の窓口までお問い合わせください。</p>
-            <ul class="policy-list">
-                <li><strong>開発者 / 運営者：</strong>山下オクトパス</li>
-                <li><strong>連絡先：</strong>yamashita.octopus.app+support@gmail.com</li>
-            </ul>
+        <div class="page-header">
+            <h1 class="page-title">🔒 Privacy Policy</h1>
+            <p class="page-desc">This Privacy Policy sets forth the policies regarding the handling and protection of user information in the service "Octopus Photo Studio" (including both the Web tools and the Android application, hereinafter collectively referred to as "the Service") provided by Yamashita Octopus (hereinafter "the Developer").</p>
         </div>
-    </div>
 
-    <div class="meta-info">
-        制定日：2026年10月1日<br>
-        改定日：2026年10月12日
+        <!-- 1. Media handling & Environment differences -->
+        <div class="policy-card">
+            <div class="policy-card-title">📷 Handling of Photos, Videos, Metadata & Platform Specifics</div>
+            <div class="policy-body">
+                <p>The Service is a tool suite for viewing photos, RAW files, and videos, inspecting and editing EXIF metadata, frame compositing, and color grading.</p>
+                
+                <div class="highlight-box">
+                    <strong>【Declaration of 100% Local On-Device Processing】</strong><br>
+                    All image and video files, as well as EXIF metadata (capture dates, camera settings, GPS coordinates, etc.) selected or captured by the user, are <strong>analyzed, displayed, edited, and generated solely within the user's device (client-side browser or local app environment).</strong><br>
+                    Media files and EXIF metadata are never transmitted, collected, or stored on external servers managed by the Developer or any third parties.
+                </div>
+
+                <p><strong>【Scope of Features: Web Version vs. Android App】</strong><br>
+                • <strong>Web Browser Version:</strong> Operates strictly on files that you explicitly upload or drag-and-drop into the browser window, processing them temporarily in local browser memory. The Web version does not scan local device storage, does not access your camera hardware, and does not request or access device GPS location.<br>
+                • <strong>Android App Exclusive Features:</strong> Automatically scans and indexes photos/videos/RAW files in local or external storage (e.g., SD cards) for the Photo Gallery feature, and provides real-time photo recipe shooting via the Camera feature.</p>
+
+                <div style="margin-top: 12px; padding-top: 10px; border-top: 1px dashed var(--border-color);">
+                    <span class="app-only-badge">※ Applicable to the Android App Only</span><br>
+                    <strong>【Regarding Camera Permissions & GPS Location Metadata】</strong><br>
+                    • <strong>Camera Access (CAMERA permission):</strong> Used exclusively within the App's built-in camera tool to display the live viewfinder preview and capture photos locally.<br>
+                    • <strong>Location Access (ACCESS_FINE_LOCATION / ACCESS_COARSE_LOCATION):</strong> When the "Record GPS Location" option is enabled in the camera settings, coordinates (latitude, longitude, altitude) are retrieved solely to write them into the EXIF metadata of captured photos. In the Photo Gallery, GPS data is referenced strictly for local display in the EXIF details sheet.<br>
+                    The Developer never collects, tracks, or externally transmits user location or movement history. Coordinates are shared with external map applications (such as Google Maps) via standard OS intents only when the user explicitly taps the location link.
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Analytics & Cookies -->
+        <div class="policy-card">
+            <div class="policy-card-title">📊 Information Collected & Purpose of Use</div>
+            <div class="policy-body">
+                <p>The Service utilizes analytics tools provided by Google LLC (Web version: Google Analytics 4 / App version: Firebase Analytics) to analyze usage trends, enhance usability, improve quality, and troubleshoot app crash issues.</p>
+                <p>These tools may automatically collect and aggregate the following anonymous data:</p>
+                <ul class="policy-list">
+                    <li>Device environment information such as browser type, OS version, device model, and screen resolution</li>
+                    <li>Usage logs including page views, session duration, click events, and feature usage frequency</li>
+                    <li>Diagnostic crash logs (e.g., stack traces)</li>
+                </ul>
+                <p>* None of the collected data contains personally identifiable information (such as names, addresses, phone numbers, email addresses, or actual photo content). Web users can disable cookies in browser settings to opt out of collection.</p>
+            </div>
+        </div>
+
+        <!-- 3. Third-Party Provision -->
+        <div class="policy-card">
+            <div class="policy-card-title">🌐 Third-Party Provision & External Transmission</div>
+            <div class="policy-body">
+                <p>Except for aggregated statistical or diagnostic data transmitted to Google LLC via Google Analytics / Firebase Analytics as described above, the Developer does not disclose or provide user information to third parties without prior consent.</p>
+                <p>For more details on Google's privacy policies and practices, please consult their official documentation:</p>
+                <ul class="policy-list">
+                    <li><a href="https://policies.google.com/privacy" class="link-text" target="_blank" rel="noopener">Google Privacy Policy</a></li>
+                    <li><a href="https://policies.google.com/technologies/partner-sites" class="link-text" target="_blank" rel="noopener">How Google uses information from sites or apps that use our services</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 4. Disclaimer -->
+        <div class="policy-card">
+            <div class="policy-card-title">⚠️ Disclaimer</div>
+            <div class="policy-body">
+                <p>While the Developer takes utmost care to ensure the safety, stability, and operational quality of the Service, the Developer assumes no liability whatsoever for any damages or losses (including data loss or file corruption) arising from unexpected browser crashes, device errors, or file system failures.</p>
+                <p>Please ensure you maintain backups prior to editing, modifying, moving, or deleting valuable photo data.</p>
+            </div>
+        </div>
+
+        <!-- 5. Changes to Policy -->
+        <div class="policy-card">
+            <div class="policy-card-title">📝 Changes to this Policy</div>
+            <div class="policy-body">
+                <p>This Privacy Policy may be updated without prior notice to reflect legal amendments or service feature enhancements. The latest revised privacy policy shall take effect immediately upon its publication on this page.</p>
+            </div>
+        </div>
+
+        <!-- 6. Contact Information -->
+        <div class="policy-card">
+            <div class="policy-card-title">📮 Contact Information</div>
+            <div class="policy-body">
+                <p>For inquiries, questions, or feedback regarding this policy or the handling of user information in the Service, please contact:</p>
+                <ul class="policy-list">
+                    <li><strong>Developer / Operator:</strong> Yamashita Octopus</li>
+                    <li><strong>Contact:</strong> yamashita.octopus.app+support@gmail.com</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="meta-info">
+            Established: October 1, 2026<br>
+            Revised: October 16, 2026
+        </div>
     </div>
 
 </div>

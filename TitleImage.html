@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Title Image 専用辞書JS -->
+    <script src="lang/title-image-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -568,20 +570,20 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p id="drop-area-text">ここをタップするか、背景にしたい写真ファイル（1〜6枚）をドラッグ＆ドロップ</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（最大 <span data-octopus-max-files>6</span> 枚まで一括追加可能）</span>
+        <p id="drop-area-text" data-i18n="drop_area_text">ここをタップするか、背景にしたい写真ファイル（1〜6枚）をドラッグ＆ドロップ</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP 対応（最大 </span><span data-octopus-max-files>6</span><span data-i18n="limit_notice_suffix"> 枚まで一括追加可能）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
         
-        <button type="button" id="clear-file-btn" class="clear-all-btn">すべての写真をクリア</button>
+        <button type="button" id="clear-file-btn" class="clear-all-btn" data-i18n="btn_clear_all_photos">すべての写真をクリア</button>
         
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
     </div>
 
     <!-- サムネイル並び替え＆管理ストリップ -->
     <div class="thumb-list-wrapper" id="thumb-list-wrapper" style="display: none;">
         <div class="thumb-list-header">
-            <span>読み込み済み写真 (<span id="thumb-count">0</span> / 6 枚) — ◀ ▶ で順番入れ替え</span>
-            <button type="button" class="btn-clear-thumbs" id="btn-clear-all-thumbs">✕ 全てクリア</button>
+            <span><span data-i18n="thumb_header_prefix">読み込み済み写真 (</span><span id="thumb-count">0</span><span data-i18n="thumb_header_suffix"> / 6 枚) — ◀ ▶ で順番入れ替え</span></span>
+            <button type="button" class="btn-clear-thumbs" id="btn-clear-all-thumbs" data-i18n="btn_clear_all_thumbs">✕ 全てクリア</button>
         </div>
         <div class="thumb-strip" id="thumb-strip">
             <!-- JS側で動的自動レンダリング -->
@@ -595,7 +597,7 @@
         <div class="editor-col-left">
             <div class="preview-box-container">
                 <div class="preview-header-bar">
-                    <span style="font-size: 13px; font-weight: 700; color: var(--text-color);">👁️ リアルタイムプレビュー</span>
+                    <span style="font-size: 13px; font-weight: 700; color: var(--text-color);" data-i18n="preview_title">👁️ リアルタイムプレビュー</span>
                     <span id="preview-aspect-label" style="font-size: 11px; color: var(--text-muted); font-family: monospace;">1280 × 670 (アイキャッチ)</span>
                 </div>
 
@@ -606,11 +608,11 @@
                 <!-- パン操作・調整ツールバー -->
                 <div class="preview-toolbar">
                     <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-                        <button type="button" class="pan-mode-btn" id="btn-toggle-pan" title="スマホで画面スクロールとドラッグ構図移動を切り替えます">🖐️ ドラッグ操作: OFF</button>
-                        <span class="slot-indicator" id="slot-indicator">操作対象: 全スロット一括</span>
-                        <button type="button" class="pan-mode-btn" id="btn-deselect-slot" style="display: none;" title="個別選択を解除して全スロット一括操作に戻します">全体選択に戻す</button>
+                        <button type="button" class="pan-mode-btn" id="btn-toggle-pan" title="スマホで画面スクロールとドラッグ構図移動を切り替えます" data-i18n="btn_pan_off" data-i18n-title="btn_pan_title">🖐️ ドラッグ操作: OFF</button>
+                        <span class="slot-indicator" id="slot-indicator" data-i18n="slot_indicator_all">操作対象: 全スロット一括</span>
+                        <button type="button" class="pan-mode-btn" id="btn-deselect-slot" style="display: none;" title="個別選択を解除して全スロット一括操作に戻します" data-i18n="btn_deselect_slot" data-i18n-title="btn_deselect_slot_title">全体選択に戻す</button>
                     </div>
-                    <button type="button" class="pan-mode-btn" id="btn-reset-pan" title="構図の位置を中央に戻します">↺ 構図リセット</button>
+                    <button type="button" class="pan-mode-btn" id="btn-reset-pan" title="構図の位置を中央に戻します" data-i18n="btn_reset_pan" data-i18n-title="btn_reset_pan_title">↺ 構図リセット</button>
                 </div>
             </div>
         </div>
@@ -621,13 +623,13 @@
             <!-- 1. デザインプリセット選択 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-design-presets', this)">
-                    デザインスタイル・プリセット <span>▼</span>
+                    <span data-i18n="acc_design_presets">デザインスタイル・プリセット</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-design-presets">
                     <!-- プリセットカテゴリタブ -->
                     <div class="preset-tab-bar">
-                        <button type="button" class="preset-tab-btn active" id="tab-preset-single" data-tab="single">📷 1枚（シンプル）</button>
-                        <button type="button" class="preset-tab-btn" id="tab-preset-multi" data-tab="multi">🖼️ 複数枚（コラージュ）</button>
+                        <button type="button" class="preset-tab-btn active" id="tab-preset-single" data-tab="single" data-i18n="tab_preset_single">📷 1枚（シンプル）</button>
+                        <button type="button" class="preset-tab-btn" id="tab-preset-multi" data-tab="multi" data-i18n="tab_preset_multi">🖼️ 複数枚（コラージュ）</button>
                     </div>
 
                     <div class="preset-grid" id="preset-grid-container">
@@ -639,104 +641,104 @@
             <!-- 2. テキスト入力 ＆ スタイリング設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-text-settings', this)">
-                    テキスト入力 ＆ スタイリング設定 <span>▼</span>
+                    <span data-i18n="acc_text_settings">テキスト入力 ＆ スタイリング設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-text-settings">
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 12px;">
-                        <button type="button" class="btn-danger-reset" id="btn-reset-text" title="テキスト入力と文字スタイル設定をデフォルトに戻します">↺ リセット</button>
+                        <button type="button" class="btn-danger-reset" id="btn-reset-text" title="テキスト入力と文字スタイル設定をデフォルトに戻します" data-i18n="btn_reset_text" data-i18n-title="btn_reset_text_title">↺ リセット</button>
                     </div>
 
                     <!-- テキスト入力欄（3行対応 textarea） -->
                     <div class="form-group" style="margin-bottom: 12px;">
-                        <label>メインタイトル（最大3行）</label>
+                        <label data-i18n="lbl_main_title">メインタイトル（最大3行）</label>
                         <div class="input-clear-wrapper">
-                            <textarea id="input-main-title" rows="3" placeholder="記事のメインタイトルを入力（Enterで改行）">メインタイトル</textarea>
-                            <button type="button" class="btn-field-clear" id="btn-clear-main-title" title="メインタイトルをクリア">✕</button>
+                            <textarea id="input-main-title" rows="3" placeholder="記事のメインタイトルを入力（Enterで改行）" data-i18n-placeholder="ph_main_title">メインタイトル</textarea>
+                            <button type="button" class="btn-field-clear" id="btn-clear-main-title" title="メインタイトルをクリア" data-i18n-title="btn_clear_main_title">✕</button>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 12px;">
-                        <label>サブタイトル / キャッチコピー（最大3行）</label>
+                        <label data-i18n="lbl_sub_title">サブタイトル / キャッチコピー（最大3行）</label>
                         <div class="input-clear-wrapper">
-                            <textarea id="input-sub-title" rows="3" placeholder="キャッチコピーや要約を入力（Enterで改行）">キャッチコピーや要約</textarea>
-                            <button type="button" class="btn-field-clear" id="btn-clear-sub-title" title="サブタイトルをクリア">✕</button>
+                            <textarea id="input-sub-title" rows="3" placeholder="キャッチコピーや要約を入力（Enterで改行）" data-i18n-placeholder="ph_sub_title">キャッチコピーや要約</textarea>
+                            <button type="button" class="btn-field-clear" id="btn-clear-sub-title" title="サブタイトルをクリア" data-i18n-title="btn_clear_sub_title">✕</button>
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-bottom: 16px;">
-                        <label>クレジット / 著者名・日付（最大3行）</label>
+                        <label data-i18n="lbl_author_text">クレジット / 著者名・日付（最大3行）</label>
                         <div class="input-clear-wrapper">
-                            <textarea id="input-author-text" rows="3" placeholder="著者名や日付を入力（Enterで改行）">著者名や日付など</textarea>
-                            <button type="button" class="btn-field-clear" id="btn-clear-author-text" title="クレジットをクリア">✕</button>
+                            <textarea id="input-author-text" rows="3" placeholder="著者名や日付を入力（Enterで改行）" data-i18n-placeholder="ph_author_text">著者名や日付など</textarea>
+                            <button type="button" class="btn-field-clear" id="btn-clear-author-text" title="クレジットをクリア" data-i18n-title="btn_clear_author_text">✕</button>
                         </div>
                     </div>
 
                     <!-- グループ1: 文字・フォント設定 -->
                     <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-bottom: 14px;">
-                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;">◆ 文字・フォント設定</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;" data-i18n="sec_font_settings">◆ 文字・フォント設定</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>フォント書体</label>
+                                <label data-i18n="lbl_font_family">フォント書体</label>
                                 <select id="text-font-family">
-                                    <option value="Noto Sans JP" selected>Noto Sans JP (標準)</option>
+                                    <option value="Noto Sans JP" selected data-i18n="opt_font_noto">Noto Sans JP (標準)</option>
                                     <option value="Google Sans Flex">Google Sans Flex</option>
                                     <option value="IBM Plex Sans JP">IBM Plex Sans JP</option>
                                     <option value="ZEN 角ゴシック New">ZEN 角ゴシック New</option>
                                     <option value="さわらびゴシック">さわらびゴシック</option>
-                                    <option value="クレー One">クレー One (教科書風・上品)</option>
-                                    <option value="小杉丸">小杉丸 (丸ゴシック)</option>
-                                    <option value="佑字 朴">佑字 朴 (毛筆・和風)</option>
-                                    <option value="Cherry Bomb">Cherry Bomb (ポップ・太字)</option>
-                                    <option value="はちまるポップ">はちまるポップ (レトロ)</option>
+                                    <option value="クレー One" data-i18n="opt_font_klee">クレー One (教科書風・上品)</option>
+                                    <option value="小杉丸" data-i18n="opt_font_kosugi">小杉丸 (丸ゴシック)</option>
+                                    <option value="佑字 朴" data-i18n="opt_font_yuji">佑字 朴 (毛筆・和風)</option>
+                                    <option value="Cherry Bomb" data-i18n="opt_font_cherry">Cherry Bomb (ポップ・太字)</option>
+                                    <option value="はちまるポップ" data-i18n="opt_font_hachi">はちまるポップ (レトロ)</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label>文字の太さ (ウェイト)</label>
+                                <label data-i18n="lbl_text_weight">文字の太さ (ウェイト)</label>
                                 <select id="text-weight">
-                                    <option value="400">標準 (Normal)</option>
-                                    <option value="700" selected>太字 (Bold)</option>
-                                    <option value="900">極太 (Heavy)</option>
+                                    <option value="400" data-i18n="opt_weight_400">標準 (Normal)</option>
+                                    <option value="700" selected data-i18n="opt_weight_700">太字 (Bold)</option>
+                                    <option value="900" data-i18n="opt_weight_900">極太 (Heavy)</option>
                                 </select>
                             </div>
 
                             <div class="form-group">
-                                <label>タイトル文字サイズ: <span id="val-font-size" class="slider-val">6.2%</span></label>
+                                <label><span data-i18n="lbl_font_size_prefix">タイトル文字サイズ: </span><span id="val-font-size" class="slider-val">6.2%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-font-size" min="3.0" max="20.0" step="0.2" value="6.2">
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>文字色</label>
+                                <label data-i18n="lbl_text_color">文字色</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="color" id="text-color" value="#ffffff" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                    <span style="font-size: 12px; color: var(--text-muted);">カラー選択</span>
+                                    <span style="font-size: 12px; color: var(--text-muted);" data-i18n="lbl_color_pick">カラー選択</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>文字の影・フチ取り</label>
+                                <label data-i18n="lbl_text_deco">文字の影・フチ取り</label>
                                 <select id="text-decoration-mode">
-                                    <option value="soft-shadow" selected>やわらかな影 (可読性アップ)</option>
-                                    <option value="hard-shadow">くっきりした影</option>
-                                    <option value="outline">細いフチ取り</option>
-                                    <option value="none">装飾なし</option>
+                                    <option value="soft-shadow" selected data-i18n="opt_deco_soft">やわらかな影 (可読性アップ)</option>
+                                    <option value="hard-shadow" data-i18n="opt_deco_hard">くっきりした影</option>
+                                    <option value="outline" data-i18n="opt_deco_outline">細いフチ取り</option>
+                                    <option value="none" data-i18n="opt_deco_none">装飾なし</option>
                                 </select>
                             </div>
 
                             <!-- フチ色選択 -->
                             <div class="form-group" id="outline-color-group" style="display: none;">
-                                <label>フチの色</label>
+                                <label data-i18n="lbl_outline_color">フチの色</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="color" id="outline-color" value="#000000" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                    <span style="font-size: 12px; color: var(--text-muted);">カラー選択</span>
+                                    <span style="font-size: 12px; color: var(--text-muted);" data-i18n="lbl_color_pick">カラー選択</span>
                                 </div>
                             </div>
 
                             <!-- フチの太さスライダー（1%〜50%） -->
                             <div class="form-group" id="outline-width-group" style="display: none;">
-                                <label>フチの太さ: <span id="val-outline-width" class="slider-val">8%</span></label>
+                                <label><span data-i18n="lbl_outline_width_prefix">フチの太さ: </span><span id="val-outline-width" class="slider-val">8%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-outline-width" min="1" max="50" step="1" value="8">
                                 </div>
@@ -746,36 +748,36 @@
 
                     <!-- グループ2: 背景・座布団設定 -->
                     <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-bottom: 14px;">
-                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;">◆ 背景・座布団設定</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;" data-i18n="sec_bg_box_settings">◆ 背景・座布団設定</div>
 
-                        <!-- ★ 新設：背景ブラー切替チェックボックス -->
+                        <!-- 背景ブラー切替チェックボックス -->
                         <div style="margin-bottom: 12px; background: var(--card-bg-sub); border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 9px 12px;">
                             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; margin: 0;">
                                 <input type="checkbox" id="check-bg-blur" style="width: 18px; height: 18px; accent-color: var(--primary); cursor: pointer;">
-                                <span style="font-size: 13px; font-weight: 700; color: var(--text-color);">背景を1枚目写真のブラーぼかし画像にする</span>
+                                <span style="font-size: 13px; font-weight: 700; color: var(--text-color);" data-i18n="lbl_check_bg_blur">背景を1枚目写真のブラーぼかし画像にする</span>
                             </label>
                         </div>
 
                         <div class="form-grid">
                             <!-- 背景カラーピッカー（ブラーON時は自動グレーアウト） -->
                             <div class="form-group" id="bg-color-group" style="transition: var(--transition);">
-                                <label id="bg-color-title-label">背景カラー (台紙色)</label>
+                                <label id="bg-color-title-label" data-i18n="lbl_bg_color_title">背景カラー (台紙色)</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="color" id="bg-color-picker" value="#f4f1eb" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                    <span style="font-size: 12px; color: var(--text-muted);" id="bg-color-label">カラー選択</span>
+                                    <span style="font-size: 12px; color: var(--text-muted);" id="bg-color-label" data-i18n="lbl_color_pick">カラー選択</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>座布団のカラー</label>
+                                <label data-i18n="lbl_box_color">座布団のカラー</label>
                                 <div style="display: flex; gap: 8px; align-items: center;">
                                     <input type="color" id="box-color" value="#000000" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                    <span style="font-size: 12px; color: var(--text-muted);">カラー選択</span>
+                                    <span style="font-size: 12px; color: var(--text-muted);" data-i18n="lbl_color_pick">カラー選択</span>
                                 </div>
                             </div>
 
                             <div class="form-group">
-                                <label>座布団の不透明度: <span id="val-box-opacity" class="slider-val">75%</span></label>
+                                <label><span data-i18n="lbl_box_opacity_prefix">座布団の不透明度: </span><span id="val-box-opacity" class="slider-val">75%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-box-opacity" min="0" max="100" step="5" value="75">
                                 </div>
@@ -785,16 +787,16 @@
 
                     <!-- グループ3: 配置微調整（テキスト位置） -->
                     <div style="border-top: 1px dashed var(--border-color); padding-top: 14px; margin-bottom: 14px;">
-                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;">◆ 配置微調整 (テキスト)</div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-color); margin-bottom: 10px;" data-i18n="sec_text_offset">◆ 配置微調整 (テキスト)</div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>左右レイアウト微調整: <span id="val-offset-x" class="slider-val">0%</span></label>
+                                <label><span data-i18n="lbl_offset_x_prefix">左右レイアウト微調整: </span><span id="val-offset-x" class="slider-val">0%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-offset-x" min="-100" max="100" step="1" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>上下レイアウト微調整: <span id="val-offset-y" class="slider-val">0%</span></label>
+                                <label><span data-i18n="lbl_offset_y_prefix">上下レイアウト微調整: </span><span id="val-offset-y" class="slider-val">0%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-offset-y" min="-100" max="100" step="1" value="0">
                                 </div>
@@ -805,24 +807,24 @@
                     <!-- グループ4: 画像・構図微調整 -->
                     <div style="border-top: 1px dashed var(--border-color); padding-top: 14px;">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                            <span style="font-size: 13px; font-weight: 700; color: var(--text-color);">◆ 画像・構図微調整</span>
-                            <span id="target-slot-badge" style="font-size: 11px; color: var(--text-muted);">全スロット一括操作中</span>
+                            <span style="font-size: 13px; font-weight: 700; color: var(--text-color);" data-i18n="sec_photo_framing">◆ 画像・構図微調整</span>
+                            <span id="target-slot-badge" style="font-size: 11px; color: var(--text-muted);" data-i18n="badge_target_all">全スロット一括操作中</span>
                         </div>
                         <div class="form-grid">
                             <div class="form-group">
-                                <label>画像の拡大縮小: <span id="val-photo-zoom" class="slider-val">100%</span></label>
+                                <label><span data-i18n="lbl_photo_zoom_prefix">画像の拡大縮小: </span><span id="val-photo-zoom" class="slider-val">100%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-photo-zoom" min="50" max="200" step="1" value="100">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>左右構図オフセット: <span id="val-pan-x" class="slider-val">0%</span></label>
+                                <label><span data-i18n="lbl_pan_x_prefix">左右構図オフセット: </span><span id="val-pan-x" class="slider-val">0%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-pan-x" min="-50" max="50" step="1" value="0">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>上下構図オフセット: <span id="val-pan-y" class="slider-val">0%</span></label>
+                                <label><span data-i18n="lbl_pan_y_prefix">上下構図オフセット: </span><span id="val-pan-y" class="slider-val">0%</span></label>
                                 <div class="slider-row">
                                     <input type="range" id="slider-pan-y" min="-100" max="100" step="1" value="0">
                                 </div>
@@ -836,40 +838,40 @@
             <!-- 3. キャンバス比率 ＆ 余白処理 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-canvas-ratio', this)">
-                    キャンバス比率 ＆ 余白処理 <span>▼</span>
+                    <span data-i18n="acc_canvas_ratio">キャンバス比率 ＆ 余白処理</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-canvas-ratio">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>比率プリセット</label>
+                            <label data-i18n="lbl_ratio_preset">比率プリセット</label>
                             <select id="canvas-ratio-select">
-                                <option value="eyecatch" selected>アイキャッチ (1280 × 670 / 約1.91:1)</option>
-                                <option value="16_9">16:9 ワイド (1920 × 1080)</option>
-                                <option value="1_1">1:1 正方形 (1080 × 1080)</option>
-                                <option value="4_3">4:3 スタンダード (1440 × 1080)</option>
-                                <option value="3_2">3:2 一眼標準 (1620 × 1080)</option>
+                                <option value="eyecatch" selected data-i18n="opt_ratio_eyecatch">アイキャッチ (1280 × 670 / 約1.91:1)</option>
+                                <option value="16_9" data-i18n="opt_ratio_16_9">16:9 ワイド (1920 × 1080)</option>
+                                <option value="1_1" data-i18n="opt_ratio_1_1">1:1 正方形 (1080 × 1080)</option>
+                                <option value="4_3" data-i18n="opt_ratio_4_3">4:3 スタンダード (1440 × 1080)</option>
+                                <option value="3_2" data-i18n="opt_ratio_3_2">3:2 一眼標準 (1620 × 1080)</option>
                             </select>
                         </div>
 
                         <div class="form-group">
-                            <label>写真の収まり方式</label>
+                            <label data-i18n="lbl_photo_fit_mode">写真の収まり方式</label>
                             <select id="photo-fit-mode">
-                                <option value="crop" selected>余白なし (中央クロップ ＋ パン移動)</option>
-                                <option value="blur">全体表示 ＋ すりガラス背景 (ブラー余白)</option>
-                                <option value="solid">全体表示 ＋ 単色余白</option>
+                                <option value="crop" selected data-i18n="opt_fit_crop">余白なし (中央クロップ ＋ パン移動)</option>
+                                <option value="blur" data-i18n="opt_fit_blur">全体表示 ＋ すりガラス背景 (ブラー余白)</option>
+                                <option value="solid" data-i18n="opt_fit_solid">全体表示 ＋ 単色余白</option>
                             </select>
                         </div>
 
                         <div class="form-group" id="solid-color-group" style="display: none; transition: var(--transition);">
-                            <label>単色余白のカラー</label>
+                            <label data-i18n="lbl_solid_color">単色余白のカラー</label>
                             <div style="display: flex; gap: 8px; align-items: center;">
                                 <input type="color" id="bg-solid-color" value="#1c2118" style="width: 44px; height: 36px; border: 1px solid var(--border-color); border-radius: 6px; padding: 2px;">
-                                <span style="font-size: 12px; color: var(--text-muted);" id="bg-solid-label">背景色選択</span>
+                                <span style="font-size: 12px; color: var(--text-muted);" id="bg-solid-label" data-i18n="lbl_bg_color_pick">背景色選択</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label>長辺サイズ (カスタム): <span id="val-custom-long-edge" class="slider-val">1280px</span></label>
+                            <label><span data-i18n="lbl_custom_long_edge_prefix">長辺サイズ (カスタム): </span><span id="val-custom-long-edge" class="slider-val">1280px</span></label>
                             <div class="slider-row">
                                 <input type="range" id="custom-long-edge" min="800" max="2560" step="40" value="1280">
                             </div>
@@ -881,12 +883,12 @@
             <!-- 4. 保存 ＆ エクスポート設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-export-settings', this)">
-                    保存・エクスポート設定 <span>▼</span>
+                    <span data-i18n="acc_export_settings">保存・エクスポート設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-export-settings">
                     <div class="form-grid">
                         <div class="form-group">
-                            <label>保存フォーマット</label>
+                            <label data-i18n="lbl_export_format">保存フォーマット</label>
                             <select id="export-format">
                                 <option value="jpeg" selected>JPEG (.jpg)</option>
                                 <option value="png">PNG (.png)</option>
@@ -895,7 +897,7 @@
                         </div>
 
                         <div class="form-group" id="quality-group">
-                            <label>JPEG品質 (圧縮率): <span id="quality-display" style="font-weight: 700; color: var(--primary);">92%</span></label>
+                            <label><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質 (圧縮率): </span><span id="quality-display" style="font-weight: 700; color: var(--primary);">92%</span></label>
                             <input type="range" id="export-quality" min="70" max="100" step="1" value="92" style="margin-top: 6px;">
                         </div>
                     </div>
@@ -907,12 +909,12 @@
 
     <!-- アクションボタン群 -->
     <div class="action-bar-row">
-        <button id="btn-save-image" class="main-btn">💾 画像を保存する</button>
-        <button id="btn-copy-clipboard" class="main-btn">📋 クリップボードにコピー</button>
+        <button id="btn-save-image" class="main-btn" data-i18n="btn_save_image">💾 画像を保存する</button>
+        <button id="btn-copy-clipboard" class="main-btn" data-i18n="btn_copy_clipboard">📋 クリップボードにコピー</button>
     </div>
 
     <div style="display: flex; justify-content: flex-end; margin-top: 12px;">
-        <button type="button" class="reset-all-btn" id="btn-reset-all">↺ すべての設定を初期状態に戻す</button>
+        <button type="button" class="reset-all-btn" id="btn-reset-all" data-i18n="btn_reset_all">↺ すべての設定を初期状態に戻す</button>
     </div>
 
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
@@ -921,17 +923,17 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・写真と文章を入力するだけで、アイキャッチやブログサムネイル、SNS告知用のタイトル画像を完全ローカルで瞬時に生成・書き出しできるWebツールです。</p>
-        <p>・単体写真の洗練レイアウトはもちろん、最大6枚の写真を使った雑誌風コラージュや分割レイアウトに対応しています。</p>
-        <p>・画像の読み込み、ブラー処理、Canvas文字合成はすべてお使いの端末内（完全クライアントサイド）で行われます。写真データが外部サーバーへ送信されることは一切ありません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・写真と文章を入力するだけで、アイキャッチやブログサムネイル、SNS告知用のタイトル画像を完全ローカルで瞬時に生成・書き出しできるWebツールです。</p>
+        <p data-i18n="exp_about_2">・単体写真の洗練レイアウトはもちろん、最大6枚の写真を使った雑誌風コラージュや分割レイアウトに対応しています。</p>
+        <p data-i18n="exp_about_3">・画像の読み込み、ブラー処理、Canvas文字合成はすべてお使いの端末内（完全クライアントサイド）で行われます。写真データが外部サーバーへ送信されることは一切ありません。</p>
 
-        <h3> 使い方</h3>
-        <p>・1. 「デザインスタイル・プリセット」から好みのタブ（1枚または複数枚）を選び、レイアウトを選択します。</p>
-        <p>・2. 上部のドロップエリアに写真をドラッグ＆ドロップ（最大6枚）、またはクリップボードから貼り付けます。</p>
-        <p>・3. サムネイルの「◀」「▶」で順番を入れ替えたり、プレビュー内の写真枠をクリックして構図を個別に微調整します（未選択時は全スロット一括調整）。</p>
-        <p>・4. タイトルやサブコピー、クレジットを入力し、フォントや文字色、文字フチ、座布団カラーを微調整します。背景を1枚目のブラー画像に置き換えることも可能です。</p>
-        <p>・5. 「💾 画像を保存する」で実寸解像度でダウンロード、または「📋 クリップボードにコピー」を押して執筆画面へそのまま貼り付けできます。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. 「デザインスタイル・プリセット」から好みのタブ（1枚または複数枚）を選び、レイアウトを選択します。</p>
+        <p data-i18n="exp_usage_2">・2. 上部のドロップエリアに写真をドラッグ＆ドロップ（最大6枚）、またはクリップボードから貼り付けます。</p>
+        <p data-i18n="exp_usage_3">・3. サムネイルの「◀」「▶」で順番を入れ替えたり、プレビュー内の写真枠をクリックして構図を個別に微調整します（未選択時は全スロット一括調整）。</p>
+        <p data-i18n="exp_usage_4">・4. タイトルやサブコピー、クレジットを入力し、フォントや文字色、文字フチ、座布団カラーを微調整します。背景を1枚目のブラー画像に置き換えることも可能です。</p>
+        <p data-i18n="exp_usage_5">・5. 「💾 画像を保存する」で実寸解像度でダウンロード、または「📋 クリップボードにコピー」を押して執筆画面へそのまま貼り付けできます。</p>
     </div>
 </div>
 

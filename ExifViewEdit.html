@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- EXIF View & Edit 専用辞書JS -->
+    <script src="lang/exif-viewedit-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -522,8 +524,8 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、JPEG画像ファイルをドラッグ＆ドロップ（複数対応）</p>
-        <span id="limit-notice">JPEG (.jpg / .jpeg) 対応（上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、JPEG画像ファイルをドラッグ＆ドロップ（複数対応）</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG (.jpg / .jpeg) 対応（上限: 最大 </span><span data-octopus-max-files>50</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg" multiple style="display: none;">
     </div>
 
@@ -533,11 +535,11 @@
         <!-- 上段：モード切替＆編集件数ステータス（段上げ配置） -->
         <div class="table-mode-bar">
             <div class="mode-btn-group">
-                <button type="button" class="mode-badge-btn active" id="btn-mode-simple">簡易モード</button>
-                <button type="button" class="mode-badge-btn" id="btn-mode-detail">詳細モード</button>
+                <button type="button" class="mode-badge-btn active" id="btn-mode-simple" data-i18n="btn_mode_simple">簡易モード</button>
+                <button type="button" class="mode-badge-btn" id="btn-mode-detail" data-i18n="btn_mode_detail">詳細モード</button>
                 
                 <!-- モバイル環境向けGPS保護検知バッジ（該当時のみ動的表示） -->
-                <span id="gps-notice-badge" class="gps-notice-badge" style="display: none;" title="AndroidやiOSの標準写真選択画面（Photo Picker）のプライバシー保護機能により、ブラウザへ渡される際にGPS位置情報が自動的に消去されている可能性があります。">
+                <span id="gps-notice-badge" class="gps-notice-badge" style="display: none;" data-i18n-title="gps_notice_title" data-i18n="gps_notice_badge">
                     📱 端末の保護機能により位置情報が除外されている可能性があります
                 </span>
             </div>
@@ -547,21 +549,21 @@
         <!-- 下段：操作ツールバー -->
         <div class="table-toolbar">
             <div class="toolbar-group">
-                <button type="button" class="sub-btn" id="btn-undo" disabled title="1つ前に戻す (Ctrl+Z / 最大20回)">↩ 戻る</button>
+                <button type="button" class="sub-btn" id="btn-undo" disabled title="1つ前に戻す (Ctrl+Z / 最大20回)" data-i18n="btn_undo" data-i18n-title="btn_undo_title">↩ 戻る</button>
 
                 <!-- 文字サイズ変更ピッカー -->
-                <div class="font-size-picker" title="表内の文字サイズと行の高さを切り替えます">
-                    <span style="font-size: 11px; color: var(--text-muted); padding-left: 4px;">文字:</span>
-                    <button type="button" class="font-size-btn active" data-size="normal">標準</button>
-                    <button type="button" class="font-size-btn" data-size="small">小</button>
-                    <button type="button" class="font-size-btn" data-size="mini">極小</button>
+                <div class="font-size-picker" title="表内の文字サイズと行の高さを切り替えます" data-i18n-title="font_size_picker_title">
+                    <span style="font-size: 11px; color: var(--text-muted); padding-left: 4px;" data-i18n="lbl_font_size">文字:</span>
+                    <button type="button" class="font-size-btn active" data-size="normal" data-i18n="btn_font_normal">標準</button>
+                    <button type="button" class="font-size-btn" data-size="small" data-i18n="btn_font_small">小</button>
+                    <button type="button" class="font-size-btn" data-size="mini" data-i18n="btn_font_mini">極小</button>
                 </div>
             </div>
 
             <div class="toolbar-group">
-                <button type="button" class="sub-btn" id="btn-expand-height" title="表の縦幅を画面いっぱいに広げます">⤡ 縦を広げる</button>
-                <button type="button" class="sub-btn" id="btn-reset-all-edits" title="すべての写真の編集内容を初期状態に戻します">↺ 全編集をリセット</button>
-                <button type="button" class="sub-btn sub-btn-danger" id="btn-clear-all" title="読み込んだ写真をすべて除外します">全ファイルを除外</button>
+                <button type="button" class="sub-btn" id="btn-expand-height" title="表の縦幅を画面いっぱいに広げます" data-i18n="btn_expand_height" data-i18n-title="btn_expand_height_title">⤡ 縦を広げる</button>
+                <button type="button" class="sub-btn" id="btn-reset-all-edits" title="すべての写真の編集内容を初期状態に戻します" data-i18n="btn_reset_all_edits" data-i18n-title="btn_reset_all_edits_title">↺ 全編集をリセット</button>
+                <button type="button" class="sub-btn sub-btn-danger" id="btn-clear-all" title="読み込んだ写真をすべて除外します" data-i18n="btn_clear_all" data-i18n-title="btn_clear_all_title">全ファイルを除外</button>
             </div>
         </div>
 
@@ -580,31 +582,31 @@
     <!-- 出力・保存設定アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-output-settings', this)">
-            保存・ファイル名設定 <span>▼</span>
+            <span data-i18n="acc_output_settings">保存・ファイル名設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-output-settings">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>ファイル名の処理方式</label>
+                    <label data-i18n="lbl_filename_mode">ファイル名の処理方式</label>
                     <select id="filename-mode">
-                        <option value="prefix" selected>接頭辞をつける（例: edit_xxx.jpg）</option>
-                        <option value="suffix">接尾辞をつける（例: xxx_edit.jpg）</option>
-                        <option value="keep">元ファイル名のまま（上書き）</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞をつける（例: edit_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞をつける（例: xxx_edit.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名のまま（上書き）</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
                         <input type="checkbox" id="compress-chk" style="width: 16px; height: 16px; accent-color: var(--primary);">
-                        <span>JPEG再圧縮を実行する (容量削減)</span>
+                        <span data-i18n="lbl_compress_chk">JPEG再圧縮を実行する (容量削減)</span>
                     </label>
                     <div id="quality-slider-container" style="display: none; margin-top: 6px;">
                         <div style="display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px;">
-                            <span>JPEG品質</span>
+                            <span data-i18n="lbl_jpeg_quality">JPEG品質</span>
                             <span id="quality-val" style="font-weight: 700; color: var(--primary);">92%</span>
                         </div>
                         <input type="range" id="quality-slider" min="50" max="100" step="1" value="92">
-                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;">
+                        <span style="font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px;" data-i18n="desc_lossless_save">
                             ※ チェックを外すと【画質劣化ゼロ（バイナリ直接編集）】で超高速保存されます。
                         </span>
                     </div>
@@ -614,33 +616,33 @@
     </div>
 
     <!-- 一括ダウンロードボタン -->
-    <button id="download-all-btn" class="main-btn" disabled>一括ダウンロードする</button>
+    <button id="download-all-btn" class="main-btn" disabled data-i18n="btn_download_all">一括ダウンロードする</button>
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
 </div>
 
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・画像の読み込み、Exifメタデータの解析、バイナリ編集や再保存などのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データがサーバーへ送信されることは一切ありません。</p>
-        <p>・標準モードでは画像本体の再圧縮を行わずにExifメタデータ領域のみを直接書き換えるため、<strong>画質の劣化はゼロ（100%維持）</strong>です。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・画像の読み込み、Exifメタデータの解析、バイナリ編集や再保存などのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データがサーバーへ送信されることは一切ありません。</p>
+        <p data-i18n="exp_about_2">・標準モードでは画像本体の再圧縮を行わずにExifメタデータ領域のみを直接書き換えるため、<strong>画質の劣化はゼロ（100%維持）</strong>です。</p>
 
-        <h3> 使い方</h3>
-        <p>・枠内または<strong>表示されたExif表の上</strong>にJPEG写真をドラッグ＆ドロップして読み込みます（PCは最大50枚、スマホは最大10枚まで）。</p>
-        <p>・<strong>マウス・キーボード操作</strong>：編集可能セルだけでなく、<strong>閲覧専用セルもクリックやドラッグ、十字キー（↑ / ↓ / ← / →）で自由に選択・移動</strong>できます。さらに Shift＋クリックで連続範囲選択、Ctrl（Cmd）＋クリックで飛び地追加選択が可能です。</p>
-        <p>・<strong>コピー＆ペースト</strong>：セルを選択した状態で <strong>Ctrl+C（Cmd+C）を押すと、編集可能セル・閲覧専用セルを問わずクリップボードへコピー</strong>されます（複数選択時はExcel互換のTSV形式）。<strong>Ctrl+V（Cmd+V）</strong>でペーストでき、単一値を複数セルに一括流し込みも可能です（※閲覧専用セルへのペーストは自動的にスキップされます）。</p>
-        <p>・<strong>インライン編集</strong>：編集可能セルをダブルクリックするか、選択状態で <strong>Enter / F2 キー</strong> を押すとテキスト編集モードになります。編集中に Enter で確定して選択状態に戻り、十字キーで確定してその方向へ移動できます（※閲覧専用セルは編集モードになりません）。</p>
-        <p>・<strong>値の一括消去</strong>：選択状態で <strong>Delete / Backspace キー</strong> を押すと、選択中の編集可能セルの値が一括消去されます（保存時にExifから完全削除）。</p>
-        <p>・<strong>操作のやり直し（Undo）</strong>：表の値を変更した直後、ツールバーの<strong>「↩ 戻る」ボタン</strong>または <strong>Ctrl+Z（Cmd+Z）</strong>を押すと、直前の状態へ戻せます（最大20回まで）。</p>
-        <p>・変更を加えたセルはハイライト表示され、該当する写真の行と項目（列）にも編集マークが付きます。変更箇所の総数は上部に赤字で表示されます。</p>
-        <p>・各行の「操作」列にある<strong>「⬇ 保存（iOSは 共有）」</strong>ボタンを押すと、その写真のExif変更内容を反映して個別保存できます。</p>
-        <p>・Exifの値を1箇所以上編集すると、下部の「一括ダウンロードする」ボタンが押せるようになり、全写真をまとめてダウンロードできます（iOS環境は各行のボタンから保存してください）。</p>
-        <p>・PC環境では、表の右下をマウスでドラッグして<strong>縦の表示サイズを自由に変更</strong>できます。上部の「⤡ 縦を広げる」ボタンで一撃で画面いっぱいに拡大も可能です。</p>
-        <p>・「文字：標準・小・極小」ボタンを押すと、文字サイズと行間をコンパクトに圧縮し、一覧性を高めて一度に多くの写真を俯瞰できます。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・枠内または<strong>表示されたExif表の上</strong>にJPEG写真をドラッグ＆ドロップして読み込みます（PCは最大50枚、スマホは最大10枚まで）。</p>
+        <p data-i18n="exp_usage_2">・<strong>マウス・キーボード操作</strong>：編集可能セルだけでなく、<strong>閲覧専用セルもクリックやドラッグ、十字キー（↑ / ↓ / ← / →）で自由に選択・移動</strong>できます。さらに Shift＋クリックで連続範囲選択、Ctrl（Cmd）＋クリックで飛び地追加選択が可能です。</p>
+        <p data-i18n="exp_usage_3">・<strong>コピー＆ペースト</strong>：セルを選択した状態で <strong>Ctrl+C（Cmd+C）を押すと、編集可能セル・閲覧専用セルを問わずクリップボードへコピー</strong>されます（複数選択時はExcel互換のTSV形式）。<strong>Ctrl+V（Cmd+V）</strong>でペーストでき、単一値を複数セルに一括流し込みも可能です（※閲覧専用セルへのペーストは自動的にスキップされます）。</p>
+        <p data-i18n="exp_usage_4">・<strong>インライン編集</strong>：編集可能セルをダブルクリックするか、選択状態で <strong>Enter / F2 キー</strong> を押すとテキスト編集モードになります。編集中に Enter で確定して選択状態に戻り、十字キーで確定してその方向へ移動できます（※閲覧専用セルは編集モードになりません）。</p>
+        <p data-i18n="exp_usage_5">・<strong>値の一括消去</strong>：選択状態で <strong>Delete / Backspace キー</strong> を押すと、選択中の編集可能セルの値が一括消去されます（保存時にExifから完全削除）。</p>
+        <p data-i18n="exp_usage_6">・<strong>操作のやり直し（Undo）</strong>：表の値を変更した直後、ツールバーの<strong>「↩ 戻る」ボタン</strong>または <strong>Ctrl+Z（Cmd+Z）</strong>を押すと、直前の状態へ戻せます（最大20回まで）。</p>
+        <p data-i18n="exp_usage_7">・変更を加えたセルはハイライト表示され、該当する写真の行と項目（列）にも編集マークが付きます。変更箇所の総数は上部に赤字で表示されます。</p>
+        <p data-i18n="exp_usage_8">・各行の「操作」列にある<strong>「⬇ 保存（iOSは 共有）」</strong>ボタンを押すと、その写真のExif変更内容を反映して個別保存できます。</p>
+        <p data-i18n="exp_usage_9">・Exifの値を1箇所以上編集すると、下部の「一括ダウンロードする」ボタンが押せるようになり、全写真をまとめてダウンロードできます（iOS環境は各行のボタンから保存してください）。</p>
+        <p data-i18n="exp_usage_10">・PC環境では、表の右下をマウスでドラッグして<strong>縦の表示サイズを自由に変更</strong>できます。上部の「⤡ 縦を広げる」ボタンで一撃で画面いっぱいに拡大も可能です。</p>
+        <p data-i18n="exp_usage_11">・「文字：標準・小・極小」ボタンを押すと、文字サイズと行間をコンパクトに圧縮し、一覧性を高めて一度に多くの写真を俯瞰できます。</p>
 
-        <h3> スマートフォン・アプリでのご利用について</h3>
-        <p>・AndroidやiOSの端末から写真を選択・アップロードする際、<strong>OS標準の写真選択ピッカー（Photo Picker）のプライバシー保護機能によって、位置情報（GPS緯度・経度）が自動的に消去された状態でブラウザに渡される場合があります</strong>。</p>
-        <p>・この機能が働いた場合、端末内の写真自体にはGPSが残っていても、ブラウザ上には位置情報が「-（未設定）」として読み込まれます。位置情報を維持・編集したい場合は、PCから読み込むか、端末側の写真共有設定をご確認ください。</p>
+        <h3 data-i18n="exp_usage_mobile_title"> スマートフォン・アプリでのご利用について</h3>
+        <p data-i18n="exp_usage_mobile_1">・AndroidやiOSの端末から写真を選択・アップロードする際、<strong>OS標準の写真選択ピッカー（Photo Picker）のプライバシー保護機能によって、位置情報（GPS緯度・経度）が自動的に消去された状態でブラウザに渡される場合があります</strong>。</p>
+        <p data-i18n="exp_usage_mobile_2">・この機能が働いた場合、端末内の写真自体にはGPSが残っていても、ブラウザ上には位置情報が「-（未設定）」として読み込まれます。位置情報を維持・編集したい場合は、PCから読み込むか、端末側の写真共有設定をご確認ください。</p>
 
     </div>
 </div>

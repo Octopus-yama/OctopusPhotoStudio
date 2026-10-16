@@ -6,7 +6,7 @@
     <title>Octopus Photo Process Batch｜Octopus Photo Studio</title>
     <!-- ファビコン指定 -->
     <link rel="icon" href="img/ico_photo_Process_batch.ico" type="image/x-icon">
-    <meta name="description" content="Photo Processで作成した調色プリセットを複数画像へ一括適用し、ブラウザローカル環境で安全かつ軽快に連続書き出しを行うWebツール。" />
+    <meta name="description" content="Photo Processで作成したフォトレシピプリセットを複数画像へ一括適用し、ブラウザローカル環境で安全かつ軽快に連続書き出しを行うWebツール。" />
     
     <!-- 依存ライブラリ -->
     <script src="full.umd.js"></script>
@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Photo Batch 専用辞書JS -->
+    <script src="lang/photo-batch-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -374,37 +376,37 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files>50</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP 対応（推奨上限: 最大 </span><span data-octopus-max-files>50</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
         
         <div class="file-list" id="file-list"></div>
-        <button id="clear-all-btn" class="clear-all-btn">すべてのファイルをクリア</button>
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
+        <button id="clear-all-btn" class="clear-all-btn" data-i18n="btn_clear_all">すべてのファイルをクリア</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
     </div>
 
     <!-- 1. プリセット選択アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-preset', this)">
-            適用プリセットの選択 <span>▼</span>
+            <span data-i18n="acc_preset_select">適用プリセットの選択</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-preset">
             <div id="preset-select-container">
                 <div class="form-group">
-                    <label>適用する調色プリセット（Photo Processで保存済み）</label>
+                    <label data-i18n="lbl_preset_select">適用するレシピプリセット（Photo Processで保存済み）</label>
                     <select id="preset-select">
-                        <option value="">(プリセットを選択してください)</option>
+                        <option value="" data-i18n="opt_select_preset_default">(プリセットを選択してください)</option>
                     </select>
                 </div>
 
                 <div id="preset-details-area" style="margin-top: 12px; display: none;">
-                    <span style="font-size: 11.5px; font-weight: 700; color: var(--text-color);">■ 含まれる補正内容:</span>
+                    <span style="font-size: 11.5px; font-weight: 700; color: var(--text-color);" data-i18n="lbl_preset_details">■ 含まれる補正内容:</span>
                     <div class="preset-param-badges" id="preset-param-badges"></div>
                 </div>
             </div>
 
-            <div id="preset-empty-alert" class="preset-empty-alert" style="display: none;">
-                ⚠️ <strong>保存された調色プリセットが見つかりません。</strong><br>
+            <div id="preset-empty-alert" class="preset-empty-alert" style="display: none;" data-i18n="preset_empty_alert_html">
+                ⚠️ <strong>保存されたレシピプリセットが見つかりません。</strong><br>
                 本ツールは「<a href="PhotoProcess.html">Photo Process</a>」で保存したプリセットを一括適用するツールです。<br>
                 先に <a href="PhotoProcess.html">Photo Process</a> を開き、お好みの色調設定を作成して「＋ 現在の設定をプリセット登録」を行ってください。
             </div>
@@ -414,12 +416,12 @@
     <!-- 2. 書き出し設定アコーディオン -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-export', this)">
-            保存・エクスポート設定 <span>▼</span>
+            <span data-i18n="acc_export_settings">保存・エクスポート設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-export">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>保存フォーマット</label>
+                    <label data-i18n="lbl_export_format">保存フォーマット</label>
                     <select id="export-format">
                         <option value="jpeg" selected>JPEG (.jpg)</option>
                         <option value="png">PNG (.png)</option>
@@ -428,16 +430,16 @@
                 </div>
 
                 <div class="form-group" id="quality-group">
-                    <label>JPEG品質 (圧縮率): <span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
+                    <label><span data-i18n="lbl_jpeg_quality_prefix">JPEG品質 (圧縮率): </span><span id="quality-display" style="font-weight: 700; color: var(--primary);">95%</span></label>
                     <input type="range" id="export-quality" min="70" max="100" step="1" value="95" style="margin-top: 6px;">
                 </div>
 
                 <div class="form-group">
-                    <label>ファイル名規則</label>
+                    <label data-i18n="lbl_export_namemode">ファイル名規則</label>
                     <select id="export-namemode">
-                        <option value="prefix" selected>接頭辞（例: process_xxx.jpg）</option>
-                        <option value="suffix">接尾辞（例: xxx_process.jpg）</option>
-                        <option value="keep">元ファイル名そのまま</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞（例: process_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞（例: xxx_process.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名そのまま</option>
                     </select>
                 </div>
             </div>
@@ -445,20 +447,20 @@
             <div style="margin-top: 14px;" id="exif-option-container">
                 <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
                     <input type="checkbox" id="export-exif-chk" checked style="width: 16px; height: 16px; accent-color: var(--primary);">
-                    <span>Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影日時・機材情報等を完全維持）</span>
+                    <span data-i18n="lbl_export_exif">Exifメタデータを引き継ぐ（JPEG出力時のみ / 撮影日時・機材情報等を完全維持）</span>
                 </label>
             </div>
         </div>
     </div>
 
     <!-- アクションボタン群 -->
-    <button id="batch-run-btn" class="main-btn">⚡ 一括変換を実行する</button>
-    <button id="download-btn" class="main-btn" style="display: none;">一括ダウンロードする</button>
+    <button id="batch-run-btn" class="main-btn" data-i18n="btn_batch_run">⚡ 一括変換を実行する</button>
+    <button id="download-btn" class="main-btn" style="display: none;" data-i18n="btn_download_all">一括ダウンロードする</button>
 
     <!-- 処理進捗表示エリア -->
     <div class="progress-box" id="progress-box">
         <div class="progress-header">
-            <span id="progress-label">処理中...</span>
+            <span id="progress-label" data-i18n="progress_processing">処理中...</span>
             <span id="progress-counter">0 / 0</span>
         </div>
         <div class="progress-track">
@@ -475,16 +477,16 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・「Photo Process」で作成・保存したお気に入りの調色プリセットを、複数の写真へ一括で適用し、連続書き出しを行うWebツールです。</p>
-        <p>・画像の展開・補正計算・Exif再構築はすべてお使いの端末内（完全クライアントサイド）で順次実行されます。写真が外部サーバーへ送信されることは一切ありません。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・「Photo Process」で作成・保存したお気に入りのフォトレシピプリセットを、複数の写真へ一括で適用し、連続書き出しを行うWebツールです。</p>
+        <p data-i18n="exp_about_2">・画像の展開・補正計算・Exif再構築はすべてお使いの端末内（完全クライアントサイド）で順次実行されます。写真が外部サーバーへ送信されることは一切ありません。</p>
         
-        <h3> 使い方</h3>
-        <p>・1. 事前に「<a href="PhotoProcess.html">Photo Process</a>」で写真の色調・フィルター等を調整し、「保存/設定」タブからプリセットとして保存しておきます。</p>
-        <p>・2. 本ツールを開き、加工したい写真をまとめてドロップまたは選択します。</p>
-        <p>・3. 適用したいプリセットと保存フォーマットを選択し、「⚡ 一括変換を実行する」をクリックします。</p>
-        <p>・4. 完了後、サムネイルをタップすると、スマホでは左右スワイプで前後の写真を快適に切り替えてプレビュー確認できます。</p>
-        <p>・5. 各写真の「クリップボードにコピー」を押すと、長辺2048pxに最適化された画像が直接クリップボードへ保存され、SNSやチャットへそのまま貼り付けできます。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. 事前に「<a href="PhotoProcess.html">Photo Process</a>」で写真の色調・フィルター等を調整し、「保存/設定」タブからプリセットとして保存しておきます。</p>
+        <p data-i18n="exp_usage_2">・2. 本ツールを開き、加工したい写真をまとめてドロップまたは選択します。</p>
+        <p data-i18n="exp_usage_3">・3. 適用したいプリセットと保存フォーマットを選択し、「⚡ 一括変換を実行する」をクリックします。</p>
+        <p data-i18n="exp_usage_4">・4. 完了後、サムネイルをタップすると、スマホでは左右スワイプで前後の写真を快適に切り替えてプレビュー確認できます。</p>
+        <p data-i18n="exp_usage_5">・5. 各写真の「クリップボードにコピー」を押すと、長辺2048pxに最適化された画像が直接クリップボードへ保存され、SNSやチャットへそのまま貼り付けできます。</p>
     </div>
 </div>
 

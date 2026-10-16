@@ -12,6 +12,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Photo Grid 専用辞書JS -->
+    <script src="lang/photo-grid-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -29,7 +31,7 @@
         @media (min-width: 900px) {
             .workspace-grid {
                 grid-template-columns: 1fr 340px;
-                align-items: start; /* Sticky追従を正常に機能させるため開始位置揃え */
+                align-items: start;
             }
             .sidebar-panel {
                 width: 100%;
@@ -51,7 +53,6 @@
             box-sizing: border-box;
         }
 
-        /* PC表示時：画面スクロールに合わせて左プレビューを上部に追従固定 */
         @media (min-width: 900px) {
             .stage-card {
                 position: sticky;
@@ -113,11 +114,11 @@
         }
         @media (max-width: 768px) {
             .preview-zoom-wrapper {
-                display: none; /* スマホでは38dvh制限で既に収まっているためPC専用 */
+                display: none;
             }
         }
 
-        /* 常駐2本指バッジ（写真の邪魔にならないツールバー内に配置） */
+        /* 常駐2本指バッジ */
         .two-finger-badge {
             display: none;
             font-size: 11px;
@@ -177,14 +178,13 @@
             border-radius: 4px;
             cursor: grab;
             display: block;
-            touch-action: pan-y; /* 1本指での縦スクロールを完全に許可 */
+            touch-action: pan-y;
             transition: max-width 0.08s ease-out;
         }
         #preview-canvas:active {
             cursor: grabbing;
         }
 
-        /* スマホ・アプリ表示時のプレビュー高さ抑制 */
         @media (max-width: 768px) {
             .stage-card {
                 padding: 10px;
@@ -518,7 +518,7 @@
 <!-- 読み込み中操作保護オーバーレイ ＆ スピナー -->
 <div class="loading-overlay" id="loading-overlay">
     <div class="loading-spinner"></div>
-    <div class="loading-msg" id="loading-msg">写真を読み込み中...</div>
+    <div class="loading-msg" id="loading-msg" data-i18n="loading_photos">写真を読み込み中...</div>
 </div>
 
 <div class="container" id="main-container">
@@ -540,16 +540,16 @@
 
     <!-- ドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
-        <span id="limit-notice">JPEG / PNG / WebP 対応（推奨上限: 最大 <span data-octopus-max-files>48</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップして追加</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP 対応（推奨上限: 最大 </span><span data-octopus-max-files>48</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp" multiple style="display: none;">
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け</button>
     </div>
 
     <!-- 進捗プログレスバー -->
     <div class="progress-box" id="progress-box">
         <div class="progress-header">
-            <span id="progress-label">写真を読み込み中...</span>
+            <span id="progress-label" data-i18n="loading_photos">写真を読み込み中...</span>
             <span id="progress-counter">0 / 0</span>
         </div>
         <div class="progress-track">
@@ -563,30 +563,30 @@
         <!-- 左ペイン：プレビューステージ -->
         <div class="stage-card">
             <div class="stage-toolbar">
-                <span>■ リアルタイムプレビュー <span style="font-size:11px; font-weight:normal;">（セル内をドラッグで位置微調整）</span></span>
+                <span data-i18n="stage_toolbar_title">■ リアルタイムプレビュー <span style="font-size:11px; font-weight:normal;">（セル内をドラッグで位置微調整）</span></span>
                 <div class="stage-actions">
-                    <div class="two-finger-badge" id="two-finger-badge">✌️ 2本指で位置調整</div>
+                    <div class="two-finger-badge" id="two-finger-badge" data-i18n="badge_two_finger">✌️ 2本指で位置調整</div>
                     <!-- 表示倍率（縮小）スライダー -->
-                    <div class="preview-zoom-wrapper" title="プレビューの表示倍率（縮小）を調整。クリックで100%にリセット">
+                    <div class="preview-zoom-wrapper" title="プレビューの表示倍率（縮小）を調整。クリックで100%にリセット" data-i18n-title="preview_zoom_title">
                         <span class="preview-zoom-label" id="btn-zoom-reset">🔍 <span id="preview-zoom-val">100%</span></span>
                         <input type="range" class="preview-zoom-slider" id="preview-zoom-slider" min="30" max="100" value="100" step="5">
                     </div>
-                    <button type="button" class="sub-btn" id="btn-reset-pans" title="すべての写真の配置位置を中央に戻します">↺ 位置リセット</button>
-                    <button type="button" class="sub-btn" id="btn-clear-all" style="color:var(--danger-color);">✕ 全消去</button>
+                    <button type="button" class="sub-btn" id="btn-reset-pans" title="すべての写真の配置位置を中央に戻します" data-i18n="btn_reset_pans" data-i18n-title="btn_reset_pans_title">↺ 位置リセット</button>
+                    <button type="button" class="sub-btn" id="btn-clear-all" style="color:var(--danger-color);" data-i18n="btn_clear_all">✕ 全消去</button>
                 </div>
             </div>
 
             <div class="canvas-container" id="canvas-container">
                 <canvas id="preview-canvas" width="600" height="600"></canvas>
                 <!-- 1本指フリック時の動的案内トースト -->
-                <div class="grid-touch-toast" id="grid-touch-toast">✌️ セル内の位置調整は指2本で行えます</div>
+                <div class="grid-touch-toast" id="grid-touch-toast" data-i18n="toast_two_finger">✌️ セル内の位置調整は指2本で行えます</div>
             </div>
 
             <!-- サムネイル並び替えリスト（配列レイアウト連動） -->
             <div class="thumb-manager">
                 <div style="font-size: 12px; font-weight: 700; color: var(--text-color); display: flex; justify-content: space-between;">
-                    <span>■ 読み込み済みスロット一覧（ドラッグまたは「◀」「▶」で並び替え）</span>
-                    <span id="slot-counter" style="color:var(--primary);">0枚</span>
+                    <span data-i18n="slot_list_title">■ 読み込み済みスロット一覧（ドラッグまたは「◀」「▶」で並び替え）</span>
+                    <span id="slot-counter" style="color:var(--primary);" data-i18n="slot_counter_zero">0枚</span>
                 </div>
                 <div class="thumb-scroll-box">
                     <div class="thumb-grid" id="thumb-grid"></div>
@@ -600,25 +600,25 @@
             <!-- 1. レイアウト配置設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-grid-layout', this)">
-                    配列レイアウト <span>▼</span>
+                    <span data-i18n="acc_grid_layout">配列レイアウト</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-grid-layout">
                     <div style="margin-bottom: 8px;">
-                        <button type="button" class="sub-btn" id="btn-auto-layout" style="width: 100%; padding: 8px; font-weight: 700;">✨ 写真枚数に合わせて自動配列</button>
+                        <button type="button" class="sub-btn" id="btn-auto-layout" style="width: 100%; padding: 8px; font-weight: 700;" data-i18n="btn_auto_layout">✨ 写真枚数に合わせて自動配列</button>
                     </div>
 
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-top: 10px;">
                         <div class="form-group">
-                            <label>横の列数 (1〜8列)</label>
+                            <label data-i18n="lbl_grid_cols">横の列数 (1〜8列)</label>
                             <input type="number" id="grid-cols" value="2" min="1" max="8">
                         </div>
                         <div class="form-group">
-                            <label>縦の行数 (1〜6行)</label>
+                            <label data-i18n="lbl_grid_rows">縦の行数 (1〜6行)</label>
                             <input type="number" id="grid-rows" value="2" min="1" max="6">
                         </div>
                     </div>
 
-                    <label style="margin-top: 12px; display: block;">よく使うプリセット</label>
+                    <label style="margin-top: 12px; display: block;" data-i18n="lbl_common_presets">よく使うプリセット</label>
                     <div class="preset-chip-group">
                         <button type="button" class="preset-chip" data-cols="2" data-rows="1">2×1</button>
                         <button type="button" class="preset-chip" data-cols="1" data-rows="2">1×2</button>
@@ -647,28 +647,28 @@
             <!-- 2. アスペクト比・フィット設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-grid-fit', this)">
-                    セルの比率・画像フィット <span>▼</span>
+                    <span data-i18n="acc_grid_fit">セルの比率・画像フィット</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-grid-fit">
                     <div class="form-group">
-                        <label>各セルのアスペクト比</label>
+                        <label data-i18n="lbl_cell_aspect">各セルのアスペクト比</label>
                         <select id="cell-aspect">
-                            <option value="1:1" selected>正方形 (1:1 / SNSおすすめ)</option>
-                            <option value="3:2">横長 (3:2 / 一眼カメラ標準)</option>
-                            <option value="2:3">縦長 (2:3 / ポートレート)</option>
-                            <option value="4:3">横長 (4:3 / マイクロフォーサーズ)</option>
-                            <option value="3:4">縦長 (3:4)</option>
-                            <option value="16:9">ワイド横長 (16:9)</option>
-                            <option value="9:16">縦長ストーリー (9:16)</option>
+                            <option value="1:1" selected data-i18n="opt_aspect_1_1">正方形 (1:1 / SNSおすすめ)</option>
+                            <option value="3:2" data-i18n="opt_aspect_3_2">横長 (3:2 / 一眼カメラ標準)</option>
+                            <option value="2:3" data-i18n="opt_aspect_2_3">縦長 (2:3 / ポートレート)</option>
+                            <option value="4:3" data-i18n="opt_aspect_4_3">横長 (4:3 / マイクロフォーサーズ)</option>
+                            <option value="3:4" data-i18n="opt_aspect_3_4">縦長 (3:4)</option>
+                            <option value="16:9" data-i18n="opt_aspect_16_9">ワイド横長 (16:9)</option>
+                            <option value="9:16" data-i18n="opt_aspect_9_16">縦長ストーリー (9:16)</option>
                         </select>
                     </div>
 
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>画像のフィット方式</label>
+                        <label data-i18n="lbl_cell_fit">画像のフィット方式</label>
                         <select id="cell-fit">
-                            <option value="cover" selected>余白なしクロップ（中央＆パン調整）</option>
-                            <option value="contain">レターボックス（余白ありで全体収容）</option>
-                            <option value="fill">枠に合わせて圧縮・変形（歪み許容・全面）</option>
+                            <option value="cover" selected data-i18n="opt_fit_cover">余白なしクロップ（中央＆パン調整）</option>
+                            <option value="contain" data-i18n="opt_fit_contain">レターボックス（余白ありで全体収容）</option>
+                            <option value="fill" data-i18n="opt_fit_fill">枠に合わせて圧縮・変形（歪み許容・全面）</option>
                         </select>
                     </div>
                 </div>
@@ -677,36 +677,36 @@
             <!-- 3. 余白・隙間・カラー設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-grid-style', this)">
-                    余白・隙間・角丸・背景色 <span>▼</span>
+                    <span data-i18n="acc_grid_style">余白・隙間・角丸・背景色</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-grid-style">
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr;">
                         <div class="form-group">
-                            <label>外枠余白: <span id="val-padding" style="color:var(--primary); font-weight:700;">20px</span></label>
+                            <label><span data-i18n="lbl_padding_prefix">外枠余白: </span><span id="val-padding" style="color:var(--primary); font-weight:700;">20px</span></label>
                             <input type="range" id="grid-padding" min="0" max="100" value="20">
                         </div>
                         <div class="form-group">
-                            <label>写真間の隙間: <span id="val-gap" style="color:var(--primary); font-weight:700;">12px</span></label>
+                            <label><span data-i18n="lbl_gap_prefix">写真間の隙間: </span><span id="val-gap" style="color:var(--primary); font-weight:700;">12px</span></label>
                             <input type="range" id="grid-gap" min="0" max="60" value="12">
                         </div>
                     </div>
 
                     <div class="form-group" style="margin-top: 12px;">
-                        <label>写真の角丸: <span id="val-radius" style="color:var(--primary); font-weight:700;">8px</span></label>
+                        <label><span data-i18n="lbl_radius_prefix">写真の角丸: </span><span id="val-radius" style="color:var(--primary); font-weight:700;">8px</span></label>
                         <input type="range" id="grid-radius" min="0" max="40" value="8">
                     </div>
 
                     <div class="form-group" style="margin-top: 14px;">
-                        <label>背景色・隙間の色</label>
+                        <label data-i18n="lbl_bg_color">背景色・隙間の色</label>
                         <div style="display: flex; gap: 8px; align-items: center;">
                             <input type="color" id="grid-bgcolor" value="#ffffff" style="padding: 2px; height: 38px; width: 44px; cursor: pointer; border: 1px solid var(--border-color); border-radius: 6px; background: transparent;">
                             <input type="text" id="grid-bgcolor-text" value="#FFFFFF" style="flex: 1; font-family: monospace;" maxlength="7">
                         </div>
                         <div class="preset-chip-group" style="margin-top: 8px;">
-                            <button type="button" class="preset-chip" data-color="#ffffff">白</button>
-                            <button type="button" class="preset-chip" data-color="#000000">黒</button>
-                            <button type="button" class="preset-chip" data-color="#f7f8f5">アース</button>
-                            <button type="button" class="preset-chip" data-color="#282d24">ダーク</button>
+                            <button type="button" class="preset-chip" data-color="#ffffff" data-i18n="chip_color_white">白</button>
+                            <button type="button" class="preset-chip" data-color="#000000" data-i18n="chip_color_black">黒</button>
+                            <button type="button" class="preset-chip" data-color="#f7f8f5" data-i18n="chip_color_earth">アース</button>
+                            <button type="button" class="preset-chip" data-color="#282d24" data-i18n="chip_color_dark">ダーク</button>
                         </div>
                     </div>
                 </div>
@@ -715,29 +715,29 @@
             <!-- 4. 出力設定 -->
             <div class="accordion">
                 <div class="accordion-header" onclick="toggleAccordion('content-grid-export', this)">
-                    保存・エクスポート設定 <span>▼</span>
+                    <span data-i18n="acc_grid_export">保存・エクスポート設定</span> <span>▼</span>
                 </div>
                 <div class="accordion-content open" id="content-grid-export">
                     <div class="form-group">
-                        <label>出力解像度（長辺基準）</label>
+                        <label data-i18n="lbl_export_size">出力解像度（長辺基準）</label>
                         <select id="export-size">
-                            <option value="2048" selected>2048 px（note・SNS標準）</option>
-                            <option value="1200">1200 px（Web軽量）</option>
-                            <option value="4096">4096 px（超高解像度 4K）</option>
-                            <option value="original">元写真最大解像度ベース</option>
-                            <option value="custom">カスタム（長辺px直接指定）</option>
+                            <option value="2048" selected data-i18n="opt_size_2048">2048 px（note・SNS標準）</option>
+                            <option value="1200" data-i18n="opt_size_1200">1200 px（Web軽量）</option>
+                            <option value="4096" data-i18n="opt_size_4096">4096 px（超高解像度 4K）</option>
+                            <option value="original" data-i18n="opt_size_original">元写真最大解像度ベース</option>
+                            <option value="custom" data-i18n="opt_size_custom">カスタム（長辺px直接指定）</option>
                         </select>
                     </div>
 
                     <!-- カスタム長辺入力エリア -->
                     <div class="form-group" id="group-custom-size" style="display: none; margin-top: 10px;">
-                        <label>長辺の指定サイズ (px)</label>
+                        <label data-i18n="lbl_custom_longside">長辺の指定サイズ (px)</label>
                         <input type="number" id="custom-export-longside" value="2560" min="200" max="10000" step="10">
                     </div>
 
                     <div class="form-grid" style="grid-template-columns: 1fr 1fr; margin-top: 12px;">
                         <div class="form-group">
-                            <label>保存形式</label>
+                            <label data-i18n="lbl_export_format">保存形式</label>
                             <select id="export-format">
                                 <option value="jpeg" selected>JPEG (.jpg)</option>
                                 <option value="png">PNG (.png)</option>
@@ -745,7 +745,7 @@
                             </select>
                         </div>
                         <div class="form-group" id="group-quality">
-                            <label>JPEG品質: <span id="val-quality" style="color:var(--primary); font-weight:700;">95%</span></label>
+                            <label><span data-i18n="lbl_quality_prefix">JPEG品質: </span><span id="val-quality" style="color:var(--primary); font-weight:700;">95%</span></label>
                             <input type="range" id="export-quality" min="70" max="100" value="95">
                         </div>
                     </div>
@@ -757,8 +757,8 @@
 
     <!-- アクションボタン群 -->
     <div class="action-button-group">
-        <button id="btn-save-image" class="main-btn" style="margin-top: 0;">💾 画像を保存する</button>
-        <button id="btn-copy-image" class="copy-main-btn">📋 クリップボードにコピー</button>
+        <button id="btn-save-image" class="main-btn" style="margin-top: 0;" data-i18n="btn_save_image">💾 画像を保存する</button>
+        <button id="btn-copy-image" class="copy-main-btn" data-i18n="btn_copy_image">📋 クリップボードにコピー</button>
     </div>
 
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
@@ -767,19 +767,19 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・複数の写真を均等な格子状（グリッド）に自動整列し、1枚の組写真や作例比較画像をブラウザ完結で高解像度書き出しできるWebツールです。</p>
-        <p>・写真データの読み込みからCanvasレンダリングまで、すべての処理がお使いの端末内部（ローカル環境）で行われます。画像が外部サーバーへ送信されることは一切ありません。</p>
-        <p>・複数写真を1枚に合成するため、プライバシー保護の観点からExifメタデータは付与されずに安全に出力されます。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・複数の写真を均等な格子状（グリッド）に自動整列し、1枚の組写真や作例比較画像をブラウザ完結で高解像度書き出しできるWebツールです。</p>
+        <p data-i18n="exp_about_2">・写真データの読み込みからCanvasレンダリングまで、すべての処理がお使いの端末内部（ローカル環境）で行われます。画像が外部サーバーへ送信されることは一切ありません。</p>
+        <p data-i18n="exp_about_3">・複数写真を1枚に合成するため、プライバシー保護の観点からExifメタデータは付与されずに安全に出力されます。</p>
 
-        <h3> 使い方</h3>
-        <p>・1. まとめたい写真をドロップエリアへ投入します（PCは最大48枚、スマホは最大12枚）。</p>
-        <p>・2. 「配列レイアウト」で縦横の行・列数を指定するか、「写真枚数に合わせて自動配列」を押します。</p>
-        <p>・3. フィット方式で「余白なし」「レターボックス」「枠に合わせて圧縮・変形」を選択できます。</p>
-        <p>・4. セル内の位置調整は、PCではドラッグ、スマホでは指2本で直感的に行えます。</p>
-        <p>・5. PCではツールバーのスライダーでプレビュー倍率を縮小でき、縦長写真も画面内にすっきり収めて確認できます。</p>
-        <p>・6. 下部のスロット一覧はレイアウトと同じ列数でタイル表示され、ドラッグまたは「◀」「▶」ボタンで直感的に並び順を入れ替えられます。</p>
-        <p>・7. 出力サイズは定番プリセットのほか「カスタム」で自由な長辺pxを指定可能です。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・1. まとめたい写真をドロップエリアへ投入します（PCは最大48枚、スマホは最大12枚）。</p>
+        <p data-i18n="exp_usage_2">・2. 「配列レイアウト」で縦横の行・列数を指定するか、「写真枚数に合わせて自動配列」を押します。</p>
+        <p data-i18n="exp_usage_3">・3. フィット方式で「余白なし」「レターボックス」「枠に合わせて圧縮・変形」を選択できます。</p>
+        <p data-i18n="exp_usage_4">・4. セル内の位置調整は、PCではドラッグ、スマホでは指2本で直感的に行えます。</p>
+        <p data-i18n="exp_usage_5">・5. PCではツールバーのスライダーでプレビュー倍率を縮小でき、縦長写真も画面内にすっきり収めて確認できます。</p>
+        <p data-i18n="exp_usage_6">・6. 下部のスロット一覧はレイアウトと同じ列数でタイル表示され、ドラッグまたは「◀」「▶」ボタンで直感的に並び順を入れ替えられます。</p>
+        <p data-i18n="exp_usage_7">・7. 出力サイズは定番プリセットのほか「カスタム」で自由な長辺pxを指定可能です。</p>
     </div>
 </div>
 

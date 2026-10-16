@@ -15,6 +15,8 @@
     <script src="piexif.js"></script>
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- EXIF Cleaner 専用辞書JS -->
+    <script src="lang/exif-cleaner-i18n.js"></script>
 
     <style>
         /* プリセット選択ピッカー */
@@ -326,8 +328,8 @@
 
     <!-- アップロードドロップエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップ（複数対応）</p>
-        <span id="limit-notice">JPEG / PNG / WebP / GIF 対応（上限: 最大 <span data-octopus-max-files>100</span> 枚）</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップ（複数対応）</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG / PNG / WebP / GIF 対応（上限: 最大 </span><span data-octopus-max-files>100</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp, image/gif" multiple style="display: none;">
     </div>
 
@@ -335,10 +337,10 @@
     <div id="table-section" style="display: none; margin-bottom: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <div style="font-size: 14px; font-weight: 700; color: var(--text-color);">
-                ■ 読み込んだ写真のExif情報（全 <span id="file-count-label">0</span> 件）
-                <span style="font-size: 11px; font-weight: normal; color: var(--text-muted); margin-left: 6px;">※ 項目名をクリックして並び替え</span>
+                <span data-i18n="table_title_prefix">■ 読み込んだ写真のExif情報（全 </span><span id="file-count-label">0</span><span data-i18n="table_title_suffix"> 件）</span>
+                <span style="font-size: 11px; font-weight: normal; color: var(--text-muted); margin-left: 6px;" data-i18n="table_sort_hint">※ 項目名をクリックして並び替え</span>
             </div>
-            <button type="button" id="clear-all-btn" style="background: transparent; border: 1px dashed var(--danger-color); color: var(--danger-color); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px; cursor: pointer;">
+            <button type="button" id="clear-all-btn" style="background: transparent; border: 1px dashed var(--danger-color); color: var(--danger-color); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 4px; cursor: pointer;" data-i18n="btn_clear_all">
                 全ファイルをクリア
             </button>
         </div>
@@ -347,15 +349,15 @@
             <table class="meta-table">
                 <thead>
                     <tr>
-                        <th style="width: 50px;">写真</th>
-                        <th class="sortable-th" data-sort="name">ファイル名 / サイズ <span class="sort-icon" id="sort-icon-name">↕</span></th>
-                        <th class="sortable-th" data-sort="gps">GPS（位置情報） <span class="sort-icon" id="sort-icon-gps">↕</span></th>
-                        <th class="sortable-th" data-sort="dateTime">撮影日時 <span class="sort-icon" id="sort-icon-dateTime">↕</span></th>
-                        <th class="sortable-th" data-sort="device">機材情報 <span class="sort-icon" id="sort-icon-device">↕</span></th>
-                        <th class="sortable-th" data-sort="serial">シリアル番号 <span class="sort-icon" id="sort-icon-serial">↕</span></th>
-                        <th class="sortable-th" data-sort="author">作成者・著作権 <span class="sort-icon" id="sort-icon-author">↕</span></th>
-                        <th class="sortable-th" data-sort="thumb">内包サムネイル <span class="sort-icon" id="sort-icon-thumb">↕</span></th>
-                        <th style="text-align: center; width: 60px;">クリア</th>
+                        <th style="width: 50px;" data-i18n="th_photo">写真</th>
+                        <th class="sortable-th" data-sort="name"><span data-i18n="th_filename">ファイル名 / サイズ</span> <span class="sort-icon" id="sort-icon-name">↕</span></th>
+                        <th class="sortable-th" data-sort="gps"><span data-i18n="th_gps">GPS（位置情報）</span> <span class="sort-icon" id="sort-icon-gps">↕</span></th>
+                        <th class="sortable-th" data-sort="dateTime"><span data-i18n="th_datetime">撮影日時</span> <span class="sort-icon" id="sort-icon-dateTime">↕</span></th>
+                        <th class="sortable-th" data-sort="device"><span data-i18n="th_device">機材情報</span> <span class="sort-icon" id="sort-icon-device">↕</span></th>
+                        <th class="sortable-th" data-sort="serial"><span data-i18n="th_serial">シリアル番号</span> <span class="sort-icon" id="sort-icon-serial">↕</span></th>
+                        <th class="sortable-th" data-sort="author"><span data-i18n="th_author">作成者・著作権</span> <span class="sort-icon" id="sort-icon-author">↕</span></th>
+                        <th class="sortable-th" data-sort="thumb"><span data-i18n="th_thumb">内包サムネイル</span> <span class="sort-icon" id="sort-icon-thumb">↕</span></th>
+                        <th style="text-align: center; width: 60px;" data-i18n="th_clear">クリア</th>
                     </tr>
                 </thead>
                 <tbody id="meta-table-body">
@@ -368,54 +370,54 @@
     <!-- 2. 削除項目設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-clean-settings', this)">
-            削除項目の設定 <span>▼</span>
+            <span data-i18n="acc_clean_settings">削除項目の設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-clean-settings">
-            <div class="setting-group-title">◆ プリセットから選択</div>
+            <div class="setting-group-title" data-i18n="sec_preset_select">◆ プリセットから選択</div>
             <div class="segmented-picker">
                 <label class="picker-option">
                     <input type="radio" name="clean-preset" value="privacy" checked>
-                    <span class="picker-label">プライバシー情報を削除(推奨)</span>
+                    <span class="picker-label" data-i18n="preset_privacy">プライバシー情報を削除(推奨)</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="clean-preset" value="strict">
-                    <span class="picker-label">プライバシー情報＋日時を削除</span>
+                    <span class="picker-label" data-i18n="preset_strict">プライバシー情報＋日時を削除</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="clean-preset" value="clean-all">
-                    <span class="picker-label">完全全削除</span>
+                    <span class="picker-label" data-i18n="preset_clean_all">完全全削除</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="clean-preset" value="custom">
-                    <span class="picker-label">カスタム</span>
+                    <span class="picker-label" data-i18n="preset_custom">カスタム</span>
                 </label>
             </div>
 
-            <div class="setting-group-title">◆ 個別チェック（削除する対象を選択）</div>
+            <div class="setting-group-title" data-i18n="sec_custom_checks">◆ 個別チェック（削除する対象を選択）</div>
             <div class="checkbox-grid">
                 <label class="custom-chk-label">
                     <input type="checkbox" id="chk-gps" checked>
-                    <span>位置情報（GPS IFD）</span>
+                    <span data-i18n="chk_gps">位置情報（GPS IFD）</span>
                 </label>
                 <label class="custom-chk-label">
                     <input type="checkbox" id="chk-datetime">
-                    <span>撮影日時（日時タグ）</span>
+                    <span data-i18n="chk_datetime">撮影日時（日時タグ）</span>
                 </label>
                 <label class="custom-chk-label">
                     <input type="checkbox" id="chk-serial" checked>
-                    <span>機材シリアル(機材情報は残ります)</span>
+                    <span data-i18n="chk_serial">機材シリアル(機材情報は残ります)</span>
                 </label>
                 <label class="custom-chk-label">
                     <input type="checkbox" id="chk-author">
-                    <span>作成者・著作権名義</span>
+                    <span data-i18n="chk_author">作成者・著作権名義</span>
                 </label>
                 <label class="custom-chk-label">
                     <input type="checkbox" id="chk-thumb" checked>
-                    <span>内包サムネイル画像</span>
+                    <span data-i18n="chk_thumb">内包サムネイル画像</span>
                 </label>
                 <label class="custom-chk-label" style="background: rgba(201, 74, 74, 0.08); border-color: rgba(201, 74, 74, 0.3);">
                     <input type="checkbox" id="chk-all">
-                    <span style="color: var(--danger-color); font-weight: 700;">Exifメタデータを完全消去</span>
+                    <span style="color: var(--danger-color); font-weight: 700;" data-i18n="chk_all">Exifメタデータを完全消去</span>
                 </label>
             </div>
         </div>
@@ -424,16 +426,16 @@
     <!-- 3. 出力・ファイル設定 -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-output-settings', this)">
-            出力・ファイル設定 <span>▼</span>
+            <span data-i18n="acc_output_settings">出力・ファイル設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-output-settings">
             <div class="form-grid">
                 <div class="form-group">
-                    <label>ファイル名の処理方式</label>
+                    <label data-i18n="lbl_filename_mode">ファイル名の処理方式</label>
                     <select id="filename-mode">
-                        <option value="prefix" selected>接頭辞をつける（例: clean_xxx.jpg）</option>
-                        <option value="suffix">接尾辞をつける（例: xxx_clean.jpg）</option>
-                        <option value="keep">元ファイル名のまま（上書き）</option>
+                        <option value="prefix" selected data-i18n="namemode_prefix">接頭辞をつける（例: clean_xxx.jpg）</option>
+                        <option value="suffix" data-i18n="namemode_suffix">接尾辞をつける（例: xxx_clean.jpg）</option>
+                        <option value="keep" data-i18n="namemode_keep">元ファイル名のまま（上書き）</option>
                     </select>
                 </div>
             </div>
@@ -441,13 +443,13 @@
     </div>
 
     <!-- アクションボタン -->
-    <button id="process-btn" class="main-btn" disabled>Exifを削除して生成する</button>
-    <button id="download-all-btn" class="main-btn" style="display: none;">一括ダウンロードする</button>
+    <button id="process-btn" class="main-btn" disabled data-i18n="btn_process">Exifを削除して生成する</button>
+    <button id="download-all-btn" class="main-btn" style="display: none;" data-i18n="btn_download_all">一括ダウンロードする</button>
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
 
     <!-- 生成完了リザルト一覧 -->
     <div class="result-container" id="result-container">
-        <div style="font-size: 14px; font-weight: 700; color: var(--text-color); margin-bottom: 8px;">
+        <div style="font-size: 14px; font-weight: 700; color: var(--text-color); margin-bottom: 8px;" data-i18n="result_section_title">
             ■ クリーンアップ済みファイル
         </div>
         <div class="result-list" id="result-list">
@@ -459,17 +461,17 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・画像の読み込みやExif削除、バイナリ再構成などのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データが外部サーバーへ送信されることは一切ありません。</p>
-        <p>・JPEG画像の場合は、画像本体の再圧縮を行わずにExifメタデータ領域のみを直接編集するため、画質の劣化は一切ありません。</p>
-        <p>・PNGやWebP、GIF画像はメタデータを完全に削ぎ落とした新しいファイルとして再書き出しされます。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・画像の読み込みやExif削除、バイナリ再構成などのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データが外部サーバーへ送信されることは一切ありません。</p>
+        <p data-i18n="exp_about_2">・JPEG画像の場合は、画像本体の再圧縮を行わずにExifメタデータ領域のみを直接編集するため、画質の劣化は一切ありません。</p>
+        <p data-i18n="exp_about_3">・PNGやWebP、GIF画像はメタデータを完全に削ぎ落とした新しいファイルとして再書き出しされます。</p>
 
-        <h3> 使い方</h3>
-        <p>・枠内に写真ファイルをドラッグ＆ドロップして読み込みます（PCは最大100枚、スマホは最大30枚まで）。</p>
-        <p>・一覧表で各写真に含まれる位置情報や日時、機材名などの状況を確認します。ヘッダーの各項目をクリックすると昇順・降順で並び替えができます。</p>
-        <p>・「削除項目の設定」から目的のプリセットを選択するか、個別のチェックボックスを調整します。</p>
-        <p>・「Exifを削除して生成する」ボタンを押すと、クリーンアップされた写真が生成されます。</p>
-        <p>・PCでは「一括ダウンロード」、iOS・スマートフォンでは各ファイルの「保存 / 共有する」ボタンから写真アプリ等へ保存してください。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・枠内に写真ファイルをドラッグ＆ドロップして読み込みます（PCは最大100枚、スマホは最大30枚まで）。</p>
+        <p data-i18n="exp_usage_2">・一覧表で各写真に含まれる位置情報や日時、機材名などの状況を確認します。ヘッダーの各項目をクリックすると昇順・降順で並び替えができます。</p>
+        <p data-i18n="exp_usage_3">・「削除項目の設定」から目的のプリセットを選択するか、個別のチェックボックスを調整します。</p>
+        <p data-i18n="exp_usage_4">・「Exifを削除して生成する」ボタンを押すと、クリーンアップされた写真が生成されます。</p>
+        <p data-i18n="exp_usage_5">・PCでは「一括ダウンロード」、iOS・スマートフォンでは各ファイルの「保存 / 共有する」ボタンから写真アプリ等へ保存してください。</p>
 
     </div>
 </div>

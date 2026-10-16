@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- Mosaic & Blur 専用辞書JS -->
+    <script src="lang/mosaic-blur-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -365,19 +367,19 @@
 
     <!-- アップロードエリア -->
     <div class="drop-area" id="drop-area">
-        <p>ここをタップするか、画像ファイルをドラッグ＆ドロップ</p>
-        <span>JPEG / PNG / WebP / GIF 対応</span>
+        <p data-i18n="drop_area_text">ここをタップするか、画像ファイルをドラッグ＆ドロップ</p>
+        <span data-i18n="drop_area_sub">JPEG / PNG / WebP / GIF 対応</span>
         <input type="file" id="file-input" accept="image/jpeg, image/png, image/webp, image/gif" style="display: none;">
-        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます">📋 クリップボードから貼り付け（※EXIFデータが正常に読み込めない場合があります）</button>
+        <button type="button" class="stage-paste-btn" id="btn-paste-clipboard" title="クリップボードの画像を読み込みます" data-i18n="btn_paste_clipboard" data-i18n-title="btn_paste_clipboard_title">📋 クリップボードから貼り付け（※EXIFデータが正常に読み込めない場合があります）</button>
     </div>
 
     <!-- 編集ワークスペース -->
     <div id="workspace">
         <div class="action-bar">
             <div class="action-group">
-                <button class="sub-btn" id="undo-btn" disabled title="1つ前に戻す">↩ 戻る</button>
-                <button class="sub-btn" id="redo-btn" disabled title="やり直す">↪ 進む</button>
-                <button class="sub-btn" id="reset-btn" title="全加工をリセット">↺ リセット</button>
+                <button class="sub-btn" id="undo-btn" disabled title="1つ前に戻す" data-i18n="btn_undo" data-i18n-title="btn_undo_title">↩ 戻る</button>
+                <button class="sub-btn" id="redo-btn" disabled title="やり直す" data-i18n="btn_redo" data-i18n-title="btn_redo_title">↪ 進む</button>
+                <button class="sub-btn" id="reset-btn" title="全加工をリセット" data-i18n="btn_reset" data-i18n-title="btn_reset_title">↺ リセット</button>
             </div>
 
             <div class="action-group">
@@ -385,11 +387,11 @@
                     <span style="font-size: 12px; font-weight: bold; color: var(--text-muted);">🔍</span>
                     <input type="range" id="zoom-slider" class="zoom-slider" min="100" max="400" step="10" value="100">
                     <span class="zoom-label" id="zoom-val">100%</span>
-                    <button class="sub-btn" id="zoom-reset-btn" style="padding: 2px 8px; font-size: 11px;" title="ズームを100%（標準）に戻す">リセット</button>
+                    <button class="sub-btn" id="zoom-reset-btn" style="padding: 2px 8px; font-size: 11px;" title="ズームを100%（標準）に戻す" data-i18n="btn_zoom_reset" data-i18n-title="btn_zoom_reset_title">リセット</button>
                 </div>
 
                 <span id="history-count" style="font-size: 12px; font-weight: 600; color: var(--text-muted);">加工: 0/50件</span>
-                <button class="sub-btn confirm-btn" id="apply-btn" style="display: none;">✔ 確定する</button>
+                <button class="sub-btn confirm-btn" id="apply-btn" style="display: none;" data-i18n="btn_apply">✔ 確定する</button>
             </div>
         </div>
 
@@ -404,67 +406,67 @@
     <!-- 1. エフェクト・強度設定（一番上に配置） -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-effect-settings', this)">
-            エフェクト・強度設定 <span>▼</span>
+            <span data-i18n="acc_effect_settings">エフェクト・強度設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-effect-settings">
-            <div class="setting-group-title">◆ 選択形状</div>
+            <div class="setting-group-title" data-i18n="sec_shape_type">◆ 選択形状</div>
             <div class="segmented-picker">
                 <label class="picker-option">
                     <input type="radio" name="shape-type" value="rect">
-                    <span class="picker-label">■ 矩形 (四角形)</span>
+                    <span class="picker-label" data-i18n="shape_rect">■ 矩形 (四角形)</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="shape-type" value="ellipse">
-                    <span class="picker-label">● 楕円 (円形)</span>
+                    <span class="picker-label" data-i18n="shape_ellipse">● 楕円 (円形)</span>
                 </label>
             </div>
 
-            <div class="setting-group-title">◆ 効果タイプ</div>
+            <div class="setting-group-title" data-i18n="sec_effect_type">◆ 効果タイプ</div>
             <div class="segmented-picker">
                 <label class="picker-option">
                     <input type="radio" name="effect-type" value="mosaic">
-                    <span class="picker-label">モザイク</span>
+                    <span class="picker-label" data-i18n="effect_mosaic">モザイク</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="effect-type" value="blur">
-                    <span class="picker-label">ぼかし</span>
+                    <span class="picker-label" data-i18n="effect_blur">ぼかし</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="effect-type" value="frosted">
-                    <span class="picker-label">すりガラス風</span>
+                    <span class="picker-label" data-i18n="effect_frosted">すりガラス風</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="effect-type" value="blackout">
-                    <span class="picker-label">黒塗り</span>
+                    <span class="picker-label" data-i18n="effect_blackout">黒塗り</span>
                 </label>
             </div>
 
             <!-- 強度プリセットコンテナ -->
             <div id="preset-container">
-                <div class="setting-group-title">◆ 強度プリセット</div>
+                <div class="setting-group-title" data-i18n="sec_preset_strength">◆ 強度プリセット</div>
                 <div class="segmented-picker">
                     <label class="picker-option">
                         <input type="radio" name="preset-strength" value="low">
-                        <span class="picker-label">弱 (小)</span>
+                        <span class="picker-label" data-i18n="strength_low">弱 (小)</span>
                     </label>
                     <label class="picker-option">
                         <input type="radio" name="preset-strength" value="med">
-                        <span class="picker-label">中 (標準)</span>
+                        <span class="picker-label" data-i18n="strength_med">中 (標準)</span>
                     </label>
                     <label class="picker-option">
                         <input type="radio" name="preset-strength" value="high">
-                        <span class="picker-label">強 (大)</span>
+                        <span class="picker-label" data-i18n="strength_high">強 (大)</span>
                     </label>
                 </div>
             </div>
 
             <!-- 詳細スライダー調整コンテナ -->
             <div id="detail-sliders-container" style="margin-top: 14px; border-top: 1px dashed var(--border-color); padding-top: 14px;">
-                <div class="setting-group-title">◆ 詳細スライダー調整 (画像長辺に対する比率%で指定)</div>
+                <div class="setting-group-title" data-i18n="sec_detail_sliders">◆ 詳細スライダー調整 (画像長辺に対する比率%で指定)</div>
                 <div class="slider-grid">
                     <div class="slider-group" id="slider-block-group">
                         <div class="slider-header">
-                            <span>モザイクサイズ (長辺比)</span>
+                            <span data-i18n="lbl_block_size">モザイクサイズ (長辺比)</span>
                             <span class="slider-value" id="val-block-size">2.5%</span>
                         </div>
                         <input type="range" id="input-block-size" min="0.2" max="10.0" step="0.1" value="2.5">
@@ -472,7 +474,7 @@
 
                     <div class="slider-group" id="slider-blur-group">
                         <div class="slider-header">
-                            <span>ぼかし半径 (長辺比)</span>
+                            <span data-i18n="lbl_blur_radius">ぼかし半径 (長辺比)</span>
                             <span class="slider-value" id="val-blur-radius">1.2%</span>
                         </div>
                         <input type="range" id="input-blur-radius" min="0.1" max="5.0" step="0.1" value="1.2">
@@ -480,7 +482,7 @@
 
                     <div class="slider-group" id="slider-opacity-group">
                         <div class="slider-header">
-                            <span>不透明度</span>
+                            <span data-i18n="lbl_opacity">不透明度</span>
                             <span class="slider-value" id="val-opacity">100%</span>
                         </div>
                         <input type="range" id="input-opacity" min="10" max="100" step="1" value="100">
@@ -488,7 +490,7 @@
                 </div>
 
                 <div style="margin-top: 18px; text-align: right;">
-                    <button type="button" class="reset-preset-btn" id="reset-presets-btn" title="スライダーの調整値をすべて初期設定に戻します">
+                    <button type="button" class="reset-preset-btn" id="reset-presets-btn" title="スライダーの調整値をすべて初期設定に戻します" data-i18n="btn_reset_presets" data-i18n-title="btn_reset_presets_title">
                         ↺ 設定をデフォルト値に戻す
                     </button>
                 </div>
@@ -499,46 +501,46 @@
     <!-- 2. 操作設定（エフェクト設定の下に配置） -->
     <div class="accordion">
         <div class="accordion-header" onclick="toggleAccordion('content-operation-settings', this)">
-            操作設定 <span>▼</span>
+            <span data-i18n="acc_operation_settings">操作設定</span> <span>▼</span>
         </div>
         <div class="accordion-content open" id="content-operation-settings">
-            <div class="setting-group-title">◆ 確定方式</div>
+            <div class="setting-group-title" data-i18n="sec_confirm_mode">◆ 確定方式</div>
             <div class="segmented-picker">
                 <label class="picker-option">
                     <input type="radio" name="confirm-mode" value="instant" checked>
-                    <span class="picker-label">即時確定モード (離した瞬間適用)</span>
+                    <span class="picker-label" data-i18n="confirm_mode_instant">即時確定モード (離した瞬間適用)</span>
                 </label>
                 <label class="picker-option">
                     <input type="radio" name="confirm-mode" value="manual">
-                    <span class="picker-label">調整確定モード (枠確認後に確定)</span>
+                    <span class="picker-label" data-i18n="confirm_mode_manual">調整確定モード (枠確認後に確定)</span>
                 </label>
             </div>
         </div>
     </div>
 
     <!-- アクションボタン群 -->
-    <button id="save-btn" class="main-btn" disabled>加工した画像を保存する</button>
-    <button id="copy-clipboard-btn" class="secondary-btn" disabled>📋 画像をクリップボードにコピー</button>
+    <button id="save-btn" class="main-btn" disabled data-i18n="btn_save_image">加工した画像を保存する</button>
+    <button id="copy-clipboard-btn" class="secondary-btn" disabled data-i18n="btn_copy_clipboard">📋 画像をクリップボードにコピー</button>
     <div id="status-text" style="text-align: center; margin-top: 14px; font-weight: bold; font-size: 14px; color: var(--primary);"></div>
 </div>
 
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・画像の読み込みやモザイク・ぼかし処理などの画像加工はすべてブラウザ内（ローカル）で実施しています。<br>サーバ等へのアップロードは一切行われません。</p>
-        <p>・サイズ設定は解像度に左右されない「画像長辺比(%)」を採用しているため、高画素な一眼写真でもWEB画像でも意図通りの効果がかかります。</p>
-        <p>・JPEG画像の場合は、元ファイルに含まれるExifメタデータ（撮影日時やカメラ情報等）を維持したまま書き出します。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・画像の読み込みやモザイク・ぼかし処理などの画像加工はすべてブラウザ内（ローカル）で実施しています。<br>サーバ等へのアップロードは一切行われません。</p>
+        <p data-i18n="exp_about_2">・サイズ設定は解像度に左右されない「画像長辺比(%)」を採用しているため、高画素な一眼写真でもWEB画像でも意図通りの効果がかかります。</p>
+        <p data-i18n="exp_about_3">・JPEG画像の場合は、元ファイルに含まれるExifメタデータ（撮影日時やカメラ情報等）を維持したまま書き出します。</p>
 
-        <h3> 使い方</h3>
-        <p>・画像をアップロード後、画像上を指やマウスでドラッグして範囲を選択します。</p>
-        <p>・効果タイプとして「モザイク」「ぼかし」「すりガラス風」「黒塗り」から選択できます。</p>
-        <p>・拡大スライダーやスマホのピンチ操作で画像を拡大すると、細部まで正確にモザイクをかけられます。</p>
-        <p>・拡大時の画面移動：スマホでは<strong>「2本指でなぞる」</strong>、PCでは<strong>「Spaceキーを押しながらドラッグ」</strong>することで自由に視点を移動できます。</p>
-        <p>・「100%リセット」ボタンを押すと、ワンタップで標準の全体表示に戻ります。</p>
-        <p>・PCではヘッダーの「⤢ ワイド表示」ボタンを押すことで、最大2000pxの幅広レイアウトに拡張できます。</p>
-        <p>・最大50回まで連続加工が可能です。50回に達した場合は画像への確定（統合）を行うことで、加工を継続できます。</p>
-        <p>・スライダーの数値を初期状態に戻したい場合は、エフェクト設定内の「↺ 設定をデフォルト値に戻す」ボタンを押してください。</p>
-        <p>・間違えた場合は、上部のアクションバーからいつでも「戻る（Undo）」「進む（Redo）」が可能です。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・画像をアップロード後、画像上を指やマウスでドラッグして範囲を選択します。</p>
+        <p data-i18n="exp_usage_2">・効果タイプとして「モザイク」「ぼかし」「すりガラス風」「黒塗り」から選択できます。</p>
+        <p data-i18n="exp_usage_3">・拡大スライダーやスマホのピンチ操作で画像を拡大すると、細部まで正確にモザイクをかけられます。</p>
+        <p data-i18n="exp_usage_4">・拡大時の画面移動：スマホでは<strong>「2本指でなぞる」</strong>、PCでは<strong>「Spaceキーを押しながらドラッグ」</strong>することで自由に視点を移動できます。</p>
+        <p data-i18n="exp_usage_5">・「100%リセット」ボタンを押すと、ワンタップで標準の全体表示に戻ります。</p>
+        <p data-i18n="exp_usage_6">・PCではヘッダーの「⤢ ワイド表示」ボタンを押すことで、最大2000pxの幅広レイアウトに拡張できます。</p>
+        <p data-i18n="exp_usage_7">・最大50回まで連続加工が可能です。50回に達した場合は画像への確定（統合）を行うことで、加工を継続できます。</p>
+        <p data-i18n="exp_usage_8">・スライダーの数値を初期状態に戻したい場合は、エフェクト設定内の「↺ 設定をデフォルト値に戻す」ボタンを押してください。</p>
+        <p data-i18n="exp_usage_9">・間違えた場合は、上部のアクションバーからいつでも「戻る（Undo）」「進む（Redo）」が可能です。</p>
 
     </div>
 </div>

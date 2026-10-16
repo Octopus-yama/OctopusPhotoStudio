@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="common.css">
     <!-- 共通管理スクリプト -->
     <script src="common.js"></script>
+    <!-- EXIF Analyzer 専用辞書JS -->
+    <script src="lang/exif-analyzer-i18n.js"></script>
 
     <style>
         /* ---------------------------------
@@ -458,11 +460,11 @@
 <!-- 全画面集計更新オーバーレイ -->
 <div class="global-loading-overlay" id="global-loading-overlay">
     <div class="global-spinner"></div>
-    <span class="global-loading-text">集計を更新中...</span>
+    <span class="global-loading-text" data-i18n="loading_overlay_text">集計を更新中...</span>
 </div>
 
 <!-- フローティング注意バナー -->
-<div class="notice-banner" id="multi-lens-notice">
+<div class="notice-banner" id="multi-lens-notice" data-i18n="multi_lens_notice">
     ⚠️ 複数機材選択中: ズーム診断は合算参考値
 </div>
 
@@ -484,14 +486,14 @@
 
     <!-- ファイル・フォルダ投入エリア -->
     <div class="drop-area" id="drop-area">
-        <p id="drop-title">ここにJPEG写真 または フォルダをドラッグ＆ドロップ</p>
-        <span id="limit-notice">JPEG (.jpg / .jpeg) 対応（上限: 最大 <span data-octopus-max-files>3,000</span> 枚）</span>
-        <div class="drop-time-notice">※大量の写真やフォルダを投入した場合、読み込み開始まで数秒〜十数秒かかる場合があります。</div>
+        <p id="drop-title" data-i18n="drop_title">ここにJPEG写真 または フォルダをドラッグ＆ドロップ</p>
+        <span id="limit-notice"><span data-i18n="limit_notice_prefix">JPEG (.jpg / .jpeg) 対応（上限: 最大 </span><span data-octopus-max-files>3,000</span><span data-i18n="limit_notice_suffix"> 枚）</span></span>
+        <div class="drop-time-notice" data-i18n="drop_time_notice">※大量の写真やフォルダを投入した場合、読み込み開始まで数秒〜十数秒かかる場合があります。</div>
         
         <div class="upload-actions">
-            <button type="button" class="upload-btn" id="btn-select-files">📷 ファイルを選択</button>
-            <button type="button" class="upload-btn" id="btn-select-folder">📁 フォルダごと選択</button>
-            <button type="button" class="upload-btn" id="btn-clear-data" style="display:none; color:var(--danger-color);">✖ 全てクリア</button>
+            <button type="button" class="upload-btn" id="btn-select-files" data-i18n="btn_select_files">📷 ファイルを選択</button>
+            <button type="button" class="upload-btn" id="btn-select-folder" data-i18n="btn_select_folder">📁 フォルダごと選択</button>
+            <button type="button" class="upload-btn" id="btn-clear-data" style="display:none; color:var(--danger-color);" data-i18n="btn_clear_data">✖ 全てクリア</button>
         </div>
 
         <input type="file" id="file-input" accept="image/jpeg" multiple style="display: none;">
@@ -501,7 +503,7 @@
     <!-- 進捗バー -->
     <div class="progress-box" id="progress-box">
         <div class="progress-header">
-            <span id="progress-status-text">写真を解析中...</span>
+            <span id="progress-status-text" data-i18n="progress_analyzing">写真を解析中...</span>
             <span id="progress-count-text">0 / 0</span>
         </div>
         <div class="progress-bar-bg">
@@ -517,17 +519,17 @@
             <!-- 検出機材一覧（合体セレクター） -->
             <div class="form-group" style="margin-bottom: 20px;">
                 <div class="section-header-block">
-                    <label class="section-title">◆ 検出機材一覧（カメラ ＆ レンズ組み合わせ選択）</label>
-                    <p class="section-desc">
+                    <label class="section-title" data-i18n="sec_gear_list_title">◆ 検出機材一覧（カメラ ＆ レンズ組み合わせ選択）</label>
+                    <p class="section-desc" data-i18n="sec_gear_list_desc">
                         分析対象にしたい「カメラ ✕ レンズ」の組み合わせにチェックを入れてください。<br>
                         複数チェックすると同一母集団として合算されます（※異なるズームレンズが混ざった場合、両端依存度の診断は安全のため自動的にスキップされます）。
                     </p>
                 </div>
                 <div class="quick-btn-group">
-                    <button type="button" class="quick-btn" onclick="quickSelectPairs('all')">全選択</button>
-                    <button type="button" class="quick-btn" onclick="quickSelectPairs('none')">全解除</button>
-                    <button type="button" class="quick-btn" onclick="quickSelectPairs('invert')">選択反転</button>
-                    <button type="button" class="quick-btn" onclick="quickSelectPairs('unknown')">Unknownのみ</button>
+                    <button type="button" class="quick-btn" onclick="quickSelectPairs('all')" data-i18n="btn_quick_all">全選択</button>
+                    <button type="button" class="quick-btn" onclick="quickSelectPairs('none')" data-i18n="btn_quick_none">全解除</button>
+                    <button type="button" class="quick-btn" onclick="quickSelectPairs('invert')" data-i18n="btn_quick_invert">選択反転</button>
+                    <button type="button" class="quick-btn" onclick="quickSelectPairs('unknown')" data-i18n="btn_quick_unknown">Unknownのみ</button>
                 </div>
                 <div class="gear-list" id="gear-pair-list"></div>
             </div>
@@ -537,8 +539,8 @@
             <!-- カメラ・レンズ別 センサーサイズ設定 -->
             <div class="form-group">
                 <div class="section-header-block">
-                    <label class="section-title">◆ カメラ・レンズ別 センサーサイズ設定（35mm判換算補完用）</label>
-                    <p class="section-desc">
+                    <label class="section-title" data-i18n="sec_sensor_title">◆ カメラ・レンズ別 センサーサイズ設定（35mm判換算補完用）</label>
+                    <p class="section-desc" data-i18n="sec_sensor_desc">
                         選択された機材のセンサーサイズ（クロップ係数）を確認・変更します。<br>
                         写真のExifメタデータに「35mm換算焦点距離」が記録されている機材（スマホや一部ミラーレス等）は自動採用されるため、手動設定は不要です。
                     </p>
@@ -546,8 +548,8 @@
                 <table class="setting-sub-table">
                     <thead>
                         <tr>
-                            <th style="width: 45%;">カメラ / レンズ機種</th>
-                            <th>換算方式 / センサーサイズ / クロップ係数</th>
+                            <th style="width: 45%;" data-i18n="th_camera_lens">カメラ / レンズ機種</th>
+                            <th data-i18n="th_conversion_sensor">換算方式 / センサーサイズ / クロップ係数</th>
                         </tr>
                     </thead>
                     <tbody id="camera-crop-table-body"></tbody>
@@ -558,21 +560,21 @@
             <div style="background:var(--card-bg-sub); border:1px solid var(--border-color); border-radius:var(--radius-sm); padding:12px 16px; margin-top:16px;">
                 <div style="display:flex; gap:20px; align-items:center; flex-wrap:wrap;">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:13px; font-weight:700; color:var(--text-color);">画角基準:</span>
-                        <label style="font-size:13px; cursor:pointer;" title="センサーサイズを揃えて公平に画角を比較できます">
-                            <input type="radio" name="focal-mode" value="35mm" checked onchange="onFocalModeChange()"> 35mm判換算
+                        <span style="font-size:13px; font-weight:700; color:var(--text-color);" data-i18n="lbl_focal_basis">画角基準:</span>
+                        <label style="font-size:13px; cursor:pointer;" title="センサーサイズを揃えて公平に画角を比較できます" data-i18n-title="lbl_focal_35mm_title">
+                            <input type="radio" name="focal-mode" value="35mm" checked onchange="onFocalModeChange()"> <span data-i18n="lbl_focal_35mm">35mm判換算</span>
                         </label>
-                        <label style="font-size:13px; cursor:pointer;" title="レンズ本来の実ミリ数で集計します">
-                            <input type="radio" name="focal-mode" value="real" onchange="onFocalModeChange()"> 実焦点距離
+                        <label style="font-size:13px; cursor:pointer;" title="レンズ本来の実ミリ数で集計します" data-i18n-title="lbl_focal_real_title">
+                            <input type="radio" name="focal-mode" value="real" onchange="onFocalModeChange()"> <span data-i18n="lbl_focal_real">実焦点距離</span>
                         </label>
                     </div>
 
-                    <label class="toggle-label" title="チェックを外すと、広角端・望遠端も通常の焦点域ブロックに統合されます">
+                    <label class="toggle-label" title="チェックを外すと、広角端・望遠端も通常の焦点域ブロックに統合されます" data-i18n-title="lbl_isolate_endpoints_title">
                         <input type="checkbox" id="isolate-endpoints-chk" checked onchange="onIsolateToggleChange()">
-                        <span>広角端・望遠端を通常ブロックから独立集計する</span>
+                        <span data-i18n="lbl_isolate_endpoints">広角端・望遠端を通常ブロックから独立集計する</span>
                     </label>
                 </div>
-                <p style="font-size:11.5px; color:var(--text-muted); margin-top:6px; margin-bottom:0;">
+                <p style="font-size:11.5px; color:var(--text-muted); margin-top:6px; margin-bottom:0;" data-i18n="focal_basis_note">
                     ※ 異なるセンサーサイズ（フルサイズとMFTなど）の写真を混在して分析する場合は、「35mm判換算」の選択を推奨します。
                 </p>
             </div>
@@ -580,18 +582,18 @@
             <!-- アコーディオン：レンズ別 広角端・望遠端スペック微調整 -->
             <div class="accordion" id="accordion-endpoints" style="margin-top: 20px; margin-bottom: 0;">
                 <div class="accordion-header" id="header-endpoints" onclick="toggleAccordion('content-endpoints-settings', this)">
-                    レンズ別 広角端・望遠端スペック微調整（ズーム診断用） <span id="arrow-endpoints">▼</span>
+                    <span data-i18n="acc_endpoints_title">レンズ別 広角端・望遠端スペック微調整（ズーム診断用）</span> <span id="arrow-endpoints">▼</span>
                 </div>
                 <div class="accordion-content" id="content-endpoints-settings">
-                    <p class="section-desc" style="margin-top:0; margin-bottom:10px;">
+                    <p class="section-desc" style="margin-top:0; margin-bottom:10px;" data-i18n="acc_endpoints_desc">
                         ズームレンズの両端（最も広い画角・最も望遠の画角）のスペック数値です。Exifから自動判別されますが、必要に応じて手動で微調整できます（※単焦点やスマホは自動確定されロックされます）。
                     </p>
                     <table class="setting-sub-table">
                         <thead>
                             <tr>
-                                <th style="width: 45%;">レンズ機種</th>
-                                <th>広角端 (mm)</th>
-                                <th>望遠端 (mm)</th>
+                                <th style="width: 45%;" data-i18n="th_lens_model">レンズ機種</th>
+                                <th data-i18n="th_wide_end">広角端 (mm)</th>
+                                <th data-i18n="th_tele_end">望遠端 (mm)</th>
                             </tr>
                         </thead>
                         <tbody id="lens-endpoints-table-body"></tbody>
@@ -602,49 +604,49 @@
 
         <!-- 2. サマリーカードエリア -->
         <div class="section-header-block" style="margin-bottom: 10px;">
-            <label class="section-title">◆ 撮影傾向サマリー診断</label>
-            <p class="section-desc">選択された写真群全体の母集団、ズーム両端への依存度、および最も多用されている露出パラメータの概要です。</p>
+            <label class="section-title" data-i18n="sec_summary_title">◆ 撮影傾向サマリー診断</label>
+            <p class="section-desc" data-i18n="sec_summary_desc">選択された写真群全体の母集団、ズーム両端への依存度、および最も多用されている露出パラメータの概要です。</p>
         </div>
 
         <div class="summary-grid">
             <div class="summary-card">
-                <span class="summary-title">分析対象写真</span>
+                <span class="summary-title" data-i18n="card_total_title">分析対象写真</span>
                 <span class="summary-value" id="card-total-count">0 <span style="font-size:14px; font-weight:600;">枚</span></span>
                 <span class="summary-sub" id="card-total-sub">全0枚中</span>
             </div>
 
             <!-- ズーム両端活用診断カード（複数レンズ選択時はグレーアウト・スキップ） -->
             <div class="summary-card accent-card" id="card-zoom-diagnostic">
-                <span class="summary-title">ズーム両端 活用診断</span>
+                <span class="summary-title" data-i18n="card_zoom_title">ズーム両端 活用診断</span>
                 <span class="summary-value" id="card-zoom-badge">-</span>
                 <span class="summary-sub" id="card-zoom-sub">中間域活用率: 0%</span>
             </div>
 
             <div class="summary-card">
-                <span class="summary-title">広角端・望遠端 比率</span>
+                <span class="summary-title" data-i18n="card_endpoints_title">広角端・望遠端 比率</span>
                 <span class="summary-value" id="card-endpoints-ratio">0% / 0%</span>
                 <span class="summary-sub" id="card-endpoints-detail">ワイド: 0枚 / テレ: 0枚</span>
             </div>
 
             <div class="summary-card">
-                <span class="summary-title">最多露出設定</span>
+                <span class="summary-title" data-i18n="card_exposure_title">最多露出設定</span>
                 <span class="summary-value" id="card-dom-exposure" style="font-size:18px;">-</span>
-                <span class="summary-sub" id="card-dom-exposure-sub">絞り・SS・ISO</span>
+                <span class="summary-sub" id="card-dom-exposure-sub" data-i18n="card_exposure_sub_default">絞り・SS・ISO</span>
             </div>
         </div>
 
         <!-- 3. グラフ可視化エリア -->
         <div class="section-header-block" style="margin-bottom: 10px;">
-            <label class="section-title">◆ 撮影パラメータ可視化グラフ</label>
-            <p class="section-desc">焦点距離の分布や露出設定の傾向を視覚化したグラフです。上部のタブを切り替えて各パラメータの偏りを確認できます。</p>
+            <label class="section-title" data-i18n="sec_chart_title">◆ 撮影パラメータ可視化グラフ</label>
+            <p class="section-desc" data-i18n="sec_chart_desc">焦点距離の分布や露出設定の傾向を視覚化したグラフです。上部のタブを切り替えて各パラメータの偏りを確認できます。</p>
         </div>
 
         <div class="chart-tabs">
-            <button type="button" class="chart-tab-btn active" data-tab="focal-blocks" onclick="switchChartTab('focal-blocks')">焦点域ブロック</button>
-            <button type="button" class="chart-tab-btn" data-tab="focal-detail" onclick="switchChartTab('focal-detail')">1mm刻み分布</button>
-            <button type="button" class="chart-tab-btn" data-tab="fnumber" onclick="switchChartTab('fnumber')">F値 (絞り)</button>
-            <button type="button" class="chart-tab-btn" data-tab="shutter" onclick="switchChartTab('shutter')">シャッター速度</button>
-            <button type="button" class="chart-tab-btn" data-tab="iso" onclick="switchChartTab('iso')">ISO感度</button>
+            <button type="button" class="chart-tab-btn active" data-tab="focal-blocks" onclick="switchChartTab('focal-blocks')" data-i18n="tab_focal_blocks">焦点域ブロック</button>
+            <button type="button" class="chart-tab-btn" data-tab="focal-detail" onclick="switchChartTab('focal-detail')" data-i18n="tab_focal_detail">1mm刻み分布</button>
+            <button type="button" class="chart-tab-btn" data-tab="fnumber" onclick="switchChartTab('fnumber')" data-i18n="tab_fnumber">F値 (絞り)</button>
+            <button type="button" class="chart-tab-btn" data-tab="shutter" onclick="switchChartTab('shutter')" data-i18n="tab_shutter">シャッター速度</button>
+            <button type="button" class="chart-tab-btn" data-tab="iso" onclick="switchChartTab('iso')" data-i18n="tab_iso">ISO感度</button>
         </div>
 
         <div class="chart-container-box" id="chart-container-box">
@@ -655,14 +657,14 @@
         <div class="prompt-box">
             <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px; gap:12px; flex-wrap:wrap;">
                 <div class="section-header-block" style="margin-bottom:0;">
-                    <label class="section-title">🤖 AI分析用プロンプト生成</label>
-                    <p class="section-desc" style="margin-bottom:0;">
+                    <label class="section-title" data-i18n="sec_prompt_title">🤖 AI分析用プロンプト生成</label>
+                    <p class="section-desc" style="margin-bottom:0;" data-i18n="sec_prompt_desc">
                         集計データをまとめたAI相談用テキストです。「📋 プロンプトをコピー」ボタンを押し、ChatGPTやClaude、Geminiなどの生成AIにそのまま貼り付けて送信してください。<br>
                         あなたの構図の癖や、描写力向上のために買い足すべき「最適な単焦点レンズ」などの客観的な講評を受け取れます。
                     </p>
                 </div>
                 <!-- 横幅固定＆中央揃えを適用したプロンプトコピーボタン -->
-                <button type="button" class="upload-btn" id="btn-copy-prompt" style="padding:6px 14px; font-size:12.5px; flex-shrink:0; min-width:176px; justify-content:center;">📋 プロンプトをコピー</button>
+                <button type="button" class="upload-btn" id="btn-copy-prompt" style="padding:6px 14px; font-size:12.5px; flex-shrink:0; min-width:176px; justify-content:center;" data-i18n="btn_copy_prompt">📋 プロンプトをコピー</button>
             </div>
             <textarea class="prompt-textarea" id="prompt-output"></textarea>
         </div>
@@ -673,16 +675,16 @@
 <!-- 説明セクション -->
 <div class="explanation">
     <div class="usage-section">
-        <h3> 本ツールについて</h3>
-        <p>・画像の読み込み、Exifメタデータの解析、焦点距離の動的補完、グラフ描画、プロンプト生成までのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データがサーバーへ送信されることは一切ありません。</p>
-        <p>・大量の写真から撮影傾向（焦点距離や露出の癖、ズーム両端の依存度）を高速集計し、ChatGPTやClaude、Geminiなどの生成AIにコピペして具体的な撮影講評やレンズ選びの相談を行えます。</p>
+        <h3 data-i18n="exp_about_title"> 本ツールについて</h3>
+        <p data-i18n="exp_about_1">・画像の読み込み、Exifメタデータの解析、焦点距離の動的補完、グラフ描画、プロンプト生成までのすべての処理はブラウザ内（ローカル環境）で完結します。<br>写真や画像データがサーバーへ送信されることは一切ありません。</p>
+        <p data-i18n="exp_about_2">・大量の写真から撮影傾向（焦点距離や露出の癖、ズーム両端の依存度）を高速集計し、ChatGPTやClaude、Geminiなどの生成AIにコピペして具体的な撮影講評やレンズ選びの相談を行えます。</p>
 
-        <h3> 使い方</h3>
-        <p>・枠内にJPEG写真をドラッグ＆ドロップするか、「ファイルを選択」「フォルダごと選択」からまとめて読み込みます（PCは最大3,000枚、スマホは最大100枚まで）。</p>
-        <p>・<strong>機材セレクター</strong>：検出された「カメラ ✕ レンズ」の組み合わせ一覧からチェックボックスで柔軟に複数選択・合算できます。異なるカメラやスマホのレンズが混同されることなく正確に集計可能です。</p>
-        <p>・<strong>35mm判換算補完</strong>：Exifに換算値が記録されている写真（スマホや一部ミラーレス等）は最優先で自動採用されます。一部のみ記録されている場合も実測比率から高精度に自動補完します。記録されていない機材のみ、センサーサイズ（MFT: ×2.0、APS-C: ×1.5/1.6等）を選んで正確に補完します。</p>
-        <p>・<strong>ズーム両端診断</strong>：単一のズーム域を持つレンズでは「広角端 [〇〇mm]」「望遠端 [〇〇mm]」として独立集計し、中間域が40%以上活用されているかを客観的に診断します。複数の異なるズーム域が合算された場合は誤認を防ぐため自動的に全域ブロック集計へ統合され、診断はスキップされます。</p>
-        <p>・<strong>AIプロンプト生成</strong>：集計結果を盛り込んだ分析プロンプトをワンクリックでクリップボードへコピーし、AIチャットに貼り付けてアドバイスを求められます。</p>
+        <h3 data-i18n="exp_usage_title"> 使い方</h3>
+        <p data-i18n="exp_usage_1">・枠内にJPEG写真をドラッグ＆ドロップするか、「ファイルを選択」「フォルダごと選択」からまとめて読み込みます（PCは最大3,000枚、スマホは最大100枚まで）。</p>
+        <p data-i18n="exp_usage_2">・<strong>機材セレクター</strong>：検出された「カメラ ✕ レンズ」の組み合わせ一覧からチェックボックスで柔軟に複数選択・合算できます。異なるカメラやスマホのレンズが混同されることなく正確に集計可能です。</p>
+        <p data-i18n="exp_usage_3">・<strong>35mm判換算補完</strong>：Exifに換算値が記録されている写真（スマホや一部ミラーレス等）は最優先で自動採用されます。一部のみ記録されている場合も実測比率から高精度に自動補完します。記録されていない機材のみ、センサーサイズ（MFT: ×2.0、APS-C: ×1.5/1.6等）を選んで正確に補完します。</p>
+        <p data-i18n="exp_usage_4">・<strong>ズーム両端診断</strong>：単一のズーム域を持つレンズでは「広角端 [〇〇mm]」「望遠端 [〇〇mm]」として独立集計し、中間域が40%以上活用されているかを客観的に診断します。複数の異なるズーム域が合算された場合は誤認を防ぐため自動的に全域ブロック集計へ統合され、診断はスキップされます。</p>
+        <p data-i18n="exp_usage_5">・<strong>AIプロンプト生成</strong>：集計結果を盛り込んだ分析プロンプトをワンクリックでクリップボードへコピーし、AIチャットに貼り付けてアドバイスを求められます。</p>
 
     </div>
 </div>
